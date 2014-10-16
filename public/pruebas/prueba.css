@@ -1,0 +1,54 @@
+
+/*
+summary::-webkit-details-marker {
+    color: #69c773;
+    font-size: 200%;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+*/
+
+details {
+    border-radius: 3px;
+    background: #EEE;
+}
+
+details summary {
+    font-size: 17px;
+    vertical-align: top;
+    background: #333;
+    color: #FFF;
+    border-radius: 3px;
+    padding: 5px 10px;
+    outline: none;
+}
+
+details[open] summary {
+    background: #69c773;
+    color: #333;
+}
+
+/* Hide the default marker. */    
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Add the custom marker in the default state. */    
+details summary:before {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+/*    content: "";
+    background-image: url(http://png-4.findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/512/user.png);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 20px;*/
+}
+
+/* Move the sprite image when the details box is open. */
+details[open] summary:before {
+    background-position: -18px 0;
+}
