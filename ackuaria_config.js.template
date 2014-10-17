@@ -1,22 +1,27 @@
 var config = {}
 
 /*********************************************************
- COMMON CONFIGURATION
- It's used by Ackuaria
+ AMQP CONFIGURATION
+ AMQP server must be the same as Licode
 **********************************************************/
 config.rabbit = {};
 config.rabbit.host = 'localhost'; //default value: 'localhost'
 config.rabbit.port = 5672; //default value: 5672
+
+/*********************************************************
+ Logger CONFIGURATION
+**********************************************************/
 config.logger = {};
 config.logger.config_file = './log4js_configuration.json'; //default value: "../log4js_configuration.json"
 
 
 /*********************************************************
- ACKUARIA CONFIGURATION
+ DB CONFIGURATION.
+ If not used, only real-time data will be provided
 **********************************************************/
 
 config.ackuaria = {};
-config.ackuaria.useDB = true; // default value: true
+config.ackuaria.useDB = false; // default value: false
 config.ackuaria.dataBaseURL = "localhost/ackuariadb"; // default value: 'localhost/ackuariadb'
 
 /***** END *****/
