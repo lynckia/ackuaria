@@ -183,6 +183,19 @@ exports.getPublishersInRoom = function(roomId, callback) {
     })
 }
 
+// Devuelve un array con todos los publishers de una room
+exports.getPublishers = function(callback) {
+    var a = [];
+    db.rooms.find({}, function(err, rooms) {
+        for (room in rooms){
+            a = a.concat(rooms[room].publishers);
+        }
+        callback(a);
+    })
+
+
+}
+
 exports.removeAllRooms = function() {
 
     db.rooms.remove();
