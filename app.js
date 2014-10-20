@@ -1,6 +1,10 @@
 var Getopt = require('node-getopt');
 var config = require('./ackuaria_config');
-
+var db = require('./common/mdb/dataBase').db;
+var eventsRegistry = require('./common/mdb/eventsRegistry');
+var statsRegistry = require('./common/mdb/statsRegistry');
+var roomsRegistry = require('./common/mdb/roomsRegistry');
+var sessionsRegistry = require('./common/mdb/sessionsRegistry');
 
 GLOBAL.config = config || {};
 
@@ -89,8 +93,26 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/info', function(req, res) {
-   res.render('info');
+// app.get('/info', function(req, res) {
+      
+
+
+//       //console.log(req.params.id);
+
+//    res.render('info');
+// });
+
+app.get('/info/total', function(req, res) {
+      
+   roomsRegistry.getPublishers(function(publishers){
+      roomsRegistry.getTotalRooms(function(total){
+         if (publishers && total){
+                     res.render('total', {nRooms: total, nPubs:publishers.length} );
+
+         }
+      })
+
+   })
 });
 
 
