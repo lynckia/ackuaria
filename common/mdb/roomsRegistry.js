@@ -183,7 +183,7 @@ exports.getPublishersInRoom = function(roomId, callback) {
     })
 }
 
-// Devuelve un array con todos los publishers de una room
+// Devuelve un array con todos los publishers
 exports.getPublishers = function(callback) {
     var a = [];
     db.rooms.find({}, function(err, rooms) {
@@ -191,6 +191,29 @@ exports.getPublishers = function(callback) {
             a = a.concat(rooms[room].publishers);
         }
         callback(a);
+    })
+
+
+}
+exports.getTotalRooms = function(callback) {
+    var a = [];
+    db.rooms.find({}, function(err, rooms) {
+        if (err){
+            callback(err);
+        }
+
+        if (rooms){
+            var total = 0;
+            for (room in rooms){
+                total++;
+            }
+            callback(total);
+        }
+        else {
+                    callback("There are no rooms");
+
+        }
+
     })
 
 
