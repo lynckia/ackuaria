@@ -47,13 +47,18 @@ API.api = {
 
                      roomsRegistry.addRoom(room, function(saved, error) {
                         if (error) log.warn('MongoDB: Error adding room: ', error);
-                        if (saved) log.info('MongoDB: Added room: ', saved);
+                        if (saved) {
+                           log.info('MongoDB: Added room: ', saved);
+                           sessionsRegistry.addSession(session, function(saved, error) {
+                              if (error) log.warn('MongoDB: Error adding session ', error);
+                              if (saved) log.info('MongoDB: Added session: ', saved);
+                           })
+                        }
+
+
                      })
 
-                     sessionsRegistry.addSession(session, function(saved, error) {
-                        if (error) log.warn('MongoDB: Error adding session ', error);
-                        if (saved) log.info('MongoDB: Added session: ', saved);
-                     })
+
 
                   } else {
 
@@ -162,10 +167,10 @@ API.api = {
          if (config.ackuaria.useDB){
 
             statsRegistry.addStat(theStats, function(saved, error) {
-            if (error) log.warn('MongoDB: Error adding stat: ', error);
-            //if (saved) log.info('MongoDB: Added stat: ', saved);
+               if (error) log.warn('MongoDB: Error adding stat: ', error);
+               //if (saved) log.info('MongoDB: Added stat: ', saved);
 
-         });
+            });
          }
 
 
@@ -176,6 +181,8 @@ API.api = {
 };
 
 API.send_event_to_clients = function(theEvent) {
+
+
    for (var s in API.sockets) {
       API.sockets[s].emit('newEvent', {
          theEvent: theEvent
