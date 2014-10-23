@@ -17,6 +17,11 @@ a {
 	border-radius: 5px;
 	background-color: #FF9999;
 }
+
+.subscriber_info {
+  margin-left: 30px;
+}
+
 .subscriberDetail {
 	margin-left: 30px;
 }
@@ -31,6 +36,22 @@ a {
 
 }
 
+.status_point {
+  background: rgb(248, 156, 39);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 20px;
+}
+
+.status_point.ready {
+  background: rgb(148, 207, 74);
+}
+
+.status_point.fail {
+  background: rgb(196, 0, 0);
+}
 
 /*-- Chart --*/
 

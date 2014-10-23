@@ -7,13 +7,15 @@ var socket = io();
 // PUBLISH EVENT
 var updateEventPublish = function(evt){
 
-
-
     // Div de la Lista de todos los publishers
     var pubsListDiv = document.getElementById('pubsList');
 
-    var br = document.createElement("br");
-    pubsListDiv.appendChild(br);
+    var pubInfo = document.createElement('div');
+    pubInfo.setAttribute('id', "pubInfo" + evt.stream);
+
+    var connectionState = document.createElement('div');
+    connectionState.setAttribute('id', "con_state_" + evt.stream);
+    connectionState.className = "status_point";
 
     // Detail que contiene todo lo relacionado con un publisher y sus subscribers
     var pubDetail = document.createElement('details');
@@ -22,7 +24,7 @@ var updateEventPublish = function(evt){
 
     // Summary con el nombre del publisher
     var pubSum = document.createElement('summary');
-    pubSum.innerHTML = "Publisher " + evt.user;
+    pubSum.innerHTML = "Detail";
 
     // Div que contiene al publisher y sus subscribers
     var pubSubsDiv = document.createElement('div');
@@ -31,8 +33,8 @@ var updateEventPublish = function(evt){
     // Div que contiene nombre y estadísticas del publisher
     var pubDiv = document.createElement('div');
     pubDiv.setAttribute('id', 'pub' + evt.stream );
-    pubDiv.className = "publisher";
-    pubDiv.innerHTML = "USUARIO " + evt.user + " CON STREAM " + evt.stream ;
+    //pubDiv.className = "publisher";
+    pubDiv.innerHTML = "PUBLISHER " + evt.user + " CON STREAM " + evt.stream ;
 
     var pubGraphsDiv = document.createElement('div');
     pubGraphsDiv.setAttribute('id', 'pubGraphs_' + evt.stream);
@@ -46,22 +48,23 @@ var updateEventPublish = function(evt){
     BpsSentAudioDiv.setAttribute('id', 'BpsSentAudio_' + evt.stream);
     BpsSentAudioDiv.className = "chartContainer";
 
-    // pubDiv va dentro de pubSubsDiv
-    pubSubsDiv.appendChild(pubGraphsDiv);
-    pubSubsDiv.insertBefore(pubDiv, pubGraphsDiv);
+    pubInfo.appendChild(connectionState);
+    pubInfo.appendChild(pubDiv);
+    //pubInfo.appendChild(pubDetail);
+
 
     // pubSubsDiv va dentro del detail
-    pubDetail.appendChild(pubSubsDiv);
+    // pubDetail.appendChild(pubSubsDiv);
+    // pubSubsDiv.appendChild(pubGraphsDiv);
 
     // Detail va dentro de la lista de publishers
-    pubsListDiv.appendChild(pubDetail);
+    pubsListDiv.appendChild(pubInfo);
 
     // El summary va antes que el pubSubsDiv, dentro del detail
-    pubDetail.insertBefore(pubSum, pubSubsDiv);
+    // pubDetail.insertBefore(pubSum, pubSubsDiv);
 
-
-    pubGraphsDiv.appendChild(BpsSentVideoDiv);
-    pubGraphsDiv.appendChild(BpsSentAudioDiv);
+    // pubGraphsDiv.appendChild(BpsSentVideoDiv);
+    // pubGraphsDiv.appendChild(BpsSentAudioDiv);
 
    
 }
@@ -69,11 +72,16 @@ var updateEventPublish = function(evt){
 // SUBSCRIBE EVENT
 var updateEventSubscribe = function(evt){
 
-    var pubSubsDiv = document.getElementById('pubSubs' + evt.stream);
 
+    var pubInfo = document.getElementById('pubInfo' + evt.stream);
 
-    var br = document.createElement("br");
-        pubSubsDiv.appendChild(br);
+    var subInfo = document.createElement('div');
+    subInfo.setAttribute('id', "subInfo_" + evt.user + "_" + evt.stream);
+    subInfo.className = 'subscriber_info';
+
+    var connectionState = document.createElement('div');
+    connectionState.setAttribute('id', "con_state_" + evt.user + "_" + evt.stream);
+    connectionState.className = "status_point";
 
     
     // Detail que contiene todo lo relacionado con un subscriber
@@ -84,24 +92,18 @@ var updateEventSubscribe = function(evt){
 
     // Summary con el nombre del subscriber
     var subSum = document.createElement('summary');
-    subSum.innerHTML = "Subscriber " + evt.user;
+    subSum.innerHTML = "Detail";
 
     // Div que contiene toda la información relacionada con un subscriber
     var subDiv = document.createElement('div');
     subDiv.setAttribute('id', 'sub_' + evt.user + '_' + evt.stream);
     subDiv.innerHTML = "<p> SUBSCRIBER " + evt.user + '</p>';
-    subDiv.style.border="solid #0000FF";
-    subDiv.style.borderRadius="5px";
-    subDiv.style.backgroundColor = "#99CCFF";
-    
 
-
-    pubSubsDiv.appendChild(subDetail);
-    subDetail.appendChild(subDiv);
-    subDetail.insertBefore(subSum, subDiv);
-
-
-    
+    pubInfo.appendChild(subInfo);
+    subInfo.appendChild(connectionState);
+    subInfo.appendChild(subDiv);
+    // subInfo.appendChild(subDetail);
+    // subDetail.insertBefore(subSum, subDiv);
 
 
 }
@@ -109,21 +111,43 @@ var updateEventSubscribe = function(evt){
 // UNPUBLISH EVENT
 var updateEventUnpublish = function( evt) {
    var pubs = document.getElementById('pubsList');
-   var pub = document.getElementById('pubDetail' + evt.user);
+   var pub = document.getElementById('pubInfo' + evt.stream);
    pubs.removeChild(pub);
-   var subs = document.getElementsByTagName('details');
+   // var subs = document.getElementsByTagName('details');
 
-   for ( var i = 0; i<subs.length; i++){
-        if (subs[i].getAttribute('user')){
-            if (subs[i].getAttribute('user') == evt.user){
-                var sub = subs[i];
-                var parent = sub.parentNode;
-                parent.removeChild(sub);
-            }
-        }
+   // for ( var i = 0; i<subs.length; i++){
+   //      if (subs[i].getAttribute('user')){
+   //          if (subs[i].getAttribute('user') == evt.user){
+   //              var sub = subs[i];
+   //              var parent = sub.parentNode;
+   //              parent.removeChild(sub);
+   //          }
+   //      }
 
-    }
+   //  }
    
+}
+
+var updateEventStatus = function (evt) {
+    
+    var id = evt.subs ? evt.subs + '_' + evt.pub : evt.pub;
+    $("#con_state_" + id).removeClass();
+
+    switch (evt.status) {
+
+        case 500:
+            $("#con_state_" + id).addClass('status_point fail');
+            break;
+
+        case 103:
+            $("#con_state_" + id).addClass('status_point ready');
+            break;
+
+        default:
+            $("#con_state_" + id).addClass('status_point');
+            break;
+    }
+    
 }
 
 
@@ -424,20 +448,25 @@ socket.on('newEvent', function (evt) {
    		updateEventPublish(theEvent);
          break;
    	
-      case "subscribe":
+    case "subscribe":
    		console.log("User " + theEvent.user + " Subscribe" );
    		updateEventSubscribe(theEvent);
-   	   break;
+   	    break;
       
-      case "unpublish":
-         updateEventUnpublish(theEvent);
-         break;
-      case "unsubscribe":
-         break;
+    case "unpublish":
+        updateEventUnpublish(theEvent);
+        break;
+    case "unsubscribe":
+        break;
 
 
-      case "user_disconnect":
-         break;
+    case "user_disconnect":
+        break;
+
+    case "connection_status":
+        updateEventStatus(theEvent);
+
+        break;
 
       default:
          break;

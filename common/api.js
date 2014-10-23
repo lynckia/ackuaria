@@ -14,7 +14,7 @@ API.api = {
    event: function(theEvent) {
       try {
 
-         //log.info('Event: ', theEvent);
+         log.info('Event: ', theEvent);
 
          API.send_event_to_clients(theEvent);
          if (config.ackuaria.useDB) {
@@ -159,7 +159,7 @@ API.api = {
    },
    stats: function(theStats) {
 
-      log.info('Stat: ', theStats);
+      //log.info('Stat: ', theStats);
 
       try {
 
@@ -181,7 +181,6 @@ API.api = {
 
 API.send_event_to_clients = function(theEvent) {
    for (var s in API.sockets) {
-      console.log('SED');
       API.sockets[s].emit('newEvent', {
          theEvent: theEvent
       });
