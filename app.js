@@ -45,7 +45,7 @@ for (var prop in opt.options) {
 }
 
 // Load submodules with updated config
-var rpc = require('./common/rpc');
+var amqper = require('./common/amqper');
 
 // Logger
 
@@ -68,24 +68,16 @@ http.listen(8888, function() {
 var api = API.api;
 
 
-rpc.connect(function() {
+amqper.connect(function() {
    "use strict";
-   rpc.setPublicRPC(api);
 
-   var rpcID = "stats_handler";
-
-   rpc.bind(rpcID);
-
+   amqper.bind_broadcast('event', api.event);
+   amqper.bind_broadcast('stats', api.stats);
 });
 
 
 io.on('connection', function(socket) {
-
-   
    API.sockets.push(socket);
-
-
-
 });
 
 app.get('/', function(req, res) {

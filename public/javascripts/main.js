@@ -413,7 +413,7 @@ socket.on('newEvent', function (evt) {
 
    var theEvent = evt.theEvent;
    switch (evt.theEvent.type){
-      case "connection":
+      case "user_connection":
          console.log("Connection");
          //updateEventConnection(evt.theEvent);
          break;
@@ -436,7 +436,7 @@ socket.on('newEvent', function (evt) {
          break;
 
 
-      case "disconnect":
+      case "user_disconnect":
          break;
 
       default:

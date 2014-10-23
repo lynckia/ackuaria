@@ -11,6 +11,6 @@
   ],
   "levels": {
   	"Ackuaria": "DEBUG",
-  	"RPC": "INFO"
+  	"AMQPER": "INFO"
   }
 }

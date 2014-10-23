@@ -11,8 +11,10 @@ var sessionsRegistry = require('./mdb/sessionsRegistry');
 API.sockets = [];
 
 API.api = {
-   event: function(theEvent, callback) {
+   event: function(theEvent) {
       try {
+
+         //log.info('Event: ', theEvent);
 
          API.send_event_to_clients(theEvent);
          if (config.ackuaria.useDB) {
@@ -57,8 +59,6 @@ API.api = {
 
 
                      })
-
-
 
                   } else {
 
@@ -144,7 +144,6 @@ API.api = {
                               }
                            })
 
-
                         }
                      })
 
@@ -154,13 +153,14 @@ API.api = {
             }
          }
 
-
-
       } catch (err) {
          console.log("Error receiving event:", err);
       }
    },
-   stats: function(theStats, callback) {
+   stats: function(theStats) {
+
+      log.info('Stat: ', theStats);
+
       try {
 
          API.send_stats_to_clients(theStats);
@@ -173,7 +173,6 @@ API.api = {
             });
          }
 
-
       } catch (err) {
          log.error("Error receiving stat", err);
       }
@@ -181,9 +180,8 @@ API.api = {
 };
 
 API.send_event_to_clients = function(theEvent) {
-
-
    for (var s in API.sockets) {
+      console.log('SED');
       API.sockets[s].emit('newEvent', {
          theEvent: theEvent
       });
