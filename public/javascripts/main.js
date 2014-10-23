@@ -12,6 +12,7 @@ var updateEventPublish = function(evt){
 
     var pubInfo = document.createElement('div');
     pubInfo.setAttribute('id', "pubInfo" + evt.stream);
+    pubInfo.className = "publisher";
 
     var connectionState = document.createElement('div');
     connectionState.setAttribute('id', "con_state_" + evt.stream);
@@ -78,6 +79,7 @@ var updateEventSubscribe = function(evt){
     var subInfo = document.createElement('div');
     subInfo.setAttribute('id', "subInfo_" + evt.user + "_" + evt.stream);
     subInfo.className = 'subscriber_info';
+    subInfo.setAttribute("user", evt.user);
 
     var connectionState = document.createElement('div');
     connectionState.setAttribute('id', "con_state_" + evt.user + "_" + evt.stream);
@@ -113,9 +115,25 @@ var updateEventUnpublish = function( evt) {
    var pubs = document.getElementById('pubsList');
    var pub = document.getElementById('pubInfo' + evt.stream);
    pubs.removeChild(pub);
-   // var subs = document.getElementsByTagName('details');
+   var totalDivs = document.getElementsByTagName('div');
 
-   // for ( var i = 0; i<subs.length; i++){
+for ( var i = 0; i<totalDivs.length; i++){
+    var div = totalDivs[i];
+   if (div.className == "publisher"){
+    for (var j= 0; j<div.children.length; j++){
+        if (div.children[j].getAttribute("user")== evt.user){
+            console.log(div);
+            div.children[j].parentNode.removeChild(div.children[j]);
+        }
+    }
+
+   }
+}
+   // for ( var i = 0; i<totalDivs.length; i++){
+
+   //  if(totalDivs[i].className = "publisher"){
+
+   //  }
    //      if (subs[i].getAttribute('user')){
    //          if (subs[i].getAttribute('user') == evt.user){
    //              var sub = subs[i];
@@ -127,6 +145,7 @@ var updateEventUnpublish = function( evt) {
    //  }
    
 }
+
 
 var updateEventStatus = function (evt) {
     
@@ -436,6 +455,7 @@ var updateStatsSubscriber = function(evt){
 socket.on('newEvent', function (evt) {
 
    var theEvent = evt.theEvent;
+
    switch (evt.theEvent.type){
       case "user_connection":
          console.log("Connection");
