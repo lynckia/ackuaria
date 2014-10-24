@@ -71,8 +71,10 @@ var api = API.api;
 amqper.connect(function() {
    "use strict";
 
-   amqper.bind_broadcast('event', api.event);
-   amqper.bind_broadcast('stats', api.stats);
+   amqper.bind('stats_handler');
+
+   amqper.setPublicRPC(api);
+
 });
 
 

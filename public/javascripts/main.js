@@ -158,6 +158,10 @@ var updateEventStatus = function (evt) {
             $("#con_state_" + id).addClass('status_point fail');
             break;
 
+        case 102:
+            $("#con_state_" + id).addClass('status_point started');
+            break;
+
         case 103:
             $("#con_state_" + id).addClass('status_point ready');
             break;

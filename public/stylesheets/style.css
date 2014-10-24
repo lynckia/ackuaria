@@ -11,12 +11,12 @@ a {
   height:300px;
   width: 100%;
 }
-
+/*
 .publisher {
 	border: solid #FF0000;
 	border-radius: 5px;
 	background-color: #FF9999;
-}
+}*/
 
 .subscriber_info {
   margin-left: 30px;
@@ -37,7 +37,7 @@ a {
 }
 
 .status_point {
-  background: rgb(248, 156, 39);
+  background: rgb(188, 192, 182);
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -45,12 +45,16 @@ a {
   margin-right: 20px;
 }
 
+.status_point.started {
+  background: rgb(248, 156, 39);
+}
+
 .status_point.ready {
   background: rgb(148, 207, 74);
 }
 
 .status_point.fail {
-  background: rgb(196, 0, 0);
+  background: red;
 }
 
 /*-- Chart --*/
