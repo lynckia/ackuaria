@@ -21,13 +21,16 @@ a {
 .subscriber_info {
   margin-left: 30px;
 }
+.publisherDetail {
+  margin-left: 30px;
+}
 
 .subscriberDetail {
-	margin-left: 30px;
+	margin-left: 50px;
 }
 
 .subscriberGraphsDetail {
-	margin-left: 50px;
+	margin-left: 70px;
 }
 
 .fracionLost {
