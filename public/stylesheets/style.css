@@ -11,12 +11,14 @@ a {
   height:300px;
   width: 100%;
 }
-/*
+
 .publisher {
-	border: solid #FF0000;
+  padding-top: 20px;
+  padding-left: 30px;
+/*	border: solid #FF0000;
 	border-radius: 5px;
-	background-color: #FF9999;
-}*/
+	background-color: #FF9999;*/
+}
 
 .subscriber_info {
   margin-left: 30px;
