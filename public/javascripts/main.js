@@ -1,6 +1,18 @@
 var socket = io();
 
-// PUBLISH EVENT
+var hasPublishers = function() {
+        var totalDivs = document.getElementsByTagName('div');
+
+        for (var i = 0; i < totalDivs.length; i++) {
+            var div = totalDivs[i];
+            if (div.className == "publisher") {
+                return true;
+
+            }
+        }
+        return false;
+    }
+    // PUBLISH EVENT
 var updateEventPublish = function(evt) {
 
     createNewPublisher(evt.user, evt.stream);
@@ -9,30 +21,16 @@ var updateEventPublish = function(evt) {
 // SUBSCRIBE EVENT
 var updateEventSubscribe = function(evt) {
 
-
     createNewSubscriber(evt.user, evt.stream);
-
 
 }
 
 // UNPUBLISH EVENT
 var updateEventUnpublish = function(evt) {
-    var pubs = document.getElementById('pubsList');
-    var pub = document.getElementById('pubInfo' + evt.stream);
-    pubs.removeChild(pub);
-    var totalDivs = document.getElementsByTagName('div');
 
-    for (var i = 0; i < totalDivs.length; i++) {
-        var div = totalDivs[i];
-        if (div.className == "publisher") {
-            for (var j = 0; j < div.children.length; j++) {
-                if (div.children[j].getAttribute("user") == evt.user) {
-                    div.children[j].parentNode.removeChild(div.children[j]);
-                }
-            }
+    removePublisher(evt.stream);
 
-        }
-    }
+    removeSubscriber(evt.user);
 }
 
 var updateEventStatus = function(evt) {
@@ -61,7 +59,32 @@ var updateEventStatus = function(evt) {
 
 }
 
-// SENDER STATS
+
+var createStatus = function(id, status) {
+
+        $("#con_state_" + id).removeClass();
+
+        switch (status) {
+
+            case 500:
+                $("#con_state_" + id).addClass('status_point fail');
+                break;
+
+            case 102:
+                $("#con_state_" + id).addClass('status_point started');
+                break;
+
+            case 103:
+                $("#con_state_" + id).addClass('status_point ready');
+                break;
+
+            default:
+                $("#con_state_" + id).addClass('status_point');
+                break;
+        }
+
+    }
+    // SENDER STATS
 var updateStatsPublisher = function(evt) {
     var pubGraphsDiv = document.getElementById('pubGraphs_' + evt.pub);
     var stats = document.getElementById("statsPub" + evt.pub);
@@ -238,7 +261,6 @@ socket.on('newEvent', function(evt) {
 
         case "connection_status":
             updateEventStatus(theEvent);
-
             break;
 
         default:
@@ -350,7 +372,6 @@ var createNewSubscriber = function(user, stream) {
     connectionState.setAttribute('id', "con_state_" + user + "_" + stream);
     connectionState.className = "status_point";
 
-
     // Detail que contiene todo lo relacionado con un subscriber
     var subDetail = document.createElement('details');
     subDetail.setAttribute('id', "subDetail_" + user + "_" + stream);
@@ -451,4 +472,43 @@ var createNewSubscriber = function(user, stream) {
 
     subVideoGraphsDiv.appendChild(ppsLostVideoDiv);
     subAudioGraphsDiv.appendChild(ppsLostAudioDiv);
+}
+
+var removeSubscriber = function(user) {
+    var totalDivs = document.getElementsByTagName('div');
+
+    for (var i = 0; i < totalDivs.length; i++) {
+        var div = totalDivs[i];
+        if (div.className == "publisher") {
+            for (var j = 0; j < div.children.length; j++) {
+                if (div.children[j].getAttribute("user") == user) {
+                    div.children[j].parentNode.removeChild(div.children[j]);
+                }
+            }
+
+        }
+    }
+}
+
+var removePublisher = function(stream) {
+
+    var pubs = document.getElementById('pubsList');
+    var pub = document.getElementById('pubInfo' + stream);
+    pubs.removeChild(pub);
+
+}
+
+var paintUsers = function(roomInfo, userStream, statusId) {
+
+    if (!hasPublishers()) {
+        for (var stream in roomInfo) {
+            createNewPublisher(userStream[stream], stream);
+            createStatus(stream, statusId[stream]);
+            for (var i = 0; i < roomInfo[stream].length; i++) {
+                createNewSubscriber(roomInfo[stream][i], stream);
+                var id = roomInfo[stream][i] + "_" + stream;
+                createStatus(id, statusId[id]);
+            }
+        }
+    }
 }

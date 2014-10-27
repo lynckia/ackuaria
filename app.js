@@ -83,7 +83,7 @@ io.on('connection', function(socket) {
 });
 
 app.get('/', function(req, res) {
-   res.render('index');
+   res.render('index', {roomInfo:API.roomInfo, userStream: API.userStream, statusId:API.statusId});
 });
 
 

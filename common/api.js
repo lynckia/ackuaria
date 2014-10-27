@@ -9,6 +9,9 @@ var roomsRegistry = require('./mdb/roomsRegistry');
 var sessionsRegistry = require('./mdb/sessionsRegistry');
 
 API.sockets = [];
+API.roomInfo = {};
+API.userStream = {};
+API.statusId = {};
 
 API.api = {
    event: function(theEvent) {
@@ -24,132 +27,212 @@ API.api = {
                if (saved) log.info('MongoDB: Added event: ', saved);
 
             });
-
-            if (theEvent.type === "publish") {
-               roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
-
-                  if (!roomExists) {
-                     var date = new Date()
-                     var timestamp = date.getTime();
-                     var sessionId = theEvent.room + "_" + "1";
-                     var room = {
-                        roomId: theEvent.room,
-                        nPubs: 1,
-                        nSession: 1,
-                        publishers: [theEvent.stream]
-                     };
-                     var session = {
-                        sessionId: sessionId,
-                        room: theEvent.room,
-                        nSession: 1,
-                        initTimestamp: timestamp,
-                        // finalTimestamp: 0,
-                        publishers: [theEvent.stream]
-                     };
-
-                     roomsRegistry.addRoom(room, function(saved, error) {
-                        if (error) log.warn('MongoDB: Error adding room: ', error);
-                        if (saved) {
-                           log.info('MongoDB: Added room: ', saved);
-                           sessionsRegistry.addSession(session, function(saved, error) {
-                              if (error) log.warn('MongoDB: Error adding session ', error);
-                              if (saved) log.info('MongoDB: Added session: ', saved);
-                           })
-                        }
+            switch (theEvent.type) {
 
 
-                     })
+               case ("publish"):
+                  roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
 
-                  } else {
 
-                     roomsRegistry.getRoomByRoomId(theEvent.room, function(room) {
-                        var sessionId = theEvent.room + "_" + room.nSession;
+                     var stream = theEvent.stream;
+                     API.roomInfo[stream] = [];
+                     API.userStream[stream] = theEvent.user;
 
-                        if (room.nPubs < 1) {
-                           var date = new Date();
-                           var timestamp = date.getTime();
-                           sessionsRegistry.initSession(sessionId, timestamp, function(result) {
-                              console.log(result);
+
+                     if (!roomExists) {
+                        var date = new Date()
+                        var timestamp = date.getTime();
+                        var sessionId = theEvent.room + "_" + "1";
+                        var room = {
+                           roomId: theEvent.room,
+                           nPubs: 1,
+                           nSession: 1,
+                           publishers: [theEvent.stream]
+                        };
+                        var session = {
+                           sessionId: sessionId,
+                           room: theEvent.room,
+                           nSession: 1,
+                           initTimestamp: timestamp,
+                           // finalTimestamp: 0,
+                           publishers: [theEvent.stream]
+                        };
+
+                        roomsRegistry.addRoom(room, function(saved, error) {
+                           if (error) log.warn('MongoDB: Error adding room: ', error);
+                           if (saved) {
+                              log.info('MongoDB: Added room: ', saved);
+                              sessionsRegistry.addSession(session, function(saved, error) {
+                                 if (error) log.warn('MongoDB: Error adding session ', error);
+                                 if (saved) log.info('MongoDB: Added session: ', saved);
+                              })
+                           }
+
+
+                        })
+
+                     } else {
+
+                        roomsRegistry.getRoomByRoomId(theEvent.room, function(room) {
+                           var sessionId = theEvent.room + "_" + room.nSession;
+
+                           if (room.nPubs < 1) {
+                              var date = new Date();
+                              var timestamp = date.getTime();
+                              sessionsRegistry.initSession(sessionId, timestamp, function(result) {
+                                 console.log(result);
+                                 sessionsRegistry.updateSession(sessionId, theEvent.stream, function(result) {
+                                    console.log(result);
+                                 })
+                                 roomsRegistry.updateRoomPublish(theEvent.room, theEvent.stream, function(result) {
+                                    console.log(result);
+                                 })
+                              })
+                           } else {
+
                               sessionsRegistry.updateSession(sessionId, theEvent.stream, function(result) {
                                  console.log(result);
+
                               })
+
                               roomsRegistry.updateRoomPublish(theEvent.room, theEvent.stream, function(result) {
                                  console.log(result);
                               })
-                           })
-                        } else {
+                           }
 
-                           sessionsRegistry.updateSession(sessionId, theEvent.stream, function(result) {
-                              console.log(result);
-
-                           })
-
-                           roomsRegistry.updateRoomPublish(theEvent.room, theEvent.stream, function(result) {
-                              console.log(result);
-                           })
-                        }
-
-                     })
+                        })
 
 
+                     }
+                  })
+
+                  break;
+
+
+               case ("unpublish"):
+
+                  // Para liberar espacio en el array de status
+
+                  var id = "";
+                  id += theEvent.stream;
+                  delete API.statusId[id];
+                  for (var j = 0; j < API.roomInfo[theEvent.stream].length; j++) {
+                     var subs = API.roomInfo[theEvent.stream][j];
+                     var id = subs + "_" + theEvent.stream;
+                     delete API.statusId[id];
                   }
-               })
 
-            } else if (theEvent.type === "unpublish") {
-               roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
+                  for (var stream in API.roomInfo) {
+                     for (var i = 0; i < API.roomInfo[stream].length; i++) {
 
-                  if (!roomExists) {
-                     console.log("This room doesn't exist anymore");
+                        if (API.roomInfo[stream][i] === theEvent.user) {
 
 
-                  } else {
-                     roomsRegistry.updateRoomUnpublish(theEvent.room, theEvent.stream, function(result, initNewSession) {
-                        console.log(result);
+                           API.roomInfo[stream].splice(i, 1);
 
-                        if (initNewSession) {
-                           roomsRegistry.getRoomByRoomId(theEvent.room, function(room) {
-                              if (room) {
-                                 var nSession = room.nSession;
-                                 var sessionIdOld = theEvent.room + "_" + nSession;
 
-                                 nSession++;
+                           var id = theEvent.user + "_" + stream;
+                           delete API.statusId[id];
+                        }
+                     }
+                  }
+                  delete API.roomInfo[theEvent.stream];
 
-                                 var sessionIdNew = theEvent.room + "_" + nSession;
-                                 var session = {
-                                    sessionId: sessionIdNew,
-                                    room: theEvent.room,
-                                    nSession: nSession,
-                                    // initTimestamp: 0,
-                                    // finalTimestamp: 0,
-                                    publishers: []
-                                 };
 
-                                 sessionsRegistry.addSession(session, function(saved, error) {
-                                    if (error) log.warn('MongoDB: Error adding session: ', error);
-                                    if (saved) {
-                                       log.info('MongoDB: Added session: ', saved);
-                                       roomsRegistry.updateRoomSession(theEvent.room, nSession, function(result) {
-                                          console.log(result);
+                  // Hasta aquí se libera el array cada vez que llega un unpublish
 
-                                          var date = new Date();
-                                          var timestamp = date.getTime();
-                                          sessionsRegistry.finishSession(sessionIdOld, timestamp, function(result) {
+
+                  roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
+
+                     if (!roomExists) {
+                        console.log("This room doesn't exist anymore");
+
+
+                     } else {
+                        roomsRegistry.updateRoomUnpublish(theEvent.room, theEvent.stream, function(result, initNewSession) {
+                           console.log(result);
+
+                           if (initNewSession) {
+                              roomsRegistry.getRoomByRoomId(theEvent.room, function(room) {
+                                 if (room) {
+                                    var nSession = room.nSession;
+                                    var sessionIdOld = theEvent.room + "_" + nSession;
+
+                                    nSession++;
+
+                                    var sessionIdNew = theEvent.room + "_" + nSession;
+                                    var session = {
+                                       sessionId: sessionIdNew,
+                                       room: theEvent.room,
+                                       nSession: nSession,
+                                       // initTimestamp: 0,
+                                       // finalTimestamp: 0,
+                                       publishers: []
+                                    };
+
+                                    sessionsRegistry.addSession(session, function(saved, error) {
+                                       if (error) log.warn('MongoDB: Error adding session: ', error);
+                                       if (saved) {
+                                          log.info('MongoDB: Added session: ', saved);
+                                          roomsRegistry.updateRoomSession(theEvent.room, nSession, function(result) {
                                              console.log(result);
+
+                                             var date = new Date();
+                                             var timestamp = date.getTime();
+                                             sessionsRegistry.finishSession(sessionIdOld, timestamp, function(result) {
+                                                console.log(result);
+                                             })
                                           })
-                                       })
 
-                                    }
-                                 })
+                                       }
+                                    })
 
-                              }
-                           })
+                                 }
+                              })
 
-                        }
-                     })
+                           }
+                        })
 
+                     }
+                  })
+
+                  break;
+
+
+               case ("subscribe"):
+                  var stream = theEvent.stream;
+                  var user = theEvent.user;
+                  API.roomInfo[stream].push(user);
+                  console.log(API.roomInfo);
+                  break;
+
+               case ("unsubscribe"):
+
+                  for (var i = 0; i < API.roomInfo[theEvent.stream].length; i++) {
+
+                     if (API.roomInfo[theEvent.stream][i] == theEvent.user) {
+
+                        API.roomInfo[theEvent.stream].pop(API.roomInfo[theEvent.stream][i]);
+                     }
                   }
-               })
+                  break;
 
+
+               case ("connection_status"):
+
+                  if (theEvent.status == 102 || theEvent.status == 103 || theEvent.status == 500) {
+                     var id = "";
+                     if (!theEvent.subs) {
+                        id += theEvent.pub;
+                     } else {
+                        id = theEvent.subs + "_" + theEvent.pub;
+
+                     }
+                     API.statusId[id] = theEvent.status;
+                  }
+
+
+                  break;
             }
          }
 
@@ -164,7 +247,7 @@ API.api = {
       try {
 
          API.send_stats_to_clients(theStats);
-         if (config.ackuaria.useDB){
+         if (config.ackuaria.useDB) {
 
             statsRegistry.addStat(theStats, function(saved, error) {
                if (error) log.warn('MongoDB: Error adding stat: ', error);

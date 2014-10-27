@@ -31,3 +31,15 @@ CURRENT SESSION USERS
  <script src="/javascripts/graphs.js" type="text/javascript"></script>
 <script src="/javascripts/lib/canvasjs.min.js"></script>
 <script src="/javascripts/main.js" type="text/javascript"></script>
+
+<script>
+  
+
+
+
+  var roomInfo = <%- JSON.stringify(roomInfo) %>;
+  var userStream = <%- JSON.stringify(userStream) %>;
+  var statusId = <%- JSON.stringify(statusId) %>;
+
+  paintUsers(roomInfo, userStream, statusId);
+</script>
