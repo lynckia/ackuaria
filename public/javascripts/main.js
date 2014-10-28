@@ -123,7 +123,6 @@ var updateStatsPublisher = function(evt) {
 
 }
 
-
 // RECEIVER STATS
 var updateStatsSubscriber = function(evt) {
 
@@ -222,8 +221,6 @@ var updateStatsSubscriber = function(evt) {
 
         }
 
-
-
     }
 }
 
@@ -252,9 +249,9 @@ socket.on('newEvent', function(evt) {
         case "unpublish":
             updateEventUnpublish(theEvent);
             break;
+
         case "unsubscribe":
             break;
-
 
         case "user_disconnect":
             break;
@@ -274,7 +271,6 @@ socket.on('newEvent', function(evt) {
 socket.on('newStats', function(evt) {
 
     var theStats = evt.theStats;
-
 
     if (!theStats.subs) {
         updateStatsPublisher(theStats);
@@ -335,8 +331,6 @@ var createNewPublisher = function(user, stream) {
     var video = document.createElement('p');
     video.setAttribute('id', 'videoPub' + stream);
     video.className = "video";
-
-
 
     pubInfo.appendChild(connectionState);
     pubInfo.appendChild(pubDiv);
@@ -438,7 +432,6 @@ var createNewSubscriber = function(user, stream) {
     ppsLostAudioDiv.setAttribute('id', 'ppsLostAudio_' + user + "_" + stream);
     ppsLostAudioDiv.className = "chartContainer";
 
-
     pubInfo.appendChild(subInfo);
     subInfo.appendChild(connectionState);
     subInfo.appendChild(subDiv);
@@ -446,7 +439,6 @@ var createNewSubscriber = function(user, stream) {
     subDetail.appendChild(stats);
 
     subDetail.insertBefore(subSum, stats);
-
 
     stats.appendChild(audio);
     stats.appendChild(video);

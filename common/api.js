@@ -29,8 +29,7 @@ API.api = {
             });
             switch (theEvent.type) {
 
-
-               case ("publish"):
+               case "publish":
                   roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
 
 
@@ -109,10 +108,9 @@ API.api = {
                   break;
 
 
-               case ("unpublish"):
+               case "unpublish":
 
                   // Para liberar espacio en el array de status
-
                   var id = "";
                   id += theEvent.stream;
                   delete API.statusId[id];
@@ -121,6 +119,8 @@ API.api = {
                      var id = subs + "_" + theEvent.stream;
                      delete API.statusId[id];
                   }
+                  // Hasta aquí se libera el array cada vez que llega un unpublish
+
 
                   for (var stream in API.roomInfo) {
                      for (var i = 0; i < API.roomInfo[stream].length; i++) {
@@ -137,10 +137,6 @@ API.api = {
                      }
                   }
                   delete API.roomInfo[theEvent.stream];
-
-
-                  // Hasta aquí se libera el array cada vez que llega un unpublish
-
 
                   roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
 
@@ -198,15 +194,14 @@ API.api = {
 
                   break;
 
-
-               case ("subscribe"):
+               case "subscribe":
                   var stream = theEvent.stream;
                   var user = theEvent.user;
                   API.roomInfo[stream].push(user);
                   console.log(API.roomInfo);
                   break;
 
-               case ("unsubscribe"):
+               case "unsubscribe":
 
                   for (var i = 0; i < API.roomInfo[theEvent.stream].length; i++) {
 
@@ -217,8 +212,7 @@ API.api = {
                   }
                   break;
 
-
-               case ("connection_status"):
+               case "connection_status":
 
                   if (theEvent.status == 102 || theEvent.status == 103 || theEvent.status == 500) {
                      var id = "";
@@ -231,7 +225,9 @@ API.api = {
                      API.statusId[id] = theEvent.status;
                   }
 
-
+                  break;
+                  
+               default:
                   break;
             }
          }
