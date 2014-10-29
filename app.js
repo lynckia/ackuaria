@@ -46,9 +46,6 @@ for (var prop in opt.options) {
 
 // Load submodules with updated config
 var amqper = require('./common/amqper');
-
-// Logger
-
 var API = require('./common/api');
 var express = require('express');
 var app = express();
@@ -70,10 +67,8 @@ var api = API.api;
 
 amqper.connect(function() {
    "use strict";
-
-   amqper.bind('stats_handler');
-
-   amqper.setPublicRPC(api);
+   amqper.bind_broadcast('event', api.event);
+   amqper.bind_broadcast('stats', api.stats);
 
 });
 
@@ -83,30 +78,34 @@ io.on('connection', function(socket) {
 });
 
 app.get('/', function(req, res) {
-   res.render('index', {roomInfo:API.roomInfo, userStream: API.userStream, statusId:API.statusId});
+   res.render('index', {
+      roomInfo: API.roomInfo,
+      userStream: API.userStream,
+      statusId: API.statusId,
+      userName: API.userName
+   });
 });
 
 
-// app.get('/info', function(req, res) {
+/*app.get('/info', function(req, res) {
       
+      console.log(req.params.id);
 
-
-//       //console.log(req.params.id);
-
-//    res.render('info');
-// });
-
+   res.render('info');
+});
+*/
 app.get('/info/total', function(req, res) {
-      
-   roomsRegistry.getPublishers(function(publishers){
-      roomsRegistry.getTotalRooms(function(total){
-         if (publishers && total){
-                     res.render('total', {nRooms: total, nPubs:publishers.length} );
+
+   roomsRegistry.getPublishers(function(publishers) {
+      roomsRegistry.getTotalRooms(function(total) {
+         if (publishers && total) {
+            res.render('total', {
+               nRooms: total,
+               nPubs: publishers.length
+            });
 
          }
       })
 
    })
 });
-
-

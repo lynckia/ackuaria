@@ -12,6 +12,7 @@ API.sockets = [];
 API.roomInfo = {};
 API.userStream = {};
 API.statusId = {};
+API.userName = {};
 
 API.api = {
    event: function(theEvent) {
@@ -36,7 +37,7 @@ API.api = {
                      var stream = theEvent.stream;
                      API.roomInfo[stream] = [];
                      API.userStream[stream] = theEvent.user;
-
+                     API.userName[theEvent.user] = theEvent.name;
 
                      if (!roomExists) {
                         var date = new Date()
@@ -107,10 +108,11 @@ API.api = {
 
                   break;
 
-
                case "unpublish":
 
                   // Para liberar espacio en el array de status
+                  delete API.userName[theEvent.user];
+
                   var id = "";
                   id += theEvent.stream;
                   delete API.statusId[id];
@@ -120,7 +122,6 @@ API.api = {
                      delete API.statusId[id];
                   }
                   // Hasta aquí se libera el array cada vez que llega un unpublish
-
 
                   for (var stream in API.roomInfo) {
                      for (var i = 0; i < API.roomInfo[stream].length; i++) {
@@ -142,7 +143,6 @@ API.api = {
 
                      if (!roomExists) {
                         console.log("This room doesn't exist anymore");
-
 
                      } else {
                         roomsRegistry.updateRoomUnpublish(theEvent.room, theEvent.stream, function(result, initNewSession) {
@@ -198,7 +198,7 @@ API.api = {
                   var stream = theEvent.stream;
                   var user = theEvent.user;
                   API.roomInfo[stream].push(user);
-                  console.log(API.roomInfo);
+                  API.userName[user] = theEvent.name;
                   break;
 
                case "unsubscribe":
@@ -207,14 +207,14 @@ API.api = {
 
                      if (API.roomInfo[theEvent.stream][i] == theEvent.user) {
 
-                        API.roomInfo[theEvent.stream].pop(API.roomInfo[theEvent.stream][i]);
+                        API.roomInfo[theEvent.stream].splice(i, 1);
                      }
                   }
                   break;
 
                case "connection_status":
 
-                  if (theEvent.status == 102 || theEvent.status == 103 || theEvent.status == 500) {
+                  
                      var id = "";
                      if (!theEvent.subs) {
                         id += theEvent.pub;
@@ -223,10 +223,10 @@ API.api = {
 
                      }
                      API.statusId[id] = theEvent.status;
-                  }
+                  
 
                   break;
-                  
+
                default:
                   break;
             }

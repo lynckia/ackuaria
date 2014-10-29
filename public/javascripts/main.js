@@ -15,13 +15,13 @@ var hasPublishers = function() {
     // PUBLISH EVENT
 var updateEventPublish = function(evt) {
 
-    createNewPublisher(evt.user, evt.stream);
+    createNewPublisher(evt.user, evt.stream, evt.name);
 }
 
 // SUBSCRIBE EVENT
 var updateEventSubscribe = function(evt) {
 
-    createNewSubscriber(evt.user, evt.stream);
+    createNewSubscriber(evt.user, evt.stream, evt.name);
 
 }
 
@@ -33,19 +33,15 @@ var updateEventUnpublish = function(evt) {
     removeSubscriber(evt.user);
 }
 
-var updateEventStatus = function(evt) {
-
+var updateEventStatus = function (evt) {
+    
     var id = evt.subs ? evt.subs + '_' + evt.pub : evt.pub;
     $("#con_state_" + id).removeClass();
 
     switch (evt.status) {
-
+ 
         case 500:
             $("#con_state_" + id).addClass('status_point fail');
-            break;
-
-        case 102:
-            $("#con_state_" + id).addClass('status_point started');
             break;
 
         case 103:
@@ -55,9 +51,10 @@ var updateEventStatus = function(evt) {
         default:
             $("#con_state_" + id).addClass('status_point');
             break;
-    }
-
-}
+     }
+   
+    
+ }
 
 
 var createStatus = function(id, status) {
@@ -70,13 +67,10 @@ var createStatus = function(id, status) {
                 $("#con_state_" + id).addClass('status_point fail');
                 break;
 
-            case 102:
-                $("#con_state_" + id).addClass('status_point started');
-                break;
-
             case 103:
                 $("#con_state_" + id).addClass('status_point ready');
                 break;
+
 
             default:
                 $("#con_state_" + id).addClass('status_point');
@@ -280,7 +274,7 @@ socket.on('newStats', function(evt) {
 });
 
 
-var createNewPublisher = function(user, stream) {
+var createNewPublisher = function(user, stream, name) {
     // Div de la Lista de todos los publishers
     var pubsListDiv = document.getElementById('pubsList');
 
@@ -305,7 +299,7 @@ var createNewPublisher = function(user, stream) {
     var pubDiv = document.createElement('div');
     pubDiv.setAttribute('id', 'pub' + stream);
     //pubDiv.className = "publisher";
-    pubDiv.innerHTML = "PUBLISHER " + user + " CON STREAM " + stream;
+    pubDiv.innerHTML = name + ": PUBLISHER " + user + " CON STREAM " + stream;
 
     var pubGraphsDiv = document.createElement('div');
     pubGraphsDiv.setAttribute('id', 'pubGraphs_' + stream);
@@ -354,7 +348,7 @@ var createNewPublisher = function(user, stream) {
 
 }
 
-var createNewSubscriber = function(user, stream) {
+var createNewSubscriber = function(user, stream, name) {
     var pubInfo = document.getElementById('pubInfo' + stream);
 
     var subInfo = document.createElement('div');
@@ -379,7 +373,7 @@ var createNewSubscriber = function(user, stream) {
     // Div que contiene toda la información relacionada con un subscriber
     var subDiv = document.createElement('div');
     subDiv.setAttribute('id', 'sub_' + user + '_' + stream);
-    subDiv.innerHTML = "SUBSCRIBER " + user;
+    subDiv.innerHTML = name + ": SUBSCRIBER " + user;
 
     var stats = document.createElement('div');
     stats.setAttribute('id', 'statsSub_' + user + "_" + stream);
@@ -490,14 +484,14 @@ var removePublisher = function(stream) {
 
 }
 
-var paintUsers = function(roomInfo, userStream, statusId) {
+var paintUsers = function(roomInfo, userStream, statusId, userName) {
 
     if (!hasPublishers()) {
         for (var stream in roomInfo) {
-            createNewPublisher(userStream[stream], stream);
+            createNewPublisher(userStream[stream], stream, userName[userStream[stream]]);
             createStatus(stream, statusId[stream]);
             for (var i = 0; i < roomInfo[stream].length; i++) {
-                createNewSubscriber(roomInfo[stream][i], stream);
+                createNewSubscriber(roomInfo[stream][i], stream, userName[roomInfo[stream][i]]);
                 var id = roomInfo[stream][i] + "_" + stream;
                 createStatus(id, statusId[id]);
             }

@@ -266,3 +266,50 @@ a {
   fill: #000;
   font-size: 28px;
 }
+
+
+details {
+    border-radius: 10px;
+    background: #FFF;
+    padding: 5px;
+
+}
+
+details summary {
+    font-size: 12px;
+    vertical-align: top;
+    background: #59ABEB;
+    color: #FFF;
+    border-radius: 10px;
+    padding: 5px 10px;
+    outline: none;
+    width: 100px;
+}
+
+details[open] summary {
+    background: #69c773;
+    color: #333;
+}
+
+/* Hide the default marker. */    
+details summary::-webkit-details-marker {
+    display: visible;
+}
+
+/* Add the custom marker in the default state. */    
+details summary:before {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+/*    content: "";
+    background-image: url(http://png-4.findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/512/user.png);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 20px;*/
+}
+
+/* Move the sprite image when the details box is open. */
+details[open] summary:before {
+    background-position: -18px 0;
+}
