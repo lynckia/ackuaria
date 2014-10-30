@@ -12,7 +12,7 @@ a {
   color: #FFF;
   border-radius: 10px;
   padding: 5px 10px;
-  width: 250px;
+  width: 300px;
 }
 .chartContainer {
   height:300px;
@@ -290,7 +290,7 @@ details summary {
     border-radius: 10px;
     padding: 5px 10px;
     outline: none;
-    width: 100px;
+    width: 150px;
 }
 
 details[open] summary {
