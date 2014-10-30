@@ -1,18 +1,20 @@
 var socket = io();
 
 var hasPublishers = function() {
-        var totalDivs = document.getElementsByTagName('div');
+    var totalDivs = document.getElementsByTagName('div');
 
-        for (var i = 0; i < totalDivs.length; i++) {
-            var div = totalDivs[i];
-            if (div.className == "publisher") {
-                return true;
+    for (var i = 0; i < totalDivs.length; i++) {
+        var div = totalDivs[i];
+        if (div.className == "publisher") {
+            return true;
 
-            }
         }
-        return false;
     }
-    // PUBLISH EVENT
+    return false;
+}
+
+
+// PUBLISH EVENT
 var updateEventPublish = function(evt) {
 
     createNewPublisher(evt.user, evt.stream, evt.name);
@@ -33,13 +35,13 @@ var updateEventUnpublish = function(evt) {
     removeSubscriber(evt.user);
 }
 
-var updateEventStatus = function (evt) {
-    
+var updateEventStatus = function(evt) {
+
     var id = evt.subs ? evt.subs + '_' + evt.pub : evt.pub;
     $("#con_state_" + id).removeClass();
 
     switch (evt.status) {
- 
+
         case 500:
             $("#con_state_" + id).addClass('status_point fail');
             break;
@@ -49,12 +51,12 @@ var updateEventStatus = function (evt) {
             break;
 
         default:
-            $("#con_state_" + id).addClass('status_point');
+            $("#con_state_" + id).addClass('status_point started');
             break;
-     }
-   
-    
- }
+    }
+
+
+}
 
 
 var createStatus = function(id, status) {
@@ -73,7 +75,7 @@ var createStatus = function(id, status) {
 
 
             default:
-                $("#con_state_" + id).addClass('status_point');
+                $("#con_state_" + id).addClass('status_point started');
                 break;
         }
 
@@ -258,7 +260,6 @@ socket.on('newEvent', function(evt) {
             break;
 
     }
-
 
 });
 
