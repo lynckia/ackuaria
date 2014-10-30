@@ -232,7 +232,7 @@ socket.on('newEvent', function(evt) {
     switch (evt.theEvent.type) {
         case "user_connection":
             console.log("Connection");
-            
+
             //updateEventConnection(evt.theEvent);
             break;
 
@@ -287,6 +287,7 @@ var createNewRoom = function(roomId){
     var roomInfo = document.createElement('div');
     roomInfo.setAttribute('id', 'roomInfo_'+ roomId);
     roomInfo.innerHTML = "ROOM " + roomId;
+    roomInfo.className = "roomInfo";
 
     var roomPubs = document.createElement('div');
     roomPubs.setAttribute('id', 'roomPubs_' + roomId);
