@@ -78,11 +78,15 @@ io.on('connection', function(socket) {
 });
 
 app.get('/', function(req, res) {
+
+
    res.render('index', {
       roomInfo: API.roomInfo,
       userStream: API.userStream,
       statusId: API.statusId,
-      userName: API.userName
+      userName: API.userName,
+      rooms: API.rooms,
+      streamRoom: API.streamRoom
    });
 });
 

@@ -17,7 +17,7 @@ var hasPublishers = function() {
 // PUBLISH EVENT
 var updateEventPublish = function(evt) {
 
-    createNewPublisher(evt.user, evt.stream, evt.name);
+    createNewPublisher(evt.user, evt.stream, evt.name, evt.room);
 }
 
 // SUBSCRIBE EVENT
@@ -30,9 +30,13 @@ var updateEventSubscribe = function(evt) {
 // UNPUBLISH EVENT
 var updateEventUnpublish = function(evt) {
 
-    removePublisher(evt.stream);
+    removePublisher(evt.stream, evt.room);
 
     removeSubscriber(evt.user);
+
+    if (!document.getElementById('pubsList_' + evt.room).hasChildNodes()){
+        removeRoom(evt.room);
+    }
 }
 
 var updateEventStatus = function(evt) {
@@ -228,6 +232,7 @@ socket.on('newEvent', function(evt) {
     switch (evt.theEvent.type) {
         case "user_connection":
             console.log("Connection");
+            
             //updateEventConnection(evt.theEvent);
             break;
 
@@ -274,10 +279,37 @@ socket.on('newStats', function(evt) {
 
 });
 
+var createNewRoom = function(roomId){
+    var roomsListDiv = document.getElementById('roomsList');
+    var newRoom = document.createElement('div');
+    newRoom.setAttribute('id', "room_" + roomId);
 
-var createNewPublisher = function(user, stream, name) {
+    var roomInfo = document.createElement('div');
+    roomInfo.setAttribute('id', 'roomInfo_'+ roomId);
+    roomInfo.innerHTML = "ROOM " + roomId;
+
+    var roomPubs = document.createElement('div');
+    roomPubs.setAttribute('id', 'roomPubs_' + roomId);
+
+    newRoom.appendChild(roomInfo);
+    newRoom.appendChild(roomPubs);
+    roomsListDiv.appendChild(newRoom);
+
+}
+var createNewPublisher = function(user, stream, name, room) {
+
+    var roomPubs = document.getElementById('roomPubs_' + room);
+    if (roomPubs===null){
+        createNewRoom(room);
+        var roomPubs = document.getElementById('roomPubs_' + room);
+    }
+
     // Div de la Lista de todos los publishers
-    var pubsListDiv = document.getElementById('pubsList');
+    var pubsListDiv = document.getElementById('pubsList_' + room);
+    if (!pubsListDiv){
+        var pubsListDiv = document.createElement('div');
+        pubsListDiv.setAttribute('id', 'pubsList_' + room);
+    }
 
     var pubInfo = document.createElement('div');
     pubInfo.setAttribute('id', "pubInfo" + stream);
@@ -346,6 +378,8 @@ var createNewPublisher = function(user, stream, name) {
     stats.appendChild(audio);
     stats.appendChild(video);
     stats.appendChild(pubGraphsDiv);
+
+    roomPubs.appendChild(pubsListDiv);
 
 }
 
@@ -477,19 +511,28 @@ var removeSubscriber = function(user) {
     }
 }
 
-var removePublisher = function(stream) {
+var removePublisher = function(stream, room) {
 
-    var pubs = document.getElementById('pubsList');
+    var pubs = document.getElementById('pubsList_' + room);
     var pub = document.getElementById('pubInfo' + stream);
     pubs.removeChild(pub);
 
 }
 
-var paintUsers = function(roomInfo, userStream, statusId, userName) {
+var removeRoom = function(room){
+    var roomToRemove = document.getElementById('room_'  + room);
+    var roomsList = document.getElementById('roomsList');
+    roomsList.removeChild(roomToRemove);
+}
+
+var paintUsers = function(roomInfo, userStream, statusId, userName, rooms, streamRoom) {
 
     if (!hasPublishers()) {
+        for (var j = 0; j<rooms.length; j++){
+            createNewRoom(rooms[j]);
+        }
         for (var stream in roomInfo) {
-            createNewPublisher(userStream[stream], stream, userName[userStream[stream]]);
+            createNewPublisher(userStream[stream], stream, userName[userStream[stream]], streamRoom[stream]);
             createStatus(stream, statusId[stream]);
             for (var i = 0; i < roomInfo[stream].length; i++) {
                 createNewSubscriber(roomInfo[stream][i], stream, userName[roomInfo[stream][i]]);

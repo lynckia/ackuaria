@@ -13,19 +13,22 @@ API.roomInfo = {};
 API.userStream = {};
 API.statusId = {};
 API.userName = {};
+API.rooms = [];
+API.streamRoom = {};
+API.roomUsers = {};
 
 API.api = {
    event: function(theEvent) {
       try {
 
-         log.info('Event: ', theEvent);
+        // log.info('Event: ', theEvent);
 
          API.send_event_to_clients(theEvent);
          if (config.ackuaria.useDB) {
             // DATABASE
             eventsRegistry.addEvent(theEvent, function(saved, error) {
-               if (error) log.warn('MongoDB: Error adding event: ', error);
-               if (saved) log.info('MongoDB: Added event: ', saved);
+               // if (error) log.warn('MongoDB: Error adding event: ', error);
+               // if (saved) log.info('MongoDB: Added event: ', saved);
 
             });
             switch (theEvent.type) {
@@ -38,6 +41,15 @@ API.api = {
                      API.roomInfo[stream] = [];
                      API.userStream[stream] = theEvent.user;
                      API.userName[theEvent.user] = theEvent.name;
+                     if (API.rooms.indexOf(theEvent.room) == "-1"){
+                        API.rooms.push(theEvent.room);
+                        API.roomUsers[theEvent.room] = 1;
+                     }
+                     else {
+                        API.roomUsers[theEvent.room] += 1; 
+
+                     }
+                     API.streamRoom[stream] = theEvent.room;
 
                      if (!roomExists) {
                         var date = new Date()
@@ -112,6 +124,13 @@ API.api = {
 
                   // Para liberar espacio en el array de status
                   delete API.userName[theEvent.user];
+                  delete API.streamRoom[theEvent.stream];
+                  API.roomUsers[theEvent.room] -= 1;
+                  if (API.roomUsers[theEvent.room] == 0){
+                     API.rooms.splice(theEvent.room, 1);
+                     delete API.roomUsers[theEvent.room];
+                  }
+
 
                   var id = "";
                   id += theEvent.stream;
