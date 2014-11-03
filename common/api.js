@@ -251,6 +251,107 @@ API.api = {
             }
          }
 
+         else {
+
+            switch (theEvent.type) {
+
+               case "publish":
+   
+                     var stream = theEvent.stream;
+                     API.roomInfo[stream] = [];
+                     API.userStream[stream] = theEvent.user;
+                     API.userName[theEvent.user] = theEvent.name;
+                     if (API.rooms.indexOf(theEvent.room) == "-1"){
+                        API.rooms.push(theEvent.room);
+                        API.roomUsers[theEvent.room] = 1;
+                     }
+                     else {
+                        API.roomUsers[theEvent.room] += 1; 
+
+                     }
+                     API.streamRoom[stream] = theEvent.room;
+
+                     
+
+                  break;
+
+               case "unpublish":
+
+                  // Para liberar espacio en el array de status
+                  delete API.userName[theEvent.user];
+                  delete API.streamRoom[theEvent.stream];
+                  API.roomUsers[theEvent.room] -= 1;
+                  if (API.roomUsers[theEvent.room] == 0){
+                     API.rooms.splice(theEvent.room, 1);
+                     delete API.roomUsers[theEvent.room];
+                  }
+
+                  var id = "";
+                  id += theEvent.stream;
+                  delete API.statusId[id];
+                  for (var j = 0; j < API.roomInfo[theEvent.stream].length; j++) {
+                     var subs = API.roomInfo[theEvent.stream][j];
+                     var id = subs + "_" + theEvent.stream;
+                     delete API.statusId[id];
+                  }
+                  // Hasta aquí se libera el array cada vez que llega un unpublish
+
+                  for (var stream in API.roomInfo) {
+                     for (var i = 0; i < API.roomInfo[stream].length; i++) {
+
+                        if (API.roomInfo[stream][i] === theEvent.user) {
+
+
+                           API.roomInfo[stream].splice(i, 1);
+
+
+                           var id = theEvent.user + "_" + stream;
+                           delete API.statusId[id];
+                        }
+                     }
+                  }
+                  delete API.roomInfo[theEvent.stream];
+                  break;
+
+               case "subscribe":
+                  var stream = theEvent.stream;
+                  var user = theEvent.user;
+                  API.roomInfo[stream].push(user);
+                  API.userName[user] = theEvent.name;
+                  break;
+
+               case "unsubscribe":
+
+                  for (var i = 0; i < API.roomInfo[theEvent.stream].length; i++) {
+
+                     if (API.roomInfo[theEvent.stream][i] == theEvent.user) {
+
+                        API.roomInfo[theEvent.stream].splice(i, 1);
+                     }
+                  }
+                  break;
+
+               case "connection_status":
+
+                  
+                     var id = "";
+                     if (!theEvent.subs) {
+                        id += theEvent.pub;
+                     } else {
+                        id = theEvent.subs + "_" + theEvent.pub;
+
+                     }
+                     API.statusId[id] = theEvent.status;
+                  
+
+                  break;
+
+               default:
+                  break;
+            }
+
+         }
+
       } catch (err) {
          console.log("Error receiving event:", err);
       }
