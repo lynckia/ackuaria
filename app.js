@@ -58,8 +58,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-http.listen(8888, function() {
-   console.log('listening on *:8888');
+http.listen(GLOBAL.config.ackuaria.port, function() {
+   console.log('listening on *:' + GLOBAL.config.ackuaria.port);
 });
 
 var api = API.api;
