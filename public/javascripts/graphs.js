@@ -146,7 +146,7 @@ GRAPH.generateBpsSent = function(id, value, time, type) {
 
   charts[id] = new CanvasJS.Chart(id, {
     title: {
-      text: "Bps Sent " + type
+      text: "bps Sent " + type
     },
     axisX:{      
             interval: 1,
@@ -176,7 +176,7 @@ GRAPH.updateBpsSent = function(id, value, time) {
 
   var dataLength = 100; // number of dataPoints visible at any point
   if (timeElapsed != 0) {
-    var data = (bytesSent / timeElapsed) * 1000;
+    var data = ((bytesSent * 8)/ timeElapsed) * 1000;
   }
   else {
     var data = 0;
