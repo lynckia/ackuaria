@@ -280,6 +280,7 @@ API.api = {
                   // Para liberar espacio en el array de status
                   delete API.userName[theEvent.user];
                   delete API.streamRoom[theEvent.stream];
+                  delete API.userStream[theEvent.stream];
                   API.roomUsers[theEvent.room] -= 1;
                   if (API.roomUsers[theEvent.room] == 0){
                      API.rooms.splice(theEvent.room, 1);
