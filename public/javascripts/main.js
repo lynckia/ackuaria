@@ -526,19 +526,22 @@ var removeRoom = function(room){
     roomsList.removeChild(roomToRemove);
 }
 
-var paintUsers = function(roomInfo, userStream, statusId, userName, rooms, streamRoom) {
+var paintUsers = function(roomsInfo, userStream, statusId, userName, rooms, streamRoom) {
 
     if (!hasPublishers()) {
         for (var j = 0; j<rooms.length; j++){
             createNewRoom(rooms[j]);
         }
-        for (var stream in roomInfo) {
-            createNewPublisher(userStream[stream], stream, userName[userStream[stream]], streamRoom[stream]);
-            createStatus(stream, statusId[stream]);
-            for (var i = 0; i < roomInfo[stream].length; i++) {
-                createNewSubscriber(roomInfo[stream][i], stream, userName[roomInfo[stream][i]]);
-                var id = roomInfo[stream][i] + "_" + stream;
-                createStatus(id, statusId[id]);
+        for (var room in roomsInfo){
+
+            for (var stream in roomsInfo[room]) {
+                createNewPublisher(userStream[stream], stream, userName[userStream[stream]], streamRoom[stream]);
+                createStatus(stream, statusId[stream]);
+                for (var i = 0; i < roomsInfo[room][stream].length; i++) {
+                    createNewSubscriber(roomsInfo[room][stream][i], stream, userName[roomsInfo[room][stream][i]]);
+                    var id = roomsInfo[room][stream][i] + "_" + stream;
+                    createStatus(id, statusId[id]);
+                }
             }
         }
     }

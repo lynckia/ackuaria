@@ -28,14 +28,15 @@
 
 <script>
 
-  var roomInfo = <%- JSON.stringify(roomInfo) %>;
+  var roomsInfo = <%- JSON.stringify(roomsInfo) %>;
   var userStream = <%- JSON.stringify(userStream) %>;
   var statusId = <%- JSON.stringify(statusId) %>;
   var userName = <%- JSON.stringify(userName) %>;
   var rooms = <%- JSON.stringify(rooms) %>;
   var streamRoom = <%- JSON.stringify(streamRoom) %>;
 
-  paintUsers(roomInfo, userStream, statusId, userName, rooms, streamRoom);
+
+  paintUsers(roomsInfo, userStream, statusId, userName, rooms, streamRoom);
   
 </script>
 

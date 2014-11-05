@@ -9,13 +9,21 @@ var roomsRegistry = require('./mdb/roomsRegistry');
 var sessionsRegistry = require('./mdb/sessionsRegistry');
 
 API.sockets = [];
-API.roomInfo = {};
+API.roomsInfo = {};
 API.userStream = {};
 API.statusId = {};
 API.userName = {};
 API.rooms = [];
 API.streamRoom = {};
 API.roomUsers = {};
+
+function isEmpty(obj) {
+   for (var key in obj) {
+      if (obj.hasOwnProperty(key))
+         return false;
+   }
+   return true;
+}
 
 API.api = {
    event: function(theEvent) {
@@ -36,19 +44,33 @@ API.api = {
                case "publish":
                   roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
 
-
+                     // Memoria local para datos
                      var stream = theEvent.stream;
-                     API.roomInfo[stream] = [];
-                     API.userStream[stream] = theEvent.user;
-                     API.userName[theEvent.user] = theEvent.name;
-                     if (API.rooms.indexOf(theEvent.room) == "-1") {
-                        API.rooms.push(theEvent.room);
-                        API.roomUsers[theEvent.room] = 1;
+                     var room = theEvent.room;
+                     var user = theEvent.user;
+                     var name = theEvent.name;
+
+                     if (API.roomsInfo[room] === undefined) {
+                        API.roomsInfo[room] = {};
+                        API.roomsInfo[room][stream] = [];
                      } else {
-                        API.roomUsers[theEvent.room] += 1;
+                        if (API.roomsInfo[room][stream] === undefined) {
+                           API.roomsInfo[room][stream] = [];
+                        }
 
                      }
-                     API.streamRoom[stream] = theEvent.room;
+
+                     API.userStream[stream] = user;
+                     API.userName[user] = name;
+
+
+                     if (API.rooms.indexOf(theEvent.room) == "-1") {
+                        API.rooms.push(theEvent.room);
+
+                     }
+
+                     API.streamRoom[stream] = room;
+                     // Fin memoria local para datos
 
                      if (!roomExists) {
                         var date = new Date()
@@ -120,42 +142,54 @@ API.api = {
                   break;
 
                case "unpublish":
+                  var stream = theEvent.stream;
+                  var room = theEvent.room;
+                  var user = theEvent.user;
 
                   // Para liberar espacio en el array de status
-                  delete API.userName[theEvent.user];
-                  delete API.streamRoom[theEvent.stream];
-                  API.roomUsers[theEvent.room] -= 1;
-                  if (API.roomUsers[theEvent.room] == 0) {
-                     API.rooms.splice(theEvent.room, 1);
-                     delete API.roomUsers[theEvent.room];
-                  }
+                  delete API.userName[user];
+                  delete API.streamRoom[stream];
+                  delete API.userStream[stream];
+
+                  for (var ro in API.roomsInfo) {
+                     for (var st in API.roomsInfo[ro]) {
+                        for (var i = 0; i < API.roomsInfo[ro][st].length; i++) {
+
+                           if (API.roomsInfo[ro][st][i] === user) {
 
 
-                  var id = "";
-                  id += theEvent.stream;
-                  delete API.statusId[id];
-                  for (var j = 0; j < API.roomInfo[theEvent.stream].length; j++) {
-                     var subs = API.roomInfo[theEvent.stream][j];
-                     var id = subs + "_" + theEvent.stream;
-                     delete API.statusId[id];
-                  }
-                  // Hasta aquí se libera el array cada vez que llega un unpublish
-
-                  for (var stream in API.roomInfo) {
-                     for (var i = 0; i < API.roomInfo[stream].length; i++) {
-
-                        if (API.roomInfo[stream][i] === theEvent.user) {
+                              API.roomsInfo[ro][st].splice(i, 1);
 
 
-                           API.roomInfo[stream].splice(i, 1);
-
-
-                           var id = theEvent.user + "_" + stream;
-                           delete API.statusId[id];
+                              var id = user + "_" + st;
+                              delete API.statusId[id];
+                           }
                         }
                      }
                   }
-                  delete API.roomInfo[theEvent.stream];
+
+                  var id = "";
+                  id += stream;
+
+                  delete API.statusId[id];
+
+
+                  for (var j = 0; j < API.roomsInfo[room][stream].length; j++) {
+                     var subs = API.roomsInfo[room][stream][j];
+                     var id = subs + "_" + stream;
+                     delete API.statusId[id];
+                  }
+                  delete API.roomsInfo[room][stream];
+
+
+                  if (isEmpty(API.roomsInfo[room])) {
+                     var index = API.rooms.indexOf(room);
+                     console.log(index);
+                     API.rooms.splice(index, 1);
+                     delete API.roomsInfo[room];
+                  }
+
+
 
                   roomsRegistry.hasRoomByRoomId(theEvent.room, function(roomExists) {
 
@@ -215,17 +249,24 @@ API.api = {
                case "subscribe":
                   var stream = theEvent.stream;
                   var user = theEvent.user;
-                  API.roomInfo[stream].push(user);
+                  var room = theEvent.room;
+                  API.roomsInfo[room][stream].push(user);
                   API.userName[user] = theEvent.name;
                   break;
 
                case "unsubscribe":
 
-                  for (var i = 0; i < API.roomInfo[theEvent.stream].length; i++) {
+                  delete API.statusId[theEvent.user + "_" + theEvent.stream]
 
-                     if (API.roomInfo[theEvent.stream][i] == theEvent.user) {
+                  for (var ro in API.roomsInfo) {
 
-                        API.roomInfo[theEvent.stream].splice(i, 1);
+
+                     for (var i = 0; i < API.roomsInfo[ro][theEvent.stream].length; i++) {
+
+                        if (API.roomsInfo[ro][theEvent.stream][i] == theEvent.user) {
+
+                           API.roomsInfo[ro][theEvent.stream].splice(i, 1);
+                        }
                      }
                   }
                   break;
@@ -249,81 +290,114 @@ API.api = {
                   break;
             }
          } else {
-
             switch (theEvent.type) {
 
                case "publish":
 
+
+                  // Memoria local para datos
                   var stream = theEvent.stream;
-                  API.roomInfo[stream] = [];
-                  API.userStream[stream] = theEvent.user;
-                  API.userName[theEvent.user] = theEvent.name;
-                  if (API.rooms.indexOf(theEvent.room) == "-1") {
-                     API.rooms.push(theEvent.room);
-                     API.roomUsers[theEvent.room] = 1;
+                  var room = theEvent.room;
+                  var user = theEvent.user;
+                  var name = theEvent.name;
+
+                  if (API.roomsInfo[room] === undefined) {
+                     API.roomsInfo[room] = {};
+                     API.roomsInfo[room][stream] = [];
                   } else {
-                     API.roomUsers[theEvent.room] += 1;
+                     if (API.roomsInfo[room][stream] === undefined) {
+                        API.roomsInfo[room][stream] = [];
+                     }
 
                   }
-                  API.streamRoom[stream] = theEvent.room;
+
+                  API.userStream[stream] = user;
+                  API.userName[user] = name;
+
+
+                  if (API.rooms.indexOf(theEvent.room) == "-1") {
+                     API.rooms.push(theEvent.room);
+
+                  }
+
+                  API.streamRoom[stream] = room;
+                  // Fin memoria local para datos
 
 
 
                   break;
 
                case "unpublish":
+                  var stream = theEvent.stream;
+                  var room = theEvent.room;
+                  var user = theEvent.user;
 
                   // Para liberar espacio en el array de status
-                  delete API.userName[theEvent.user];
-                  delete API.streamRoom[theEvent.stream];
-                  delete API.userStream[theEvent.stream];
-                  API.roomUsers[theEvent.room] -= 1;
-                  if (API.roomUsers[theEvent.room] == 0) {
-                     API.rooms.splice(theEvent.room, 1);
-                     delete API.roomUsers[theEvent.room];
-                  }
+                  delete API.userName[user];
+                  delete API.streamRoom[stream];
+                  delete API.userStream[stream];
 
-                  var id = "";
-                  id += theEvent.stream;
-                  delete API.statusId[id];
-                  for (var j = 0; j < API.roomInfo[theEvent.stream].length; j++) {
-                     var subs = API.roomInfo[theEvent.stream][j];
-                     var id = subs + "_" + theEvent.stream;
-                     delete API.statusId[id];
-                  }
-                  // Hasta aquí se libera el array cada vez que llega un unpublish
+                  for (var ro in API.roomsInfo) {
+                     for (var st in API.roomsInfo[ro]) {
+                        for (var i = 0; i < API.roomsInfo[ro][st].length; i++) {
 
-                  for (var stream in API.roomInfo) {
-                     for (var i = 0; i < API.roomInfo[stream].length; i++) {
-
-                        if (API.roomInfo[stream][i] === theEvent.user) {
+                           if (API.roomsInfo[ro][st][i] === user) {
 
 
-                           API.roomInfo[stream].splice(i, 1);
+                              API.roomsInfo[ro][st].splice(i, 1);
 
 
-                           var id = theEvent.user + "_" + stream;
-                           delete API.statusId[id];
+                              var id = user + "_" + st;
+                              delete API.statusId[id];
+                           }
                         }
                      }
                   }
-                  delete API.roomInfo[theEvent.stream];
+
+                  var id = "";
+                  id += stream;
+
+                  delete API.statusId[id];
+
+
+                  for (var j = 0; j < API.roomsInfo[room][stream].length; j++) {
+                     var subs = API.roomsInfo[room][stream][j];
+                     var id = subs + "_" + stream;
+                     delete API.statusId[id];
+                  }
+                  delete API.roomsInfo[room][stream];
+
+
+                  if (isEmpty(API.roomsInfo[room])) {
+                     var index = API.rooms.indexOf(room);
+                     console.log(index);
+                     API.rooms.splice(index, 1);
+                     delete API.roomsInfo[room];
+                  }
+
                   break;
 
                case "subscribe":
                   var stream = theEvent.stream;
                   var user = theEvent.user;
-                  API.roomInfo[stream].push(user);
+                  var room = theEvent.room;
+                  API.roomsInfo[room][stream].push(user);
                   API.userName[user] = theEvent.name;
                   break;
 
                case "unsubscribe":
 
-                  for (var i = 0; i < API.roomInfo[theEvent.stream].length; i++) {
+                  delete API.statusId[theEvent.user + "_" + theEvent.stream]
 
-                     if (API.roomInfo[theEvent.stream][i] == theEvent.user) {
+                  for (var ro in API.roomsInfo) {
 
-                        API.roomInfo[theEvent.stream].splice(i, 1);
+
+                     for (var i = 0; i < API.roomsInfo[ro][theEvent.stream].length; i++) {
+
+                        if (API.roomsInfo[ro][theEvent.stream][i] == theEvent.user) {
+
+                           API.roomsInfo[ro][theEvent.stream].splice(i, 1);
+                        }
                      }
                   }
                   break;

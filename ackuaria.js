@@ -81,12 +81,12 @@ app.get('/', function(req, res) {
 
 
    res.render('index', {
-      roomInfo: API.roomInfo,
+      roomsInfo: API.roomsInfo,
       userStream: API.userStream,
       statusId: API.statusId,
       userName: API.userName,
       rooms: API.rooms,
-      streamRoom: API.streamRoom
+      streamRoom: API.streamRoom,
    });
 });
 
