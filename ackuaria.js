@@ -99,17 +99,25 @@ app.get('/', function(req, res) {
 });
 */
 app.get('/info/total', function(req, res) {
+   if (GLOBAL.config.useDB) {
+      roomsRegistry.getPublishers(function(publishers) {
+         roomsRegistry.getTotalRooms(function(total) {
+            if (publishers && total) {
+               res.render('total', {
+                  nRooms: total,
+                  nPubs: publishers.length
+               });
 
-   roomsRegistry.getPublishers(function(publishers) {
-      roomsRegistry.getTotalRooms(function(total) {
-         if (publishers && total) {
-            res.render('total', {
-               nRooms: total,
-               nPubs: publishers.length
-            });
+            }
+         })
 
-         }
       })
+   }
+   else {
+      res.render('total', {
+         nRooms: API.nRoomsTotal,
+         nPubs: API.nPubsTotal
+      })
+   }
 
-   })
 });

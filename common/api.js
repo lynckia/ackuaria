@@ -16,6 +16,8 @@ API.userName = {};
 API.rooms = [];
 API.streamRoom = {};
 API.roomUsers = {};
+API.nRoomsTotal = 0;
+API.nPubsTotal = 0;
 
 function isEmpty(obj) {
    for (var key in obj) {
@@ -184,7 +186,6 @@ API.api = {
 
                   if (isEmpty(API.roomsInfo[room])) {
                      var index = API.rooms.indexOf(room);
-                     console.log(index);
                      API.rooms.splice(index, 1);
                      delete API.roomsInfo[room];
                   }
@@ -294,6 +295,7 @@ API.api = {
 
                case "publish":
 
+                  API.nPubsTotal++; // In case of not using DB
 
                   // Memoria local para datos
                   var stream = theEvent.stream;
@@ -304,9 +306,12 @@ API.api = {
                   if (API.roomsInfo[room] === undefined) {
                      API.roomsInfo[room] = {};
                      API.roomsInfo[room][stream] = [];
+                     API.nRoomsTotal++; // In case of not using DB
+
                   } else {
                      if (API.roomsInfo[room][stream] === undefined) {
                         API.roomsInfo[room][stream] = [];
+
                      }
 
                   }
@@ -370,7 +375,6 @@ API.api = {
 
                   if (isEmpty(API.roomsInfo[room])) {
                      var index = API.rooms.indexOf(room);
-                     console.log(index);
                      API.rooms.splice(index, 1);
                      delete API.roomsInfo[room];
                   }
