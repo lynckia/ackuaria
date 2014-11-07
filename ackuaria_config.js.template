@@ -23,7 +23,7 @@ config.logger.config_file = './log4js_configuration.json'; //default value: "../
 config.ackuaria = {};
 config.ackuaria.useDB = false; // default value: false
 config.ackuaria.dataBaseURL = "localhost/ackuariadb"; // default value: 'localhost/ackuariadb'
-config.ackuaria.port = 80 // default value: 80
+config.ackuaria.port = 8888 // default value: 80
 
 /***** END *****/
 // Following lines are always needed.
