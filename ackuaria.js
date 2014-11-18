@@ -46,8 +46,10 @@ for (var prop in opt.options) {
 
 // Load submodules with updated config
 var amqper = require('./common/amqper');
+
 var API = require('./common/api');
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
@@ -57,6 +59,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.urlencoded({
+   extended: true
+}));
+
+app.use(bodyParser.json());
+app.set('view engine', 'ejs');
 
 http.listen(GLOBAL.config.ackuaria.port, function() {
    console.log('listening on *:' + GLOBAL.config.ackuaria.port);
@@ -91,13 +100,67 @@ app.get('/', function(req, res) {
 });
 
 
-/*app.get('/info', function(req, res) {
-      
-      console.log(req.params.id);
+app.get('/info', function(req, res) {
 
-   res.render('info');
+
+   res.render('info', {
+      eventos: "",
+      initDate: null,
+      finalDate: null,
+      useDB: config.ackuaria.useDB
+   });
 });
-*/
+
+app.post('/info', function(req, res) {
+
+   // ARREGLAR
+   var date1 = req.body.initTimestamp;
+   var initDate = date1.split("-");
+   var day1 = parseInt(initDate[0]);
+   var month1 = initDate[1] - 1;
+   var year1 = initDate[2];
+   var dateInit = new Date(year1, month1, day1);
+   var timestampInit = dateInit.getTime();
+
+   var date2 = req.body.finalTimestamp;
+   var finalDate = date2.split("-");
+   var day2 = parseInt(finalDate[0]);
+   var month2 = finalDate[1] - 1;
+   var year2 = finalDate[2];
+   var dateFinal = new Date(year2, month2, day2);
+   var timestampFinal = dateFinal.getTime();
+
+
+   var eventType = req.body.eventType;
+   if (eventType == "all") {
+      eventsRegistry.getEventsByDate(timestampInit, timestampFinal, function(events) {
+         console.log(events);
+         res.render('info', {
+            eventos: JSON.stringify(events),
+            initDate: dateInit,
+            finalDate: dateFinal,
+            useDB: config.ackuaria.useDB
+         });
+
+      })
+
+   } else {
+
+
+   eventsRegistry.getEventsByDateAndType(timestampInit, timestampFinal, eventType, function(events) {
+      console.log(events);
+      res.render('info', {
+         eventos: JSON.stringify(events),
+         initDate: dateInit,
+         finalDate: dateFinal,
+         useDB: config.ackuaria.useDB
+      });
+
+   })
+}
+
+});
+
 app.get('/info/total', function(req, res) {
    if (GLOBAL.config.useDB) {
       roomsRegistry.getPublishers(function(publishers) {
@@ -112,8 +175,7 @@ app.get('/info/total', function(req, res) {
          })
 
       })
-   }
-   else {
+   } else {
       res.render('total', {
          nRooms: API.nRoomsTotal,
          nPubs: API.nPubsTotal

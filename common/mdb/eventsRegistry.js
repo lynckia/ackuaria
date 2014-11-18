@@ -177,6 +177,60 @@ exports.getEventsByDate = function(timestampInit, timestampFinal, callback) {
     }
 };
 
+
+
+exports.getEventsByDateAndType = function(timestampInit, timestampFinal, type, callback) {
+
+    if (timestampInit && timestampFinal) {
+
+        db.events.find({
+            timestamp: {
+                $gt: timestampInit,
+                $lt: timestampFinal
+            },
+            type: type
+        }).toArray(function(err, events) {
+            if (err || !events) {
+                console.log("There are no events on this date ");
+            } else {
+                callback(events);
+            }
+        })
+
+    } else if (timestampInit && !timestampFinal) {
+
+        db.events.find({
+            timestamp: {
+                $gt: timestampInit
+            }
+        }).toArray(function(err, events) {
+            if (err || !events) {
+                console.log("There are no events on this date");
+            } else {
+
+                callback(events);
+
+            }
+        })
+
+    } else if (timestampFinal && !timestampinit) {
+
+        db.events.find({
+            timestamp: {
+                $lt: timestampFinal
+            }
+        }).toArray(function(err, events) {
+            if (err || !events) {
+                console.log("There are no events on this date");
+            } else {
+
+                callback(events);
+
+            }
+        })
+    }
+};
+
 exports.removeAllEvents = function() {
 
     db.events.remove();
