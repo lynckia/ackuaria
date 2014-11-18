@@ -40,8 +40,8 @@ text/javascript " src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.
   	var year2 = tomorrowDate.getFullYear();
 
 
-    $("#initDatepicker").datepicker({dateFormat: "dd-mm-yy"}).val( day1 + "-" + month1 + "-" + year1);
-    $("#finalDatepicker").datepicker({dateFormat: "dd-mm-yy"}).val(day2 + "-" + month2 + "-" + year2);
+    $("#initDatepicker").datepicker({dateFormat: "dd-mm-yy",  firstDay: 1}).val( day1 + "-" + month1 + "-" + year1);
+    $("#finalDatepicker").datepicker({dateFormat: "dd-mm-yy",  firstDay: 1}).val(day2 + "-" + month2 + "-" + year2);
 
 }
 else {
