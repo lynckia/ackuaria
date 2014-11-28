@@ -86,10 +86,24 @@ io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
 
+
 app.get('/', function(req, res) {
 
 
    res.render('index', {
+      roomsInfo: API.roomsInfo,
+      userStream: API.userStream,
+      statusId: API.statusId,
+      userName: API.userName,
+      rooms: API.rooms,
+      streamRoom: API.streamRoom,
+   });
+});
+
+app.get('/graphs', function(req, res) {
+
+
+   res.render('graphs', {
       roomsInfo: API.roomsInfo,
       userStream: API.userStream,
       statusId: API.statusId,
