@@ -176,7 +176,8 @@ app.post('/info', function(req, res) {
 });
 
 app.get('/info/total', function(req, res) {
-   if (GLOBAL.config.useDB) {
+   if (GLOBAL.config.ackuaria.useDB) {
+
       roomsRegistry.getPublishers(function(publishers) {
          roomsRegistry.getTotalRooms(function(total) {
             if (publishers && total) {
@@ -190,6 +191,7 @@ app.get('/info/total', function(req, res) {
 
       })
    } else {
+
       res.render('total', {
          nRooms: API.nRoomsTotal,
          nPubs: API.nPubsTotal

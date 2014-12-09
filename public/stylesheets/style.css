@@ -21,6 +21,7 @@ a {
 
 .publisher {
   padding-top: 20px;
+  padding-bottom: 20px;
   padding-left: 30px;
 /*	border: solid #FF0000;
 	border-radius: 5px;
@@ -29,6 +30,7 @@ a {
 
 .subscriber_info {
   margin-left: 30px;
+  padding-top: 20px;
 }
 .publisherDetail {
   margin-left: 30px;
