@@ -113,11 +113,24 @@ app.get('/graphs', function(req, res) {
    });
 });
 
+app.get('/text', function(req, res) {
 
-app.get('/info', function(req, res) {
+
+   res.render('text', {
+      roomsInfo: API.roomsInfo,
+      userStream: API.userStream,
+      statusId: API.statusId,
+      userName: API.userName,
+      rooms: API.rooms,
+      streamRoom: API.streamRoom,
+   });
+});
 
 
-   res.render('info', {
+app.get('/search', function(req, res) {
+
+
+   res.render('search', {
       eventos: "",
       initDate: null,
       finalDate: null,
@@ -125,7 +138,7 @@ app.get('/info', function(req, res) {
    });
 });
 
-app.post('/info', function(req, res) {
+app.post('/search', function(req, res) {
 
    // ARREGLAR
    var date1 = req.body.initTimestamp;
@@ -149,7 +162,7 @@ app.post('/info', function(req, res) {
    if (eventType == "all") {
       eventsRegistry.getEventsByDate(timestampInit, timestampFinal, function(events) {
          console.log(events);
-         res.render('info', {
+         res.render('search', {
             eventos: JSON.stringify(events),
             initDate: dateInit,
             finalDate: dateFinal,
@@ -163,7 +176,7 @@ app.post('/info', function(req, res) {
 
    eventsRegistry.getEventsByDateAndType(timestampInit, timestampFinal, eventType, function(events) {
       console.log(events);
-      res.render('info', {
+      res.render('search', {
          eventos: JSON.stringify(events),
          initDate: dateInit,
          finalDate: dateFinal,
@@ -175,7 +188,7 @@ app.post('/info', function(req, res) {
 
 });
 
-app.get('/info/total', function(req, res) {
+app.get('/info', function(req, res) {
    if (GLOBAL.config.ackuaria.useDB) {
 
       roomsRegistry.getPublishers(function(publishers) {
