@@ -14,9 +14,6 @@
 html, body {
 	height: 100%;
 }
-body {
-	position: relative;
-}
 
 
 #navbar {
@@ -26,7 +23,7 @@ body {
 	position: fixed;
 	top: 0;
 	z-index: 1;
-	}
+}
 
 #star {
 	top: 25px;
@@ -61,14 +58,6 @@ body {
   background-color: #55739D;
 }
 
-.room{
-	height: 100%;
-	margin-top:10px;
-	padding-top: 19px;
-	margin-bottom: 20px;
-	border: 1px solid #55739D;
-	position: relative;
-}
 
 .col-lg-3 .room {
 	width: 230px;
@@ -76,25 +65,22 @@ body {
 }
 #roomsContainer{
 	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	bottom: 25px;
-	width: 80%;
-	min-height:calc(100% - 300px);
+
 }
 
 #roomsCount {
 	position: absolute;
 	margin-top: 30px;
-	font-family: "Nunito-Bold";
+	font-family: "Nunito-Light";
 	color: #042762;
 	font-size: 20px;
 }
 #rooms {
 	position: absolute;
 	margin-top: 80px;
-	height: 100%;
-	overflow-y: scroll;
+	height: 250px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .row-centered {
@@ -113,7 +99,10 @@ body {
 	min-width: 250px;
 }
 .container {
-
+	margin-bottom: 140px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
 }
 
 #pubsInRoom {
