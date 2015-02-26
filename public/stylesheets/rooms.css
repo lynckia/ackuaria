@@ -1,0 +1,116 @@
+@font-face {
+  font-family: 'Nunito-Light';
+  src: url('../fonts/Nunito-Light.ttf'); /* IE9 Compat Modes */
+}
+@font-face {
+  font-family: 'Nunito-Regular';
+  src: url('../fonts/Nunito-Regular.ttf'); /* IE9 Compat Modes */
+}
+@font-face {
+  font-family: 'Nunito-Bold';
+  src: url('../fonts/Nunito-Bold.ttf'); /* IE9 Compat Modes */
+}
+
+html, body {
+	height: 100%;
+}
+
+
+#navbar {
+	background-color: #55739D;
+	width: 100%;
+	height: 25px;
+	position: fixed;
+	top: 0;
+}
+
+#star {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	width:80px;
+}
+
+#logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width:80px;
+}
+
+#ackuaria {
+	text-align: center;
+	font-family: 'Nunito-Light';
+	font-size: 25px;
+	color: #55739D;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid black;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  background-color: #55739D;
+}
+
+.room{
+	height: 180px;
+	padding-top: 19px;
+	margin-bottom: 20px;
+	border: 1px solid #55739D;
+	position: relative;
+}
+
+
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.col-min {
+	min-width: 250px;
+}
+.container {
+	margin-bottom: 140px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+#pubsInRoom {
+	height: 20%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	background-color: #55739D; 
+}
+
+#roomName {
+	position: absolute;
+	top: 30%;
+	text-align: left;
+	font-family: "Nunito-Bold";
+	color: rgb(85, 115, 157);
+	padding-left: 20px;
+
+}
+#roomId {
+	position: absolute;
+	top: 40%;
+	text-align: left;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	padding-left: 20px;
+	font-size: 10px;
+
+}

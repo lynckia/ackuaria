@@ -54,12 +54,13 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path');
+var partials = require('express-partials');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(partials());
 app.use(bodyParser.urlencoded({
    extended: true
 }));
@@ -100,6 +101,9 @@ app.get('/', function(req, res) {
    });
 });
 
+app.get('/room', function(req, res){
+   res.render('rooms');
+})
 app.get('/graphs', function(req, res) {
 
 
