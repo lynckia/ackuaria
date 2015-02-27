@@ -79,5 +79,18 @@
 	position: absolute;
 	bottom: 0;
 	background-color: #55739D; 
+	font-family: "Nunito-Light";
+	color: white;
 }
 
+.bold {
+	font-family: "Nunito-Bold";
+}
+
+
+
+#streams {
+	top: 30%;
+	position: relative;
+	text-align: center;
+}
