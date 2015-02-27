@@ -101,9 +101,17 @@ app.get('/', function(req, res) {
    });
 });
 
+
+//TRASH 
 app.get('/room', function(req, res){
-   res.render('rooms');
+   res.render('rooms', {view:"rooms"});
 })
+app.get('/pub', function(req, res){
+   res.render('publishers', {view: "publishers"});
+})
+//
+
+
 app.get('/graphs', function(req, res) {
 
 

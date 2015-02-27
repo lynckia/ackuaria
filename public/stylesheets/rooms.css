@@ -1,64 +1,27 @@
-@font-face {
-  font-family: 'Nunito-Light';
-  src: url('../fonts/Nunito-Light.ttf'); /* IE9 Compat Modes */
-}
-@font-face {
-  font-family: 'Nunito-Regular';
-  src: url('../fonts/Nunito-Regular.ttf'); /* IE9 Compat Modes */
-}
-@font-face {
-  font-family: 'Nunito-Bold';
-  src: url('../fonts/Nunito-Bold.ttf'); /* IE9 Compat Modes */
+#roomsCount {
+	position: absolute;
+	margin-top: 30px;
+	font-family: "Nunito-Light";
+	color: #042762;
+	font-size: 20px;
 }
 
-html, body {
-	height: 100%;
-}
-body {
+
+#roomsContainer{
 	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	bottom: 25px;
+	width: 80%;
+	min-height:calc(100% - 300px);
 }
 
-
-#navbar {
-	background-color: #55739D;
+#rooms {
+	position: absolute;
+	margin-top: 80px;
+	height: 100%;
 	width: 100%;
-	height: 25px;
-	position: fixed;
-	top: 0;
-	z-index: 1;
-	}
-
-#star {
-	top: 25px;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 20px;
-	width:80px;
-}
-
-#logo {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width:80px;
-}
-
-#ackuaria {
-	text-align: center;
-	font-family: 'Nunito-Light';
-	font-size: 25px;
-	color: #55739D;
-}
-
-.footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid black;
-  /* Set the fixed height of the footer here */
-  height: 100px;
-  background-color: #55739D;
+	overflow-y: scroll;
 }
 
 .room{
@@ -73,28 +36,6 @@ body {
 .col-lg-3 .room {
 	width: 230px;
 	height: 230px;
-}
-#roomsContainer{
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	bottom: 25px;
-	width: 80%;
-	min-height:calc(100% - 300px);
-}
-
-#roomsCount {
-	position: absolute;
-	margin-top: 30px;
-	font-family: "Nunito-Bold";
-	color: #042762;
-	font-size: 20px;
-}
-#rooms {
-	position: absolute;
-	margin-top: 80px;
-	height: 100%;
-	overflow-y: scroll;
 }
 
 .row-centered {
@@ -111,17 +52,6 @@ body {
 
 .col-min {
 	min-width: 250px;
-}
-.container {
-
-}
-
-#pubsInRoom {
-	height: 20%;
-	width: 100%;
-	position: absolute;
-	bottom: 0;
-	background-color: #55739D; 
 }
 
 #roomName {
@@ -141,5 +71,13 @@ body {
 	color: #55739D;
 	padding-left: 20px;
 	font-size: 10px;
-
 }
+
+#streamsInRoom {
+	height: 20%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	background-color: #55739D; 
+}
+
