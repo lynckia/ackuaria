@@ -38,7 +38,7 @@ html, body {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	width:80px;
+	width:65px;
 }
 
 #ackuaria {
@@ -48,16 +48,26 @@ html, body {
 	color: #55739D;
 }
 
-#marca {
-	padding-bottom: 30px;
-}
-
 .footer {
   position: fixed;
   bottom: 0;
   width: 100%;
   border-top: 1px solid black;
   /* Set the fixed height of the footer here */
-  height: 100px;
+  height: 70px;
   background-color: #55739D;
+}
+
+
+.bold {
+		font-family: "Nunito-Bold";
+}
+.light {
+		font-family: "Nunito-Light";
+}
+.blue {
+	color: #55739D;
+}
+.dark {
+	color: #042762;
 }

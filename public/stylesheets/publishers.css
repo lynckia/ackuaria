@@ -6,8 +6,7 @@ html {
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 20px;
-	bottom: 40px;
+	margin-top: 5px;
 	width: 80%;
 	min-height:calc(100% - 300px);
 }
@@ -54,6 +53,7 @@ html {
 	position: relative;
 	width: 150px;
 	height: 150px;
+	cursor: pointer;
 }
 
 .col-min{
@@ -88,6 +88,7 @@ html {
 	top: 30%;
 	text-align: left;
 	font-family: "Nunito-Bold";
+	font-size: 13px;
 	color: 042762;
 	padding-left: 10px;
 
@@ -112,19 +113,6 @@ html {
 
 }
 
-.bold {
-		font-family: "Nunito-Bold";
-}
-.light {
-		font-family: "Nunito-Light";
-}
-.blue {
-	color: #55739D;
-}
-.dark {
-	color: #042762;
-}
-
 .green {
 	color: rgb(84, 195, 30);
 }
@@ -147,5 +135,8 @@ html {
 	float: right;
 	font-size: 20px;
 	color: #55739D;
+}
+
+#back {
 	cursor: pointer;
 }

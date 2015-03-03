@@ -109,6 +109,9 @@ app.get('/rooms', function(req, res){
 app.get('/pubs', function(req, res){
    res.render('publishers', {view: "publishers"});
 })
+app.get('/subs', function(req, res){
+   res.render('subscribers', {view: "subscribers"});
+})
 //
 
 

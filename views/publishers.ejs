@@ -3,7 +3,7 @@
 
 <div id="pubsContainer" class="container">
 	<div id="roomInfo">
-		<div id="roomName">ROOM UNO</div><div id="back" class="back"><span class="light blue">BACK TO </span><span class="bold dark">ROOMS</span></div>
+		<div id="roomName">ROOM UNO</div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
 		<div id="roomId">FJA8734H344334JH234</div>
 		<div id="pubsCount">XX STREAMS <i class="fa fa-users"></i></div>
 	</div>
@@ -30,4 +30,6 @@ var add = function(){
 }
 
 $('#back').click(function(){ window.location='rooms'})
+$('.publisher').click(function(){ window.location='subs'})
+
 </script>
