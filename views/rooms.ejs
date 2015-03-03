@@ -1,8 +1,7 @@
 
 
-
 <div id="roomsContainer" class="container">
-<div id="roomsCount">XX ROOMS <i class="fa fa-bullseye"></i></div>
+	<div id="roomsCount">XX ROOMS <i class="fa fa-bullseye"></i></div>
 
 	<div id="rooms" class="row row-centered">
 
@@ -16,14 +15,14 @@
 				</div>
 		</div>
 		<% } %>
-		
+
 	</div>
 
 </div>
 
 <script>
 var add = function(){
-	$('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-min col-centered"><div class="room"><p><div id="roomName">ROOM UNO</div></p><p><div id="roomId">734734892349782340984</div></p><div id="streamsInRoom"></div></div></div>')
+	$('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-min col-centered"><div class="room"><p><div id="roomName">ROOM UNO</div></p><p><div id="roomId">734734892349782340984</div></p><div id="streamsInRoom"><div id="streams"><span class="bold">15</span> STREAMS <span class="fa fa-user"></span></div></div></div></div>')
 }
 
 $(".room").click(function() { window.location='pubs' })
