@@ -103,10 +103,10 @@ app.get('/', function(req, res) {
 
 
 //TRASH 
-app.get('/room', function(req, res){
+app.get('/rooms', function(req, res){
    res.render('rooms', {view:"rooms"});
 })
-app.get('/pub', function(req, res){
+app.get('/pubs', function(req, res){
    res.render('publishers', {view: "publishers"});
 })
 //

@@ -6,21 +6,17 @@
 
 	<div id="rooms" class="row row-centered">
 
+		<% for (var i=0; i<10; i++) {%>
 		<div class="col-lg-3 col-md-4 col-sm-6 col-min col-centered">
 				<div class="room">
 					<p><div id="roomName">ROOM UNO</div></p>
 					<p><div id="roomId">734734892349782340984</div></p>
-					<div id="streamsInRoom"></div>
+					<div id="streamsInRoom"><div id="streams"><span class="bold">17</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div>
+
 				</div>
 		</div>
-				<div class="col-lg-3 col-md-4 col-sm-6 col-min col-centered">
-				<div class="room">
-					<p><div id="roomName">ROOM UNO</div></p>
-					<p><div id="roomId">734734892349782340984</div></p>
-					<div id="streamsInRoom"></div>
-				</div>
-		</div>		
-
+		<% } %>
+		
 	</div>
 
 </div>
@@ -29,4 +25,6 @@
 var add = function(){
 	$('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-min col-centered"><div class="room"><p><div id="roomName">ROOM UNO</div></p><p><div id="roomId">734734892349782340984</div></p><div id="streamsInRoom"></div></div></div>')
 }
+
+$(".room").click(function() { window.location='pubs' })
 </script>

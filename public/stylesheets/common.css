@@ -48,6 +48,10 @@ html, body {
 	color: #55739D;
 }
 
+#marca {
+	padding-bottom: 30px;
+}
+
 .footer {
   position: fixed;
   bottom: 0;

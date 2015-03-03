@@ -41,7 +41,7 @@ html {
 	position: absolute;
 	margin-top: 80px;
 	padding-bottom: 50px;
-	height: 100%;
+	height: 90%;
 	width: 100%;
 	overflow-y: scroll;
 }
@@ -117,11 +117,35 @@ html {
 }
 .light {
 		font-family: "Nunito-Light";
-
 }
+.blue {
+	color: #55739D;
+}
+.dark {
+	color: #042762;
+}
+
+.green {
+	color: rgb(84, 195, 30);
+}
+
+.red {
+	color: rgb(213, 15, 30);
+}
+
+.orange {
+	color: rgb(247, 119, 52);
+}
+
 
 #subscribers {
 	top: 40%;
 	position: relative;
 	text-align: center;
+}
+.back {
+	float: right;
+	font-size: 20px;
+	color: #55739D;
+	cursor: pointer;
 }
