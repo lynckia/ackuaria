@@ -18,13 +18,13 @@ html {
 	position: absolute;
 	font-family: "Nunito-Bold";
 	color: 042762;
-	font-size: 20px;
+	font-size: 15px;
 
 
 }
 #roomId {
 	position: absolute;
-	margin-top: 25px;
+	margin-top: 20px;
 	font-family: "Nunito-Light";
 	color: #55739D;
 }
@@ -33,14 +33,14 @@ html {
 	font-family: "Nunito-Light";
 	color: #042762;
 	margin-top: 60px;
-	font-size: 20px;
+	font-size: 15px;
 }
 
 #publishers {
 	position: absolute;
-	margin-top: 80px;
+	margin-top: 50px;
 	padding-bottom: 50px;
-	height: 90%;
+	height: 100%;
 	width: 100%;
 	overflow-y: scroll;
 }
@@ -112,20 +112,6 @@ html {
 	font-size: 13px;
 
 }
-
-.green {
-	color: rgb(84, 195, 30);
-}
-
-.red {
-	color: rgb(213, 15, 30);
-}
-
-.orange {
-	color: rgb(247, 119, 52);
-}
-
-
 #subscribers {
 	top: 40%;
 	position: relative;
@@ -133,7 +119,7 @@ html {
 }
 .back {
 	float: right;
-	font-size: 20px;
+	font-size: 15px;
 	color: #55739D;
 }
 

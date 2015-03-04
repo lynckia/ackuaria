@@ -52,10 +52,13 @@ html, body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  border-top: 1px solid black;
+  border-top: 1px solid #042762;
   /* Set the fixed height of the footer here */
   height: 70px;
   background-color: #55739D;
+  -webkit-box-shadow: 0px -3px 2px #042762;
+    -moz-box-shadow:    0px -3px 2px #042762;
+    box-shadow:         0px -3px 2px #042762;
 }
 
 
@@ -70,4 +73,16 @@ html, body {
 }
 .dark {
 	color: #042762;
+}
+
+.green {
+	color: rgb(84, 195, 30);
+}
+
+.red {
+	color: rgb(213, 15, 30);
+}
+
+.orange {
+	color: rgb(247, 119, 52);
 }

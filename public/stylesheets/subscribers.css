@@ -1,0 +1,140 @@
+
+.back {
+	float: right;
+	font-size: 15px;
+	color: #55739D;
+}
+
+#back {
+	cursor: pointer;
+}
+
+#carouselContainer{
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+	width: 80%;
+}
+
+#carousel  {
+	width: 100%;
+	height: 80px;
+	margin-top: 25px;
+	background-color: gray;
+}
+
+#dataAndSubs {
+	width: 100%;
+}
+
+#subsContainer{
+	position: relative;
+	top: 10px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+#pubName {
+	position: absolute;
+	font-family: "Nunito-Bold";
+	color: 042762;
+	font-size: 15px;
+}
+#pubId {
+	position: absolute;
+	margin-top: 25px;
+	font-family: "Nunito-Light";
+	color: #55739D;
+
+}
+.subsCol {
+	height: 100%;
+}
+
+#subsCount {
+	text-align: right;
+	font-family: "Nunito-Light";
+	color: #042762;
+	font-size: 15px;
+}
+
+#subscribers {
+	position: absolute;
+	margin-top: 20px;
+	padding-bottom: 50px;
+	height: 100%;
+	width: 100%;
+	overflow-y: scroll;
+}
+
+.subscriber{
+	margin-top:10px;
+	padding-top: 19px;
+	margin-bottom: 20px;
+	border: 1px solid #55739D;
+	position: relative;
+	width: 100px;
+	height: 100px;
+}
+
+.col-min{
+	min-width: 100px;
+	margin-right: 20px;
+
+}
+.col-max {
+	max-width: 100px;
+
+}
+
+#subName {
+	position: absolute;
+	top: 30%;
+	text-align: left;
+	font-family: "Nunito-Bold";
+	font-size: 13px;
+	color: 042762;
+	padding-left: 10px;
+
+}
+/*#subId {
+	position: absolute;
+	top: 40%;
+	text-align: left;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	padding-left: 10px;
+	font-size: 10px;
+}*/
+
+
+#streamInfo {
+	text-align: left;
+	font-family: "Nunito-Light";
+	color: #042762;
+	font-size: 15px;
+}
+
+#streamData {
+	position: absolute;
+	margin-top: 60px;
+	padding-bottom: 50px;
+	height: 90%;
+	width: 90%;
+	background-color: gray;
+	overflow-y: scroll;
+}
+
+#subsCol {
+	padding-left: 40px;
+	border-left: 1px solid #55739D;
+	max-height: calc(100% - 380px);
+}
+
+#dataCol {
+
+	max-height: calc(100% - 380px);
+}
