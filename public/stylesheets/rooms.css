@@ -19,8 +19,8 @@
 
 #rooms {
 	position: absolute;
-	margin-top: 60px;
-	margin-bottom:20px;
+	margin-top: 70px;
+	padding-bottom: 50px;
 	height: 90%;
 	width: 100%;
 	overflow-y: scroll;

@@ -1,13 +1,9 @@
-html {
-	overflow: auto;
-}
-
 #pubsContainer{
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 5px;
-	width: 80%;
+	width: 90%;
 	min-height:calc(100% - 300px);
 }
 
@@ -38,7 +34,7 @@ html {
 
 #publishers {
 	position: absolute;
-	margin-top: 50px;
+	margin-top: 60px;
 	padding-bottom: 50px;
 	height: 100%;
 	width: 100%;
@@ -46,42 +42,21 @@ html {
 }
 
 .publisher{
-	margin-top:10px;
-	padding-top: 19px;
-	margin-bottom: 20px;
 	border: 1px solid #55739D;
 	position: relative;
+	padding: 10px;
 	width: 150px;
 	height: 150px;
 	cursor: pointer;
 }
 
 .col-min{
-	min-width: 150px;
-	margin-right: 20px;
-
-}
-.col-max {
-	max-width: 150px;
-
-}
-/*
-.col-min {
 	min-width: 170px;
-}*/
+	max-width: 170px;
+	padding: 10px;
+	margin: 10px;
 
-/*.row-centered {
-    text-align:center;
 }
-.col-centered {
-    display:inline-block;
-    float:none;
-     reset the text-align 
-    text-align:left;
-    margin-right:-4px;
-} */
-
-
 
 #pubName {
 	position: absolute;
@@ -107,6 +82,7 @@ html {
 	width: 100%;
 	position: absolute;
 	bottom: 0;
+	left: 0;
 	background-color: #55739D; 
 	color: white;
 	font-size: 13px;
