@@ -13,66 +13,47 @@
 	margin-right: auto;
 	margin-top: 5px;
 	bottom: 25px;
-	width: 80%;
-	min-height:calc(100% - 300px);
+	width: 90%;
+	min-height:calc(100% - 210px);
 }
 
 #rooms {
 	position: absolute;
-	margin-top: 80px;
+	margin-top: 60px;
+	margin-bottom:20px;
 	height: 90%;
 	width: 100%;
 	overflow-y: scroll;
 }
 
 .room{
-	height: 100%;
-	margin-top:10px;
-	padding-top: 19px;
-	margin-bottom: 20px;
+	width: 180px;
+	height: 180px;
 	border: 1px solid #55739D;
+	padding: 10px;
 	position: relative;
 	cursor: pointer;
 }
 
-.col-lg-3 .room {
-	width: 230px;
-	height: 230px;
-}
-
-.row-centered {
-    text-align:center;
-}
-.col-centered {
-    display:inline-block;
-    float:none;
-    /* reset the text-align */
-    text-align:left;
-    /* inline-block space fix */
-    margin-right:-4px;
-}
-
 .col-min {
-	min-width: 250px;
+	min-width: 200px;
+	max-width: 200px;
+	padding: 10px;
+	margin: 10px;
 }
 
 #roomName {
 	position: absolute;
-	top: 30%;
-	text-align: left;
 	font-family: "Nunito-Bold";
 	color: 042762;
-	padding-left: 20px;
 	font-size: 20px;
 
 }
 #roomId {
 	position: absolute;
-	top: 45%;
-	text-align: left;
+	bottom: 80;
 	font-family: "Nunito-Light";
 	color: #55739D;
-	padding-left: 20px;
 	font-size: 13px;
 }
 
@@ -81,6 +62,7 @@
 	width: 100%;
 	position: absolute;
 	bottom: 0;
+	left: 0;
 	background-color: #55739D;
 	color: white;
 	font-size: 15px;
