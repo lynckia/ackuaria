@@ -5,6 +5,10 @@
 	color: #55739D;
 }
 
+#backRooms, #backStreams {
+	cursor: pointer;
+}
+
 #back {
 	cursor: pointer;
 }
@@ -14,7 +18,7 @@
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 10px;
-	width: 80%;
+	width: 90%;
 }
 
 #carousel  {
@@ -34,7 +38,7 @@
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	width: 80%;
+	width: 90%;
 }
 
 #pubName {
@@ -53,9 +57,14 @@
 .subsCol {
 	height: 100%;
 }
+.col-min  {
+	min-width: 90px;
+	max-width: 90px;
+	padding: 5px;
+	margin: 5px;
+}
 
 #subsCount {
-	text-align: right;
 	font-family: "Nunito-Light";
 	color: #042762;
 	font-size: 15px;
@@ -64,40 +73,27 @@
 #subscribers {
 	position: absolute;
 	margin-top: 20px;
-	padding-bottom: 50px;
+	padding: 0 10px 50px;
 	height: 100%;
 	width: 100%;
 	overflow-y: scroll;
 }
 
 .subscriber{
-	margin-top:10px;
-	padding-top: 19px;
-	margin-bottom: 20px;
 	border: 1px solid #55739D;
+	padding: 10px;
 	position: relative;
-	width: 100px;
-	height: 100px;
-}
-
-.col-min{
-	min-width: 100px;
-	margin-right: 20px;
-
-}
-.col-max {
-	max-width: 100px;
-
+	width: 80px;
+	height: 80px;
 }
 
 #subName {
 	position: absolute;
-	top: 30%;
-	text-align: left;
+	bottom: 0;
 	font-family: "Nunito-Bold";
-	font-size: 13px;
+	font-size: 10px;
 	color: 042762;
-	padding-left: 10px;
+
 
 }
 /*#subId {
@@ -129,7 +125,7 @@
 }
 
 #subsCol {
-	padding-left: 40px;
+	padding-left: 30px;
 	border-left: 1px solid #55739D;
 	max-height: calc(100% - 380px);
 }

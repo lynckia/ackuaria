@@ -1,4 +1,3 @@
-<div id="all">
 <div id="carouselContainer" class="container">
 	<div class="back"><span class="light blue">BACK TO </span><span id="backRooms" class="bold dark">ROOMS </span> / <span id="backStreams" class="bold dark"> ROOM UNO </span> </div>
 	<div id="carousel"></div>
@@ -17,9 +16,9 @@
 			<div id="subsCount">XX SUBSCRIPTIONS <i class="fa fa-users"></i></div>
 		 	<div id="subscribers" class="row">
 				<% for(var i=0; i<100; i++) {%>
-					<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max">
+					<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max" id="subscriberCol">
 						<div class="subscriber">
-							<div id="subName"><p><div class="fa fa-circle green"></div></p> SUBS PEPE</div>
+							<div class="fa fa-circle green"></div><div id="subName">SUBS PEPE</div>
 						</div>
 					</div>
 				<% } %>
@@ -28,12 +27,15 @@
 		</div>
 
 </div>
-</div>
 <script>
 var add = function(){
 	$('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher"><p><div id="pubName">PUBLISHER UNO</div></p><p><div id="pubId">734734892349782340984</div></p><div id="subsInPub"><div id="subscribers"><span class="bold">13</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
 }
 
-$('.publisher').click(function(){ window.location='subs'})
+$('.publisher').click(function(){ window.location='subs'});
+$('#backRooms').click(function(){ window.location='rooms'});
+$('#backStreams').click(function(){ window.location='pubs'});
+
+
 
 </script>
