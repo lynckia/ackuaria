@@ -13,12 +13,12 @@
 			<div id="streamData"></div>
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
-			<div id="subsCount">XX SUBSCRIPTIONS <i class="fa fa-users"></i></div>
+			<div id="subsCount">XX SUBSCRIBERS <i class="fa fa-users"></i></div>
 		 	<div id="subscribers" class="row">
 				<% for(var i=0; i<100; i++) {%>
-					<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max" id="subscriberCol">
+					<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max" data-toggle="modal" data-target="#subscriberModal" id="subscriberCol">
 						<div class="subscriber">
-							<div class="fa fa-circle green"></div><div id="subName">SUBS PEPE</div>
+							<div class="fa fa-circle green"></div><div id="subName">PEPE</div>
 						</div>
 					</div>
 				<% } %>
@@ -26,6 +26,28 @@
 		</div>
 		</div>
 
+</div>
+
+
+
+<div class="modal fade" id="subscriberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel"><span class="fa fa-circle green"></span><span class="bold dark"> PEPE</span></h4>
+      </div>
+      <div class="modal-body">
+      	<div id="subModal" class="row">
+
+	        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" id="dataModal">
+	        </div>
+	       	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="subscribersModal">
+	        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 <script>
 var add = function(){
@@ -35,7 +57,6 @@ var add = function(){
 $('.publisher').click(function(){ window.location='subs'});
 $('#backRooms').click(function(){ window.location='rooms'});
 $('#backStreams').click(function(){ window.location='pubs'});
-
 
 
 </script>

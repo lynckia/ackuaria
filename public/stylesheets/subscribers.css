@@ -134,3 +134,31 @@
 
 	max-height: calc(100% - 380px);
 }
+
+
+#dataModal {
+	padding:20px;
+	height: 100%;
+	margin-bottom: 10px;
+}
+
+#subscribersModal {
+		height: 100%;
+		padding:20px;
+		margin-bottom: 10px;
+		border-left: 1px solid #55739D;
+
+
+}
+
+#subModal {
+	max-height: calc(100% - 200px);
+	height: 100%;
+}
+.modal, .modal.fade.in {
+    top: 140px; /* was 10% */
+}
+
+.modal-backdrop.in {
+	opacity: 0;
+}

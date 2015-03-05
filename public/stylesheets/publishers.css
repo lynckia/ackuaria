@@ -60,22 +60,17 @@
 
 #pubName {
 	position: absolute;
-	top: 30%;
-	text-align: left;
 	font-family: "Nunito-Bold";
 	font-size: 13px;
 	color: 042762;
-	padding-left: 10px;
 
 }
 #pubId {
 	position: absolute;
-	top: 40%;
-	text-align: left;
+	top: 50%;
 	font-family: "Nunito-Light";
 	color: #55739D;
-	padding-left: 10px;
-	font-size: 10px;
+	font-size: 11px;
 }
 #subsInPub {
 	height: 25%;
