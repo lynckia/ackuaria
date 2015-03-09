@@ -24,7 +24,6 @@
 #carousel  {
 	width: 100%;
 	margin-top: 25px;
-	background-color: #B2C2D6;
 }
 
 #dataAndSubs {
@@ -183,11 +182,18 @@
 	border: 2px solid #B2C2D6;
 	padding: 10px;
 	margin: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	position: relative;
 	width: 80px;
 	height: 80px;
 	background-color: white;
 	cursor: pointer;
+}
+
+
+#carousel > div:last-child {
+	margin-right: 10px;
 }
 
 .active {
@@ -207,4 +213,10 @@
 	font-family: "Nunito-Bold";
 	font-size: 11px;
 	color: #B2C2D6;
+}
+
+.row-fluid {
+	background-color: #B2C2D6;
+	padding-left: 10px;
+	padding-right: 10px;
 }
