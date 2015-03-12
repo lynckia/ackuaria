@@ -99,17 +99,29 @@ app.get('/', function(req, res) {
 //TRASH 
 app.get('/room', function(req, res){
    var roomID = req.query.room_id;
-   if (API.rooms[roomID]) var room = API.rooms[roomID];
-   else var room ="undefined";
    res.render('publishers', {
       view:"publishers",
-      room: room,
+      roomID: roomID,
+      rooms: API.rooms,
       streams: API.streams,
       users: API.users
    });
 })
-app.get('/pubs', function(req, res){
-   res.render('publishers', {view: "publishers"});
+app.get('/pub', function(req, res){
+   var streamID = req.query.pub_id;
+   var roomID = req.query.room_id;
+
+   var userName = API.streams[streamID]["userName"];
+   res.render('subscribers', {
+      view: "subscribers",
+      roomID: roomID,
+      streamID: streamID,
+      userName: userName,
+      rooms: API.rooms, 
+      streams: API.streams,
+      users: API.users
+});
+
 })
 app.get('/subs', function(req, res){
    res.render('subscribers', {view: "subscribers"});

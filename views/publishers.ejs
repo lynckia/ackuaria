@@ -5,7 +5,7 @@
 	<div id="roomInfo">
 		<div id="roomName">ROOM UNO</div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
 		<div id="roomId">FJA8734H344334JH234</div>
-		<div id="pubsCount">XX STREAMS <i class="fa fa-users"></i></div>
+		<div id="pubsCount"> <span id="numberStreams">0</span> STREAMS <i class="fa fa-users"></i></div>
 	</div>
 
 	<div id="publishers" class="row row-centered">
@@ -17,14 +17,15 @@
 
 <script>
 
-  var room = <%- JSON.stringify(room) %>;
+  var rooms = <%- JSON.stringify(rooms) %>;
+  var roomID = <%- JSON.stringify(roomID) %>;
+
   var streams = <%- JSON.stringify(streams) %>;
   var users = <%- JSON.stringify(users) %>;
   
-  paintPublishers(room, streams, users);
+  paintPublishers(roomID, rooms, streams, users);
   
 
 $('#back').click(function(){ window.location='/'})
-$('.publisher').click(function(){ window.location='subs'})
 
 </script>

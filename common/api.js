@@ -365,6 +365,11 @@ API.api = {
                      }
                   }
 
+                  for (var stream in API.streams){
+                     var indexStream = API.streams[stream]["subscribers"].indexOf(userID);
+                     if (indexStream > -1) API.streams[stream]["subscribers"].splice(indexStream, 1);
+                  }
+
                   delete API.streams[streamID];
 
                   //Falta statusID

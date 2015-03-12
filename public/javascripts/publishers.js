@@ -1,45 +1,5 @@
 var socket = io();
 
-var hasPublishers = function() {
-    var totalDivs = document.getElementsByTagName('div');
-
-    for (var i = 0; i < totalDivs.length; i++) {
-        var div = totalDivs[i];
-        if (div.className == "publisher") {
-            return true;
-
-        }
-    }
-    return false;
-}
-
-
-// PUBLISH EVENT
-var updateEventPublish = function(evt) {
-    var roomID = evt.room;
-    var streamID = evt.stream;
-    var userID = evt.user;
-    
-}
-
-// SUBSCRIBE EVENT
-var updateEventSubscribe = function(evt) {
-
-    createNewSubscriber(evt.user, evt.stream, evt.name);
-
-}
-
-// UNPUBLISH EVENT
-var updateEventUnpublish = function(evt) {
-
-    removePublisher(evt.stream, evt.room);
-
-    removeSubscriber(evt.user);
-
-    if (!document.getElementById('pubsList_' + evt.room).hasChildNodes()){
-        removeRoom(evt.room);
-    }
-}
 
 var updateEventStatus = function(evt) {
 
@@ -94,21 +54,20 @@ socket.on('newEvent', function(evt) {
     var streams = evt.streams;
     var users = evt.users;
     var room = event.roomID;
-
     $('#publishers').html("");
+
     if (rooms[room]) {
         for (var s in rooms[room]["streams"]) {
-            if (!$('#pub_'+rooms[room]["streams"][s]).length){
-                var streamID = rooms[room]["streams"][s];
-                var nSubscribers = streams[streamID]["subscribers"].length;
-                var userName = streams[streamID]["userName"];
-                createNewPublisher(streamID, nSubscribers, userName);
-            } else {
-                var streamID = rooms[room]["streams"][s];
-                var nSubscribers = streams[streamID]["subscribers"].length;
-                updateNSubscribers(streamID, nSubscribers);
-            }
+            
+            var streamID = rooms[room]["streams"][s];
+            var nSubscribers = streams[streamID]["subscribers"].length;
+            var userName = streams[streamID]["userName"];
+            createNewPublisher(room, streamID, nSubscribers, userName);
+           
         }
+        updateNStreams(rooms[room]["streams"].length);
+    } else {
+        updateNStreams(0);
     }
 
 
@@ -116,25 +75,37 @@ socket.on('newEvent', function(evt) {
 });
 
 
-var createNewPublisher = function(streamID, nSubscribers, userName){
-    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher" id="pub_' + streamID + '"><p><div id="pubName"><span class="fa fa-circle green"></span> ' + userName +'</div></p><p><div id="pubId">' + streamID +'</div></p><div id="subsInPub"><div id="subscribers"><span id="number" class="bold">' + nSubscribers + '</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
-    
+var createNewPublisher = function(roomID, streamID, nSubscribers, userName){
+    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div id="pubName"><span class="fa fa-circle green"></span> ' + userName +'</div></p><p><div id="pubId">' + streamID +'</div></p><div id="subsInPub"><div id="subscribers"><span id="number" class="bold">' + nSubscribers + '</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
+    $('#pub_'+ streamID).click(function() {
+    var pub_id = $(this).data('pub_id');
+
+    if (pub_id != undefined || pub_id != null) {
+        window.location = '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
+    }
+})
 
 }
 
 var updateNSubscribers = function(streamID, nSubscribers){
     $('#pub_' + streamID + ' #subscribers ' + '#number').html(nSubscribers);
 }
-var paintPublishers = function(room, streams, users) {
-    if (room == "undefined") {
-        console.log("EMPTY ROOM");
-    }
-    var roomStreams = room["streams"];
-    for (var stream in roomStreams){
-        var streamID = roomStreams[stream];
-        var nSubscribers = streams[roomStreams[stream]]["subscribers"].length;
-        var userName = streams[roomStreams[stream]]["userName"];
-        createNewPublisher(streamID, nSubscribers, userName);
-    }
-   
+var updateNStreams = function(nStreams) {
+    $('#numberStreams').html(nStreams);
+
+}
+var paintPublishers = function(roomID, rooms, streams, users) {
+    if (rooms[roomID]) {
+        var roomStreams = rooms[roomID]["streams"];
+        var nStreams = rooms[roomID]["streams"].length;
+        updateNStreams(nStreams);
+        for (var stream in roomStreams){
+            var streamID = roomStreams[stream];
+            var nSubscribers = streams[roomStreams[stream]]["subscribers"].length;
+            var userName = streams[roomStreams[stream]]["userName"];
+            createNewPublisher(roomID, streamID, nSubscribers, userName);
+        }
+    } else updateNStreams(0);
+
+
 }

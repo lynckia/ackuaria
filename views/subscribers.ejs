@@ -14,19 +14,15 @@
 	<div id="dataAndSubs" class="row">
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="dataCol" >
 			<div id="streamInfo">
-				<div id="pubName"><span class="fa fa-circle green"></span>  PUBLISHER</div>
-				<div id="pubId">FJA8734H344334JH234</div>
+				<div id="pubName"><span class="fa fa-circle green"></span> <%= userName %></div>
+				<div id="pubId"><%= streamID %></div>
 			</div>
 			<div id="streamData"></div>
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
-			<div id="subsCount">XX SUBSCRIBERS <i class="fa fa-users"></i></div>
+			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
 		 	<div id="subscribers" class="row">
-				<% for(var i=0; i<100; i++) {%>
-					<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max subscriberCol" data-toggle="modal" data-target="#subscriberModal">
-							<div class="fa fa-circle green"></div><div id="subName">PEPE</div>
-					</div>
-				<% } %>
+
 			</div>
 		</div>
 		</div>
@@ -55,13 +51,20 @@
 </div>
 </div>
 <script>
-var add = function(){
-	$('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher"><p><div id="pubName">PUBLISHER UNO</div></p><p><div id="pubId">734734892349782340984</div></p><div id="subsInPub"><div id="subscribers"><span class="bold">13</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
-}
+
+  var rooms = <%- JSON.stringify(rooms) %>;
+  var roomID = <%- JSON.stringify(roomID) %>;
+  var streamID = <%- JSON.stringify(streamID) %>;
+  var streams = <%- JSON.stringify(streams) %>;
+  var users = <%- JSON.stringify(users) %>;
+  
+  paintSubscribers(streamID, roomID, rooms, streams, users);
+  
+
 
 $('.publisher').click(function(){ window.location='subs'});
-$('#backRooms').click(function(){ window.location='rooms'});
-$('#backStreams').click(function(){ window.location='pubs'});
+$('#backRooms').click(function(){ window.location='/'});
+$('#backStreams').click(function(){ window.location='/room?room_id=' + roomID});
 
 
 </script>

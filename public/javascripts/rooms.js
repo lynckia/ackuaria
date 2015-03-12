@@ -1,45 +1,5 @@
 var socket = io();
 
-var hasPublishers = function() {
-    var totalDivs = document.getElementsByTagName('div');
-
-    for (var i = 0; i < totalDivs.length; i++) {
-        var div = totalDivs[i];
-        if (div.className == "publisher") {
-            return true;
-
-        }
-    }
-    return false;
-}
-
-
-// PUBLISH EVENT
-var updateEventPublish = function(evt) {
-    var roomID = evt.room;
-    var streamID = evt.stream;
-    var userID = evt.user;
-    
-}
-
-// SUBSCRIBE EVENT
-var updateEventSubscribe = function(evt) {
-
-    createNewSubscriber(evt.user, evt.stream, evt.name);
-
-}
-
-// UNPUBLISH EVENT
-var updateEventUnpublish = function(evt) {
-
-    removePublisher(evt.stream, evt.room);
-
-    removeSubscriber(evt.user);
-
-    if (!document.getElementById('pubsList_' + evt.room).hasChildNodes()){
-        removeRoom(evt.room);
-    }
-}
 
 var updateEventStatus = function(evt) {
 
@@ -90,6 +50,8 @@ var createStatus = function(id, status) {
 
 socket.on('newEvent', function(evt) {
     var rooms = evt.rooms;
+    var nRooms = Object.keys(rooms).length
+    updateNRooms(nRooms);
     $('#rooms').html("");
 
     for (var room in rooms) {
@@ -104,6 +66,8 @@ socket.on('newEvent', function(evt) {
             updateNStreams(roomID, nStreams);
         }
     }
+
+
 
     
 });
@@ -123,7 +87,14 @@ var updateNStreams = function(roomID, nStreams){
     $('#room_' + roomID + ' #streams ' + '#number').html(nStreams);
 }
 
+var updateNRooms = function(nRooms) {
+    $('#numberRooms').html(nRooms);
+
+}
+
 var paintRooms = function(rooms) {
+    var nRooms = Object.keys(rooms).length
+    updateNRooms(nRooms);
     for (var room in rooms) {
         var roomID = room;
         var nStreams = rooms[room]["nStreams"];
