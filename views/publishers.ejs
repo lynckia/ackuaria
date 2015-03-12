@@ -10,26 +10,21 @@
 
 	<div id="publishers" class="row row-centered">
 	
-		<% for(var i=0; i<100; i++) {%>
-			<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max">
-				<div class="publisher">
-					<p><div id="pubName"><span class="fa fa-circle green"></span> PUBLISHER</div></p>
-					<p><div id="pubId">734734892349782340984</div></p>
-					<div id="subsInPub"><div id="subscribers"><span class="bold">13</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div>
-				</div>
-			</div>
-		<% } %>
 	</div>
 
 </div>
 
 
 <script>
-var add = function(){
-	$('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher"><p><div id="pubName">PUBLISHER UNO</div></p><p><div id="pubId">734734892349782340984</div></p><div id="subsInPub"><div id="subscribers"><span class="bold">13</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
-}
 
-$('#back').click(function(){ window.location='rooms'})
+  var room = <%- JSON.stringify(room) %>;
+  var streams = <%- JSON.stringify(streams) %>;
+  var users = <%- JSON.stringify(users) %>;
+  
+  paintPublishers(room, streams, users);
+  
+
+$('#back').click(function(){ window.location='/'})
 $('.publisher').click(function(){ window.location='subs'})
 
 </script>

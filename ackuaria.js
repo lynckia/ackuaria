@@ -89,22 +89,24 @@ io.on('connection', function(socket) {
 
 
 app.get('/', function(req, res) {
-
-
-   res.render('index', {
-      roomsInfo: API.roomsInfo,
-      userStream: API.userStream,
-      statusId: API.statusId,
-      userName: API.userName,
-      rooms: API.rooms,
-      streamRoom: API.streamRoom,
+   res.render('rooms', {
+      view:"rooms",
+      rooms: API.rooms
    });
 });
 
 
 //TRASH 
-app.get('/rooms', function(req, res){
-   res.render('rooms', {view:"rooms"});
+app.get('/room', function(req, res){
+   var roomID = req.query.room_id;
+   if (API.rooms[roomID]) var room = API.rooms[roomID];
+   else var room ="undefined";
+   res.render('publishers', {
+      view:"publishers",
+      room: room,
+      streams: API.streams,
+      users: API.users
+   });
 })
 app.get('/pubs', function(req, res){
    res.render('publishers', {view: "publishers"});
@@ -132,6 +134,8 @@ app.get('/text', function(req, res) {
 
 
    res.render('text', {
+      view: "index",
+      publishers: API.publishers,
       roomsInfo: API.roomsInfo,
       userStream: API.userStream,
       statusId: API.statusId,

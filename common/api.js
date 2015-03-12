@@ -13,11 +13,16 @@ API.roomsInfo = {};
 API.userStream = {};
 API.statusId = {};
 API.userName = {};
-API.rooms = [];
+//API.rooms = [];
 API.streamRoom = {};
 API.roomUsers = {};
 API.nRoomsTotal = 0;
 API.nPubsTotal = 0;
+
+API.rooms = {};
+API.streams = {};
+API.users = {};
+API.status = {};
 
 function isEmpty(obj) {
    for (var key in obj) {
@@ -33,7 +38,7 @@ API.api = {
 
          // log.info('Event: ', theEvent);
 
-         API.send_event_to_clients(theEvent);
+
          if (config.ackuaria.useDB) {
             // DATABASE
             eventsRegistry.addEvent(theEvent, function(saved, error) {
@@ -295,129 +300,142 @@ API.api = {
 
                case "publish":
 
-                  API.nPubsTotal++; // In case of not using DB
 
                   // Memoria local para datos
-                  var stream = theEvent.stream;
-                  var room = theEvent.room;
-                  var user = theEvent.user;
-                  var name = theEvent.name;
+                  var event = {};
+                  var streamID = theEvent.stream;
+                  var roomID = theEvent.room;
+                  var userID = theEvent.user;
+                  var userName = theEvent.name;
 
-                  if (API.roomsInfo[room] === undefined) {
-                     API.roomsInfo[room] = {};
-                     API.roomsInfo[room][stream] = [];
-                     API.nRoomsTotal++; // In case of not using DB
+                  event.streamID = streamID;
+                  event.roomID = roomID;
+                  event.userID = userID;
+                  event.userName = userName;
 
+                  if (API.rooms[roomID] === undefined) {
+                     API.rooms[roomID] = {"roomName": "NombreTest", "nStreams": 1, "streams": [streamID], "users":[userID]};
                   } else {
-                     if (API.roomsInfo[room][stream] === undefined) {
-                        API.roomsInfo[room][stream] = [];
-
-                     }
-
+                     API.rooms[roomID]["nStreams"]++;
+                     API.rooms[roomID]["streams"].push(streamID);
                   }
 
-                  API.userStream[stream] = user;
-                  API.userName[user] = name;
-
-
-                  if (API.rooms.indexOf(theEvent.room) == "-1") {
-                     API.rooms.push(theEvent.room);
-
+                  if (API.users[userID] === undefined){
+                     API.users[userID] = {"userName": userName, "roomID": roomID, "streams": [streamID], "subscribedTo": []};
+                  } else {
+                     API.users[userID]["streams"].push(streamID);
                   }
 
-                  API.streamRoom[stream] = room;
+                  API.streams[streamID] = {"userID": userID, "roomID": roomID, "userName": userName, "subscribers": [] };
                   // Fin memoria local para datos
 
-
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
 
                   break;
 
                case "unpublish":
-                  var stream = theEvent.stream;
-                  var room = theEvent.room;
-                  var user = theEvent.user;
+                  var event = {};
+                  var streamID = theEvent.stream;
+                  var roomID = theEvent.room;
+                  var userID = theEvent.user;
 
-                  // Para liberar espacio en el array de status
-                  delete API.userName[user];
-                  delete API.streamRoom[stream];
-                  delete API.userStream[stream];
+                  event.streamID = streamID;
+                  event.roomID = roomID;
+                  event.userID = userID;
 
-                  for (var ro in API.roomsInfo) {
-                     for (var st in API.roomsInfo[ro]) {
-                        for (var i = 0; i < API.roomsInfo[ro][st].length; i++) {
+                  var indexRoom = API.rooms[roomID]["streams"].indexOf(streamID);
+                  if (indexRoom > -1) API.rooms[roomID]["streams"].splice(indexRoom, 1);
+                  API.rooms[roomID]["nStreams"]--;
+                  API.rooms[roomID]["nStreams"];
+                  if (API.rooms[roomID]["nStreams"] == 0) {
+                     delete API.rooms[roomID];
+                  }
 
-                           if (API.roomsInfo[ro][st][i] === user) {
+                  var indexUser = API.users[userID]["streams"].indexOf(streamID);
+                  if (indexUser > -1) API.users[userID]["streams"].splice(indexUser, 1);
+                  if (API.users[userID]["nStreams"] == 0 && API.users[userID]["subscribedTo"].length == 0){
+                     delete API.users[userID];
+                  }
 
-
-                              API.roomsInfo[ro][st].splice(i, 1);
-
-
-                              var id = user + "_" + st;
-                              delete API.statusId[id];
-                           }
-                        }
+                  var subscribers = API.streams[streamID]["subscribers"];
+                  for (var s in subscribers) {
+                     if (API.users[subscribers[s]]) {
+                        var indexSub = API.users[subscribers[s]]["subscribedTo"].indexOf(streamID);
+                        if (indexSub > -1) API.users[subscribers[s]]["subscribedTo"].splice(indexSub, 1);
                      }
                   }
 
-                  var id = "";
-                  id += stream;
+                  delete API.streams[streamID];
 
-                  delete API.statusId[id];
-
-
-                  for (var j = 0; j < API.roomsInfo[room][stream].length; j++) {
-                     var subs = API.roomsInfo[room][stream][j];
-                     var id = subs + "_" + stream;
-                     delete API.statusId[id];
-                  }
-                  delete API.roomsInfo[room][stream];
-
-
-                  if (isEmpty(API.roomsInfo[room])) {
-                     var index = API.rooms.indexOf(room);
-                     API.rooms.splice(index, 1);
-                     delete API.roomsInfo[room];
-                  }
+                  //Falta statusID
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
 
                   break;
 
                case "subscribe":
-                  var stream = theEvent.stream;
-                  var user = theEvent.user;
-                  var room = theEvent.room;
-                  API.roomsInfo[room][stream].push(user);
-                  API.userName[user] = theEvent.name;
+                  var event = {};
+                  var streamID = theEvent.stream;
+                  var userID = theEvent.user;
+                  var roomID = theEvent.room;
+                  var userName = theEvent.name;
+
+                  event.streamID = streamID;
+                  event.roomID = roomID;
+                  event.userID = userID;
+                  event.userName = userName;
+
+                  API.streams[streamID]["subscribers"].push(userID);
+
+                  if (API.users[userID] === undefined) {
+                     API.users[userID] = {"userName": userName, "roomID": roomID, "streams": [], "subscribedTo": [streamID]}
+                  } else {
+                     API.users[userID]["subscribedTo"].push(streamID);
+                  }
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+
+
                   break;
 
                case "unsubscribe":
+                  var event = {};
+                  var streamID = theEvent.stream;
+                  var userID = theEvent.user;
+                  var roomID = theEvent.room;
 
-                  delete API.statusId[theEvent.user + "_" + theEvent.stream]
+                  event.streamID = streamID;
+                  event.roomID = roomID;
+                  event.userID = userID;
 
-                  for (var ro in API.roomsInfo) {
+                  var indexStream = API.streams[streamID]["subscribers"].indexOf(userID);
+                  if (indexSub > -1) API.streams[streamID]["subscribers"].splice(indexSub, 1);
 
-
-                     for (var i = 0; i < API.roomsInfo[ro][theEvent.stream].length; i++) {
-
-                        if (API.roomsInfo[ro][theEvent.stream][i] == theEvent.user) {
-
-                           API.roomsInfo[ro][theEvent.stream].splice(i, 1);
-                        }
-                     }
+                  var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
+                  if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
+                  if (API.users[userID][nStreams] && API.users[userID]["subscribedTo"].length == 0){
+                     delete API.users[userID];
                   }
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+
                   break;
 
                case "connection_status":
+                  var event = {};
+                  var streamID = theEvent.pub;
+                  var userID = theEvent.subs;
+                  var status = theEvent.status;
 
-
+                  event.streamID = streamID;
+                  event.userID = userID;
+                  event.status = status;
                   var id = "";
-                  if (!theEvent.subs) {
-                     id += theEvent.pub;
+                  if (!userID) {
+                     id += streamID;
                   } else {
-                     id = theEvent.subs + "_" + theEvent.pub;
-
+                     id = userID + "_" + streamID;
                   }
-                  API.statusId[id] = theEvent.status;
 
+                  API.status[id] = status;
+//                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
 
                   break;
 
@@ -453,10 +471,13 @@ API.api = {
    }
 };
 
-API.send_event_to_clients = function(theEvent) {
+API.send_event_to_clients = function(event, rooms, streams, users) {
    for (var s in API.sockets) {
       API.sockets[s].emit('newEvent', {
-         theEvent: theEvent
+         event: event,
+         rooms: rooms,
+         streams: streams,
+         users: users
       });
    }
 }
