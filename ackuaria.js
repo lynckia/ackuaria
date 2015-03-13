@@ -110,8 +110,8 @@ app.get('/room', function(req, res){
 app.get('/pub', function(req, res){
    var streamID = req.query.pub_id;
    var roomID = req.query.room_id;
-
-   var userName = API.streams[streamID]["userName"];
+   if (API.streams[streamID])  var userName = API.streams[streamID]["userName"];
+   else var userName = "Disconnected";
    res.render('subscribers', {
       view: "subscribers",
       roomID: roomID,

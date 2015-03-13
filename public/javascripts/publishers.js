@@ -107,5 +107,4 @@ var paintPublishers = function(roomID, rooms, streams, users) {
         }
     } else updateNStreams(0);
 
-
 }

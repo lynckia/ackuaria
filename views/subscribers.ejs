@@ -2,10 +2,11 @@
 	<div class="back"><span class="light blue">BACK TO </span><span id="backRooms" class="bold dark">ROOMS </span> / <span id="backStreams" class="bold dark"> ROOM UNO </span> </div>
 	<div class="row-fluid">
 		<div id="carousel">
-			<div class="col-lg-3 publisherCol active"><div class="fa fa-circle green"></div><div id="pubNameCarousel">PEPE</div></div>
-			<% for (var i=0; i<20; i++) {%>
-			<div class="col-lg-3 publisherCol"><div class="fa fa-circle green"></div><div id="pubNameCarousel">PEPE</div></div>
-	        <% } %>
+		<div>
+			<span id="active">
+			</span><span id="others">
+			</span>
+	    </div>
 	    </div>
 	</div>
 </div>
@@ -59,8 +60,11 @@
   var users = <%- JSON.stringify(users) %>;
   
   paintSubscribers(streamID, roomID, rooms, streams, users);
-  
+  paintPublishers(streamID, roomID, rooms, streams, users);
 
+  var getMyStream = function() {
+  	return streamID;
+  }
 
 $('.publisher').click(function(){ window.location='subs'});
 $('#backRooms').click(function(){ window.location='/'});
