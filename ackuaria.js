@@ -99,9 +99,14 @@ app.get('/', function(req, res) {
 //TRASH 
 app.get('/room', function(req, res){
    var roomID = req.query.room_id;
+   if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
+   else var roomName = "Not found";
+
+
    res.render('publishers', {
       view:"publishers",
       roomID: roomID,
+      roomName: roomName,
       rooms: API.rooms,
       streams: API.streams,
       users: API.users
@@ -111,10 +116,15 @@ app.get('/pub', function(req, res){
    var streamID = req.query.pub_id;
    var roomID = req.query.room_id;
    if (API.streams[streamID])  var userName = API.streams[streamID]["userName"];
-   else var userName = "Disconnected";
+   else var userName = "Publisher not found";
+
+   if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
+   else var roomName = "Not found";
+
    res.render('subscribers', {
       view: "subscribers",
       roomID: roomID,
+      roomName: roomName,
       streamID: streamID,
       userName: userName,
       rooms: API.rooms, 
