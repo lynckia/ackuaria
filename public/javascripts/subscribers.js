@@ -49,7 +49,7 @@ socket.on('newEvent', function(evt) {
 
 
 var createNewSubscriber = function(userID, userName){
-    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 col-min col-max subscriberCol" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div id="subName">' + userName +'</div></div>');
+    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div id="subName">' + userName +'</div></div>');
 }
 
 

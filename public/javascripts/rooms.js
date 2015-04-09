@@ -74,7 +74,7 @@ socket.on('newEvent', function(evt) {
 
 
 var createNewRoom = function(roomID, nStreams, roomName){
-    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-min col-centered"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><p><div id="roomName">' + roomName + '</div></p><p><div id="roomId">' + roomID + '</div></p><div id="streamsInRoom"><div id="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
+    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 roomContainer"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><p><div id="roomName">' + roomName + '</div></p><p><div id="roomId">' + roomID + '</div></p><div id="streamsInRoom"><div id="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
     $('#room_'+ roomID).click(function() {
     var room_id = $(this).data('room_id');
     if (room_id != undefined || room_id != null) {

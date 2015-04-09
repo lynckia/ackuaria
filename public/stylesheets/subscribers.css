@@ -56,17 +56,30 @@
 .subsCol {
 	height: 100%;
 }
-.col-min  {
+.subscriberContainer  {
 	min-width: 80px;
 	max-width: 80px;
-	padding: 5px;
-	margin: 5px;
+	border: 1px solid #55739D;
+	padding: 10px;
+	margin: 10px;
+	position: relative;
+	width: 80px;
+	height: 80px;
+	background-color: white;
+	cursor: pointer;
 }
 
 #subsCount {
 	font-family: "Nunito-Light";
 	color: #042762;
 	font-size: 15px;
+}
+
+#search {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 30%;
 }
 
 #subscribers {
@@ -78,17 +91,6 @@
 	overflow-y: scroll;
 }
 
-.subscriberCol{
-	border: 1px solid #55739D;
-	padding: 10px;
-	margin: 10px;
-	position: relative;
-	width: 80px;
-	height: 80px;
-	background-color: white;
-	cursor: pointer;
-
-}
 
 #subName {
 	position: absolute;

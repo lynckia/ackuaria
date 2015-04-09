@@ -32,6 +32,13 @@
 	font-size: 15px;
 }
 
+#search {
+	position: absolute;
+	margin-top: 30px;
+	right: 0;
+	width: 20%;
+}
+
 #publishers {
 	position: absolute;
 	margin-top: 60px;
@@ -50,7 +57,7 @@
 	cursor: pointer;
 }
 
-.col-min{
+.publisherContainer{
 	min-width: 170px;
 	max-width: 170px;
 	padding: 10px;
@@ -97,3 +104,11 @@
 #back {
 	cursor: pointer;
 }
+
+
+
+
+
+
+
+

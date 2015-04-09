@@ -6,6 +6,13 @@
 	font-size: 20px;
 }
 
+#search {
+	position: absolute;
+	margin-top: 30px;
+	right: 0;
+	width: 20%;
+}
+
 
 #roomsContainer{
 	position: relative;
@@ -35,7 +42,7 @@
 	cursor: pointer;
 }
 
-.col-min {
+.roomContainer {
 	min-width: 200px;
 	max-width: 200px;
 	padding: 10px;

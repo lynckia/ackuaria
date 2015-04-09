@@ -76,7 +76,7 @@ socket.on('newEvent', function(evt) {
 
 
 var createNewPublisher = function(roomID, streamID, nSubscribers, userName){
-    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 col-min col-max"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div id="pubName"><span class="fa fa-circle green"></span> ' + userName +'</div></p><p><div id="pubId">' + streamID +'</div></p><div id="subsInPub"><div id="subscribers"><span id="number" class="bold">' + nSubscribers + '</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
+    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div id="pubName"><span class="fa fa-circle green"></span> ' + userName +'</div></p><p><div id="pubId">' + streamID +'</div></p><div id="subsInPub"><div id="subscribers"><span id="number" class="bold">' + nSubscribers + '</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
     $('#pub_'+ streamID).click(function() {
     var pub_id = $(this).data('pub_id');
 

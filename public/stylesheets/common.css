@@ -87,6 +87,9 @@ html, body {
 	color: rgb(247, 119, 52);
 }
 
+/**
+Scrolling bar properties
+**/
 
 ::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -104,4 +107,47 @@ html, body {
     	margin-bottom: 50px;
 
 
+}
+
+
+/**
+Search bar properties
+**/
+
+#custom-search-input {
+        margin:0;
+        padding: 0;
+}
+ 
+#custom-search-input .search-query {
+    padding-right: 27px;
+    padding-left: 10px;
+  	border-color: #55739D;
+  	font-family: "Nunito-Light";
+  	height: 25px;
+    margin-bottom: 0;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+}
+
+#custom-search-input button {
+	z-index: 4;
+    border: 0;
+    background: none;
+    /** belows styles are working good */
+    padding: 2px 5px;
+    margin-top: 2px;
+    position: relative;
+    left: -28px;
+    /* IE7-8 doesn't have border-radius, so don't indent the padding */
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #55739D;
+}
+
+.search-query:focus + button {
+    z-index: 3;   
 }
