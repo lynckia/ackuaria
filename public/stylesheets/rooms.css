@@ -13,6 +13,13 @@
 	width: 20%;
 }
 
+#switch {
+	position: absolute;
+	margin-top: 30px;
+	margin-right: 25%;
+	right: 0;
+}
+
 
 #roomsContainer{
 	position: relative;

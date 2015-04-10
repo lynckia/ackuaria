@@ -3,7 +3,7 @@
 	<div class="row-fluid">
 		<div id="carousel">
 		<div>
-			<span id="active">
+			<span id="selected">
 			</span><span id="others">
 			</span>
 	    </div>
@@ -22,7 +22,10 @@
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
 			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
-
+		    <div class="btn-group btn-toggle" id="switch">
+		        <button class="btn btn-sm btn-primary active" id="cuadr"><span class="glyphicon glyphicon-th-large"></span></button>
+		        <button class="btn btn-sm btn-default" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+		    </div>
 			<div class="row" id="search">
 		       <div id="custom-search-input">
 		            <div class="input-group col-md-12">
@@ -80,47 +83,4 @@
   	return streamID;
   }
 
-$('.publisher').click(function(){ window.location='subs'});
-$('#backRooms').click(function(){ window.location='/'});
-$('#backStreams').click(function(){ window.location='/room?room_id=' + roomID});
-
-$('#subscriberModal').on('show.bs.modal', function (event) {
-  var subscriber = $(event.relatedTarget);
-  var userName = subscriber.data('username');
-  var modal = $(this)
-  $('#username').html(" " + userName);
-})
-$('#searchBar').keyup(function () {
-    var filter_array = new Array();
-    var filter = this.value.toLowerCase();  // no need to call jQuery here
-
-    filter_array = filter.split(' '); // split the user input at the spaces
-
-    var arrayLength = filter_array.length; // Get the length of the filter array
-
-    $('.subscriberContainer').each(function() {
-        /* cache a reference to the current .media (you're using it twice) */
-        var _this = $(this);
-        var title = _this.find('#subName').text().toLowerCase();
-
-        /* 
-            title and filter are normalized in lowerCase letters
-            for a case insensitive search
-         */
-
-        var hidden = 0; // Set a flag to see if a div was hidden
-
-        // Loop through all the words in the array and hide the div if found
-        for (var i = 0; i < arrayLength; i++) {
-             if (title.indexOf(filter_array[i]) < 0) {
-                _this.hide();
-                hidden = 1;
-            }
-        }
-        // If the flag hasn't been tripped show the div
-        if (hidden == 0)  {
-           _this.show();
-        }
-    });
-});
 </script>

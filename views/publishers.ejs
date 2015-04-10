@@ -6,6 +6,10 @@
 		<div id="roomName">Room <%= roomName %></div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
 		<div id="roomId"><%= roomID %></div>
 		<div id="pubsCount"> <span id="numberStreams">0</span> STREAMS <i class="fa fa-users"></i></div>
+	    <div class="btn-group btn-toggle" id="switch">
+	        <button class="btn btn-sm btn-primary active" id="cuadr"><span class="glyphicon glyphicon-th-large"></span></button>
+	        <button class="btn btn-sm btn-default" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+	    </div>
 		<div class="row" id="search">
 	       <div id="custom-search-input">
 	            <div class="input-group col-md-12">
@@ -39,38 +43,6 @@
   paintPublishers(roomID, rooms, streams, users);
   
 
-$('#back').click(function(){ window.location='/'})
-$('#searchBar').keyup(function () {
-    var filter_array = new Array();
-    var filter = this.value.toLowerCase();  // no need to call jQuery here
 
-    filter_array = filter.split(' '); // split the user input at the spaces
 
-    var arrayLength = filter_array.length; // Get the length of the filter array
-
-    $('.publisherContainer').each(function() {
-        /* cache a reference to the current .media (you're using it twice) */
-        var _this = $(this);
-        var title = _this.find('#pubName').text().toLowerCase();
-
-        /* 
-            title and filter are normalized in lowerCase letters
-            for a case insensitive search
-         */
-
-        var hidden = 0; // Set a flag to see if a div was hidden
-
-        // Loop through all the words in the array and hide the div if found
-        for (var i = 0; i < arrayLength; i++) {
-             if (title.indexOf(filter_array[i]) < 0) {
-                _this.hide();
-                hidden = 1;
-            }
-        }
-        // If the flag hasn't been tripped show the div
-        if (hidden == 0)  {
-           _this.show();
-        }
-    });
-});
 </script>

@@ -34,9 +34,15 @@
 
 #search {
 	position: absolute;
-	margin-top: 30px;
+	margin-top: 42px;
 	right: 0;
 	width: 20%;
+}
+#switch {
+	position: absolute;
+	margin-top: 42px;
+	margin-right: 25%;
+	right: 0;
 }
 
 #publishers {

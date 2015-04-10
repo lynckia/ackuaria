@@ -82,6 +82,13 @@
 	width: 30%;
 }
 
+#switch {
+	position: absolute;
+	margin-right: 35%;
+	right: 0;
+	top: 0;
+}
+
 #subscribers {
 	position: absolute;
 	margin-top: 20px;
@@ -199,12 +206,12 @@
 	margin-right: 10px;
 }
 
-.active {
+.selected {
 	border: 2px solid #55739D;
 
 }
 
-.active #pubNameCarousel {
+.selected #pubNameCarousel {
 	color: #042762;
 }
 
