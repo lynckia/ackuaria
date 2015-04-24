@@ -13,8 +13,49 @@ $(document).ready(function(){
       $('#username').html(" " + userName);
     })
     $('#searchBar').keyup(function () {
+        search();
+    });
+
+
+    $('#list').click(function() {
+        if (!$(this).hasClass("active")){
+            show_grid = false;
+            paintSubscribersList(streamID, roomID, rooms, streams, users);
+            search();
+        }
+
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#grid').addClass('btn-default');
+        $('#grid').removeClass('active');
+        $('#grid').removeClass('btn-primary');
+           
+    });
+
+    $('#grid').click(function() {
+
+        if (!$(this).hasClass("active")){
+            show_grid = true;
+            paintSubscribersGrid(streamID, roomID, rooms, streams, users);
+            search();
+        }
+
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#list').addClass('btn-default');
+        $('#list').removeClass('active');
+        $('#list').removeClass('btn-primary');
+           
+    });
+
+    var search = function(){
+
         var filter_array = new Array();
-        var filter = this.value.toLowerCase();  // no need to call jQuery here
+        var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
 
         filter_array = filter.split(' '); // split the user input at the spaces
 
@@ -50,41 +91,7 @@ $(document).ready(function(){
             }
         });
         }
-    });
-
-
-    $('#list').click(function() {
-        if (!$(this).hasClass("active")){
-            show_grid = false;
-            paintSubscribersList(streamID, roomID, rooms, streams, users);
-        }
-
-        $(this).addClass('active');  
-        $(this).addClass('btn-primary');
-        $(this).removeClass('btn-default');
-
-        $('#grid').addClass('btn-default');
-        $('#grid').removeClass('active');
-        $('#grid').removeClass('btn-primary');
-           
-    });
-
-    $('#grid').click(function() {
-
-        if (!$(this).hasClass("active")){
-            show_grid = true;
-            paintSubscribersGrid(streamID, roomID, rooms, streams, users);
-        }
-
-        $(this).addClass('active');  
-        $(this).addClass('btn-primary');
-        $(this).removeClass('btn-default');
-
-        $('#list').addClass('btn-default');
-        $('#list').removeClass('active');
-        $('#list').removeClass('btn-primary');
-           
-    });
+    }
     
 })
 
@@ -132,7 +139,7 @@ var paintSubscribersGrid = function(streamID, roomID, rooms, streams, users) {
 
 var paintSubscribersList = function(streamID, roomID, rooms, streams, users) {
     $('#subscribers').html("");
-    $('#subscribers').append('<div class="subscriberContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-6">User ID</th><th class="col-md-3">User name</th><th class="col-md-3">User Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    $('#subscribers').append('<div class="subscriberContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     if (rooms[roomID] && streams[streamID]) {
         var subscribers = streams[streamID]["subscribers"];
         var nSubscribers = streams[streamID]["subscribers"].length;
