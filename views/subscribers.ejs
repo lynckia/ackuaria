@@ -23,7 +23,7 @@
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
 			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
 		    <div class="btn-group btn-toggle" id="switch">
-		        <button class="btn btn-sm btn-primary active" id="cuadr"><span class="glyphicon glyphicon-th-large"></span></button>
+		        <button class="btn btn-sm btn-primary active" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>
 		        <button class="btn btn-sm btn-default" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
 		    </div>
 			<div class="row" id="search">
@@ -76,7 +76,7 @@
   var streams = <%- JSON.stringify(streams) %>;
   var users = <%- JSON.stringify(users) %>;
   
-  paintSubscribers(streamID, roomID, rooms, streams, users);
+  paintSubscribersGrid(streamID, roomID, rooms, streams, users);
   paintPublishers(streamID, roomID, rooms, streams, users);
 
   var getMyStream = function() {

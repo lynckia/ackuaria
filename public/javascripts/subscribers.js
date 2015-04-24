@@ -1,5 +1,5 @@
 var socket = io();
-
+var show_grid = true;
 $(document).ready(function(){
 
     $('.publisher').click(function(){ window.location='subs'});
@@ -19,55 +19,66 @@ $(document).ready(function(){
         filter_array = filter.split(' '); // split the user input at the spaces
 
         var arrayLength = filter_array.length; // Get the length of the filter array
-
-        $('.subscriberContainer').each(function() {
-            /* cache a reference to the current .media (you're using it twice) */
+        if (show_grid){
+            $('.subscriberContainer').each(function() {
+                var _this = $(this);
+                var title = _this.find('.subName').text().toLowerCase();
+                var hidden = 0;
+                for (var i = 0; i < arrayLength; i++) {
+                     if (title.indexOf(filter_array[i]) < 0) {
+                        _this.hide();
+                        hidden = 1;
+                    }
+                }
+                if (hidden == 0)  {
+                   _this.show();
+                }
+            });
+        } else {
+            $('.subscriber').each(function() {
             var _this = $(this);
-            var title = _this.find('#subName').text().toLowerCase();
-
-            /* 
-                title and filter are normalized in lowerCase letters
-                for a case insensitive search
-             */
-
-            var hidden = 0; // Set a flag to see if a div was hidden
-
-            // Loop through all the words in the array and hide the div if found
+            var title = _this.find('.subName').text().toLowerCase();
+            var hidden = 0;
             for (var i = 0; i < arrayLength; i++) {
                  if (title.indexOf(filter_array[i]) < 0) {
                     _this.hide();
                     hidden = 1;
                 }
             }
-            // If the flag hasn't been tripped show the div
             if (hidden == 0)  {
                _this.show();
             }
         });
+        }
     });
 
 
     $('#list').click(function() {
-
+        if (!$(this).hasClass("active")){
+            show_grid = false;
+            paintSubscribersList(streamID, roomID, rooms, streams, users);
+        }
 
         $(this).addClass('active');  
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
-
-        $('#cuadr').addClass('btn-default');
-        $('#cuadr').removeClass('active');
-        $('#cuadr').removeClass('btn-primary');
+        $('#grid').addClass('btn-default');
+        $('#grid').removeClass('active');
+        $('#grid').removeClass('btn-primary');
            
     });
 
-    $('#cuadr').click(function() {
+    $('#grid').click(function() {
 
+        if (!$(this).hasClass("active")){
+            show_grid = true;
+            paintSubscribersGrid(streamID, roomID, rooms, streams, users);
+        }
 
         $(this).addClass('active');  
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
-
 
         $('#list').addClass('btn-default');
         $('#list').removeClass('active');
@@ -80,80 +91,69 @@ $(document).ready(function(){
 socket.on('newEvent', function(evt) {
     var event = evt.event;
     var rooms = evt.rooms;
-    var listStreams = evt.streams;
+    var streams = evt.streams;
     var users = evt.users;
     var room = event.roomID;
     var streamID = getMyStream();
 
-    $('#subscribers').html("");
     $('#others').html("");
     $('#selected').html("");
 
     if (rooms[room]) {
-        if (listStreams[streamID]) {
-            for (var s in listStreams[streamID]["subscribers"]) {
-                var userID = listStreams[streamID]["subscribers"][s];
-                var userName = users[userID]["userName"];
-                createNewSubscriber(userID, userName);
-            }
-            updateNSubscribers(listStreams[streamID]["subscribers"].length);
+        if (show_grid) paintSubscribersGrid(streamID, room, rooms, streams, users);
+        else paintSubscribersList(streamID, room, rooms, streams, users);
 
-        } else {
-            updateNamePublisher("Publisher not found");
-            updateNSubscribers(0);
-        }
-
-        for (var stream in listStreams){
-            var userName = listStreams[stream]["userName"];
-            if (stream == streamID) {
-                createMyPublisher(room, streamID, userName);
-            }
-            else {
-                createNewPublisher(room, streamID, userName);
-            }
-            //DEBERIA SER STREAMID???
-        }
+        paintPublishers(streamID, room, rooms, streams, users);
     } else {
         updateNSubscribers(0)
-        updateNamePublisher("Publisher not found");
-    }
-
-
-
-    
+        updateNamePublisher("Room not found");
+    }    
 });
 
 
-var createNewSubscriber = function(userID, userName){
-    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div id="subName">' + userName +'</div></div>');
-}
 
+var paintSubscribersGrid = function(streamID, roomID, rooms, streams, users) {
+    $('#subscribers').html("");
 
-
-var updateNSubscribers = function(nSubscribers){
-    $('#numberSubs').html(nSubscribers);
-}
-
-var updateNamePublisher = function(name) {
-        $('#pubName').html(name);
-
-}
-
-var paintSubscribers = function(streamID, roomID, rooms, streams, users) {
     if (rooms[roomID] && streams[streamID]) {
-
         var subscribers = streams[streamID]["subscribers"];
         var nSubscribers = streams[streamID]["subscribers"].length;
         updateNSubscribers(nSubscribers);
-
         for (var sub in subscribers){
             var userID = subscribers[sub];
             var userName = users[userID]["userName"];
-            createNewSubscriber(userID, userName);
+            createNewSubscriberGrid(userID, userName);
         }
-    } else updateNSubscribers(0);
+    } else {
+        updateNamePublisher("Publisher not found");
+        updateNSubscribers(0);
+    }
+}
+
+var paintSubscribersList = function(streamID, roomID, rooms, streams, users) {
+    $('#subscribers').html("");
+    $('#subscribers').append('<div class="subscriberContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-6">User ID</th><th class="col-md-3">User name</th><th class="col-md-3">User Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    if (rooms[roomID] && streams[streamID]) {
+        var subscribers = streams[streamID]["subscribers"];
+        var nSubscribers = streams[streamID]["subscribers"].length;
+        updateNSubscribers(nSubscribers);
+        for (var sub in subscribers){
+            var userID = subscribers[sub];
+            var userName = users[userID]["userName"];
+            createNewSubscriberList(userID, userName);
+        }
+    } else {
+        updateNamePublisher("Publisher not found");
+        updateNSubscribers(0);
+    }
+}
 
 
+var createNewSubscriberGrid = function(userID, userName){
+    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer show_grid" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div class="subName">' + userName +'</div></div>');
+}
+var createNewSubscriberList = function(userID, userName){
+    $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" ><th class="subId">' + userID + '</th><th class="subname">' + userName + '</th><th class="status"><span class="fa fa-circle green"></span></th></tr>');
 }
 
 var paintPublishers = function(streamID, roomID, rooms, streams, users) {
@@ -196,4 +196,16 @@ var createMyPublisher = function(roomID, streamID, userName){
         window.location = '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
     }
 })
+}
+
+
+
+
+var updateNSubscribers = function(nSubscribers){
+    $('#numberSubs').html(nSubscribers);
+}
+
+var updateNamePublisher = function(name) {
+        $('#pubName').html(name);
+
 }

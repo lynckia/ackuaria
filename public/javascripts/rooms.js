@@ -1,7 +1,8 @@
 var socket = io();
-
+var show_grid = true;
 $(document).ready(function(){
 
+    //Śearch bar code
     $('#searchBar').keyup(function () {
         var filter_array = new Array();
         var filter = this.value.toLowerCase();  // no need to call jQuery here
@@ -9,34 +10,46 @@ $(document).ready(function(){
         filter_array = filter.split(' '); // split the user input at the spaces
 
         var arrayLength = filter_array.length; // Get the length of the filter array
-
-        $('.roomContainer').each(function() {
-            /* cache a reference to the current .media (you're using it twice) */
-            var _this = $(this);
-            var title = _this.find('#roomName').text().toLowerCase();
-
-            /* 
-                title and filter are normalized in lowerCase letters
-                for a case insensitive search
-             */
-
-            var hidden = 0; // Set a flag to see if a div was hidden
-
-            // Loop through all the words in the array and hide the div if found
-            for (var i = 0; i < arrayLength; i++) {
-                 if (title.indexOf(filter_array[i]) < 0) {
-                    _this.hide();
-                    hidden = 1;
+        if (show_grid) {
+            $('.roomContainer').each(function() {
+                var _this = $(this);
+                var title = _this.find('.roomName').text().toLowerCase();
+                var hidden = 0;
+                for (var i = 0; i < arrayLength; i++) {
+                     if (title.indexOf(filter_array[i]) < 0) {
+                        _this.hide();
+                        hidden = 1;
+                    }
                 }
-            }
-            // If the flag hasn't been tripped show the div
-            if (hidden == 0)  {
-               _this.show();
-            }
-        });
+                if (hidden == 0)  {
+                   _this.show();
+                }
+            });
+        } else {
+            $('.room').each(function() {
+                var _this = $(this);
+                var title = _this.find('.roomName').text().toLowerCase();
+                var hidden = 0;
+                for (var i = 0; i < arrayLength; i++) {
+                     if (title.indexOf(filter_array[i]) < 0) {
+                        _this.hide();
+                        hidden = 1;
+                    }
+                }
+                if (hidden == 0)  {
+                   _this.show();
+                }
+            });
+        }
     });
 
+    // Grid/List switch
     $('#list').click(function() {
+
+        if (!$(this).hasClass("active")){
+            show_grid = false;
+            paintRoomsList(rooms);
+        }
 
 
         $(this).addClass('active');  
@@ -44,14 +57,17 @@ $(document).ready(function(){
         $(this).removeClass('btn-default');
 
 
-        $('#cuadr').addClass('btn-default');
-        $('#cuadr').removeClass('active');
-        $('#cuadr').removeClass('btn-primary');
+        $('#grid').addClass('btn-default');
+        $('#grid').removeClass('active');
+        $('#grid').removeClass('btn-primary');
            
     });
 
-    $('#cuadr').click(function() {
-
+    $('#grid').click(function() {
+        if (!$(this).hasClass("active")){
+            show_grid = true;
+            paintRoomsGrid(rooms);
+        }
 
         $(this).addClass('active');  
         $(this).addClass('btn-primary');
@@ -115,16 +131,42 @@ var createStatus = function(id, status) {
 
 socket.on('newEvent', function(evt) {
     var rooms = evt.rooms;
+    if (show_grid){
+        paintRoomsGrid(rooms);
+    } else {
+        paintRoomsList(rooms);
+    }
+});
+
+var paintRoomsGrid = function(rooms){
+    $('#rooms').html("");
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
-    $('#rooms').html("");
-
     for (var room in rooms) {
         if (!$('#room_'+room).length){
             var roomID = room;
             var nStreams = rooms[room]["nStreams"];
             var roomName = rooms[room]["roomName"];
-            createNewRoom(roomID, nStreams, roomName);
+            createNewRoomGrid(roomID, nStreams, roomName);
+        } else {
+            var roomID = room;
+            var nStreams = rooms[room]["nStreams"];
+            updateNStreams(roomID, nStreams);
+        }
+    }
+};
+
+var paintRoomsList = function(rooms){
+    $('#rooms').html("");
+    var nRooms = Object.keys(rooms).length
+    updateNRooms(nRooms);
+    $('#rooms').append('<div class="roomContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th><th class="col-md-4">Streams in Room</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    for (var room in rooms) {
+        if (!$('#room_'+room).length){
+            var roomID = room;
+            var nStreams = rooms[room]["nStreams"];
+            var roomName = rooms[room]["roomName"];
+            createNewRoomList(roomID, nStreams, roomName);        
         } else {
             var roomID = room;
             var nStreams = rooms[room]["nStreams"];
@@ -132,14 +174,21 @@ socket.on('newEvent', function(evt) {
         }
     }
 
+};
 
 
-    
-});
+var createNewRoomGrid = function(roomID, nStreams, roomName){
+    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 roomContainer show_grid"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><p><div class="roomName">' + roomName + '</div></p><p><div class="roomId">' + roomID + '</div></p><div class="streamsInRoom"><div class="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
+    $('#room_'+ roomID).click(function() {
+    var room_id = $(this).data('room_id');
+    if (room_id != undefined || room_id != null) {
+        window.location = '/room?room_id=' + room_id;
+    }
+    })
+}
 
-
-var createNewRoom = function(roomID, nStreams, roomName){
-    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 roomContainer"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><p><div id="roomName">' + roomName + '</div></p><p><div id="roomId">' + roomID + '</div></p><div id="streamsInRoom"><div id="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
+var createNewRoomList = function(roomID, nStreams, roomName, last){
+    $('#bodyTable').append('<tr class="room" id="room_' + roomID + '" data-room_id="' + roomID + '"><th>'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
     $('#room_'+ roomID).click(function() {
     var room_id = $(this).data('room_id');
     if (room_id != undefined || room_id != null) {
@@ -149,7 +198,7 @@ var createNewRoom = function(roomID, nStreams, roomName){
 }
 
 var updateNStreams = function(roomID, nStreams){
-    $('#room_' + roomID + ' #streams ' + '#number').html(nStreams);
+    $('#room_' + roomID + ' .streams ' + '#number').html(nStreams);
 }
 
 var updateNRooms = function(nRooms) {
@@ -157,6 +206,8 @@ var updateNRooms = function(nRooms) {
 
 }
 
+
+/**
 var paintRooms = function(rooms) {
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
@@ -168,3 +219,4 @@ var paintRooms = function(rooms) {
     }
    
 }
+**/
