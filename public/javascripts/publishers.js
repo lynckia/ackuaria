@@ -114,13 +114,13 @@ var createStatus = function(id, status) {
 
 socket.on('newEvent', function(evt) {
     var event = evt.event;
-    var rooms = evt.rooms;
-    var streams = evt.streams;
-    var users = evt.users;
-    var room = event.roomID;
+    rooms = evt.rooms;
+    streams = evt.streams;
+    users = evt.users;
+    roomID = event.roomID;
 
-    if (show_grid) paintPublishersGrid(room, rooms, streams, users);
-    else paintPublishersList(room, rooms, streams, users);
+    if (show_grid) paintPublishersGrid(roomID, rooms, streams, users);
+    else paintPublishersList(roomID, rooms, streams, users);
     
 });
 

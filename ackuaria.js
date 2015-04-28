@@ -253,3 +253,8 @@ app.get('/info', function(req, res) {
    }
 
 });
+
+
+app.get('/getRooms', function(req, res) {
+   res.send(API.rooms);
+})

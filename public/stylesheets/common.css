@@ -107,6 +107,10 @@ Scrolling bar properties
 
 }
 
+:focus{
+  outline: none !important;
+}
+
 
 /**
 Search bar properties

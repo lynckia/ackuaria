@@ -66,6 +66,7 @@ $(document).ready(function(){
     $('#grid').click(function() {
         if (!$(this).hasClass("active")){
             show_grid = true;
+            console.log(rooms);
             paintRoomsGrid(rooms);
         }
 
@@ -130,7 +131,7 @@ var createStatus = function(id, status) {
 
 
 socket.on('newEvent', function(evt) {
-    var rooms = evt.rooms;
+    rooms = evt.rooms;
     if (show_grid){
         paintRoomsGrid(rooms);
     } else {

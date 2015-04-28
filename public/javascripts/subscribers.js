@@ -97,20 +97,19 @@ $(document).ready(function(){
 
 socket.on('newEvent', function(evt) {
     var event = evt.event;
-    var rooms = evt.rooms;
-    var streams = evt.streams;
-    var users = evt.users;
-    var room = event.roomID;
-    var streamID = getMyStream();
+    rooms = evt.rooms;
+    streams = evt.streams;
+    users = evt.users;
+    roomID = event.roomID;
 
     $('#others').html("");
     $('#selected').html("");
 
-    if (rooms[room]) {
-        if (show_grid) paintSubscribersGrid(streamID, room, rooms, streams, users);
-        else paintSubscribersList(streamID, room, rooms, streams, users);
+    if (rooms[roomID]) {
+        if (show_grid) paintSubscribersGrid(streamID, roomID, rooms, streams, users);
+        else paintSubscribersList(streamID, roomID, rooms, streams, users);
 
-        paintPublishers(streamID, room, rooms, streams, users);
+        paintPublishers(streamID, roomID, rooms, streams, users);
     } else {
         updateNSubscribers(0)
         updateNamePublisher("Room not found");
@@ -204,9 +203,6 @@ var createMyPublisher = function(roomID, streamID, userName){
     }
 })
 }
-
-
-
 
 var updateNSubscribers = function(nSubscribers){
     $('#numberSubs').html(nSubscribers);
