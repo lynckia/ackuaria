@@ -1,5 +1,5 @@
 var socket = io();
-var show_grid = false;
+var show_grid = true;
 $(document).ready(function(){
 
     $('#back').click(function(){ window.location='/'});
@@ -13,6 +13,7 @@ $(document).ready(function(){
 
         if (show_grid) {
             $('.publisherContainer').each(function() {
+                console.log("fñlasjfñlasjfa");
                 var _this = $(this);
                 var title = _this.find('.pubName').text().toLowerCase();
                 var hidden = 0;
