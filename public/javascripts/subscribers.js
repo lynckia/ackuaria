@@ -1,7 +1,96 @@
 var socket = io();
 var show_grid = true;
-$(document).ready(function(){
 
+var stream_ssrc, audio, video;
+var subscribers = {};
+var sub_modal_now;
+
+socket.on('newEvent', function(evt) {
+    var event = evt.event;
+    rooms = evt.rooms;
+    streams = evt.streams;
+    users = evt.users;
+    roomID = event.roomID;
+
+    $('#others').html("");
+    $('#selected').html("");
+
+    if (rooms[roomID]) {
+        if (show_grid) paintSubscribersGrid(streamID, roomID, rooms, streams, users);
+        else paintSubscribersList(streamID, roomID, rooms, streams, users);
+
+        paintPublishers(streamID, roomID, rooms, streams, users);
+    } else {
+        updateNSubscribers(0)
+        updateNamePublisher("Room not found");
+    }    
+});
+
+socket.on('newSR', function(evt) {
+    var event = evt.event;
+    var pubID = event.pub;
+    audio = evt.audio;
+    video = evt.video;
+    stream_ssrc = evt.stream_ssrc;
+    if (pubID == streamID && audio && video){
+        stream_ssrc = evt.stream_ssrc;
+        $('#videoSSRC').html(video.ssrc);
+        $('#audioSSRC').html(audio.ssrc);
+      
+        $('#videoBytesSent').html(video.rtcpBytesSent);
+        $('#audioBytesSent').html(audio.rtcpBytesSent);
+
+        $('#videoPacketsSent').html(video.rtcpPacketSent);
+        $('#audioPacketsSent').html(audio.rtcpPacketSent);
+        
+    }
+});
+
+socket.on('newRR', function(evt) {
+    var event = evt.event;
+    var audio = evt.audio;
+    var video = evt.video;
+    var pubID = event.pub;
+    var subID = event.subs;
+    var stats = {"audio": audio, "video": video};
+    if (pubID == streamID) {
+        if (!subscribers[subID]){
+            subscribers[subID] = [stats];
+        } else if (subscribers[subID] && subscribers[subID].length < 10) {
+            subscribers[subID].unshift(stats);
+        } else {
+            subscribers[subID].pop();
+            subscribers[subID].unshift(stats);
+        }
+        if (sub_modal_now == subID && audio && video) {
+            updateRR(subID, audio, video);
+
+        }
+    }
+
+});
+
+var updateRR = function(subID, audio, video) {
+    $('#dataModal #videoSSRC').html(video.ssrc);
+    $('#dataModal #audioSSRC').html(audio.ssrc);
+  
+    $('#dataModal #pli').html(video.PLI);
+    $('#dataModal #videoBandwidth').html(video.bandwidth);
+
+    $('#dataModal #videoFractionLost').html(video.fractionLost);
+    $('#dataModal #audioFractionLost').html(audio.fractionLost);
+
+    $('#dataModal #videoJitter').html(video.jitter);
+    $('#dataModal #audioJitter').html(audio.jitter);
+
+    $('#dataModal #videoPacketsLost').html(video.packetsLost);
+    $('#dataModal #audioPacketsLost').html(audio.packetsLost);
+
+    $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
+    $('#dataModal #audioSourceSSRC').html(audio.sourceSsrc);
+}
+
+$(document).ready(function(){
     $('.publisher').click(function(){ window.location='subs'});
     $('#backRooms').click(function(){ window.location='/'});
     $('#backStreams').click(function(){ window.location='/room?room_id=' + roomID});
@@ -9,6 +98,14 @@ $(document).ready(function(){
     $('#subscriberModal').on('show.bs.modal', function (event) {
       var subscriber = $(event.relatedTarget);
       var userName = subscriber.data('username');
+      var subID = subscriber.data('subid');
+      sub_modal_now = subID;
+      var buffer = subscribers[subID];
+      if (buffer != undefined && buffer[0]) {
+        var audio = buffer[0].audio;
+        var video = buffer[0].video;
+        updateRR(subID, audio, video);
+      }
       var modal = $(this)
       $('#username').html(" " + userName);
     })
@@ -95,29 +192,6 @@ $(document).ready(function(){
     
 })
 
-socket.on('newEvent', function(evt) {
-    var event = evt.event;
-    rooms = evt.rooms;
-    streams = evt.streams;
-    users = evt.users;
-    roomID = event.roomID;
-
-    $('#others').html("");
-    $('#selected').html("");
-
-    if (rooms[roomID]) {
-        if (show_grid) paintSubscribersGrid(streamID, roomID, rooms, streams, users);
-        else paintSubscribersList(streamID, roomID, rooms, streams, users);
-
-        paintPublishers(streamID, roomID, rooms, streams, users);
-    } else {
-        updateNSubscribers(0)
-        updateNamePublisher("Room not found");
-    }    
-});
-
-
-
 var paintSubscribersGrid = function(streamID, roomID, rooms, streams, users) {
     $('#subscribers').html("");
 
@@ -156,10 +230,10 @@ var paintSubscribersList = function(streamID, roomID, rooms, streams, users) {
 
 
 var createNewSubscriberGrid = function(userID, userName){
-    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer show_grid" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div class="subName">' + userName +'</div></div>');
+    $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer show_grid" data-toggle="modal" data-target="#subscriberModal" data-subid="' + userID + '" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle green"></div><div class="subName">' + userName +'</div></div>');
 }
 var createNewSubscriberList = function(userID, userName){
-    $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-username="' + userName + '" ><th class="subId">' + userID + '</th><th class="subname">' + userName + '</th><th class="status"><span class="fa fa-circle green"></span></th></tr>');
+    $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-subid="' + userID + '" data-username="' + userName + '" ><th class="subId">' + userID + '</th><th class="subname">' + userName + '</th><th class="status"><span class="fa fa-circle green"></span></th></tr>');
 }
 
 var paintPublishers = function(streamID, roomID, rooms, streams, users) {

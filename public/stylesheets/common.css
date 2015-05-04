@@ -56,6 +56,7 @@ html, body {
   /* Set the fixed height of the footer here */
   height: 70px;
   background-color: #55739D;
+  z-index: 2;
 
 }
 
@@ -103,8 +104,6 @@ Scrolling bar properties
 ::-webkit-scrollbar-track{
 
     	margin-bottom: 50px;
-
-
 }
 
 :focus{

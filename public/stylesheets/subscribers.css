@@ -143,8 +143,7 @@
 	margin-top: 60px;
 	padding-bottom: 50px;
 	height: 90%;
-	width: 90%;
-	background-color: gray;
+	width: 95%;
 	overflow-y: scroll;
 }
 
@@ -164,6 +163,7 @@
 	padding:20px;
 	height: 100%;
 	margin-bottom: 10px;
+	overflow: auto;
 }
 
 #subscribersModal {
@@ -241,4 +241,9 @@
 	background-color: #B2C2D6;
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+.modal ::-webkit-scrollbar-track {
+
+    	margin-bottom: 10px !important;
 }

@@ -18,7 +18,30 @@
 				<div id="pubName"><span class="fa fa-circle green"></span> <%= userName %></div>
 				<div id="pubId"><%= streamID %></div>
 			</div>
-			<div id="streamData"></div>
+			<div id="streamData">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" id="videoCol" >
+					<span id="typeVideo"> VIDEO </span>
+					<br>
+					<br>
+					SSRC: <span id="videoSSRC"></span>
+					<br>
+					rtcpBytesSent: <span id="videoBytesSent"></span>
+					<br>
+					rtcpPacketSent: <span id="videoPacketsSent"></span>
+				</div>
+
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" id="audioCol" >
+				<span id="typeAudio"> AUDIO </span>
+					<br>
+					<br>
+					SSRC: <span id="audioSSRC"></span>
+					<br>
+					rtcpBytesSent: <span id="audioBytesSent"></span>
+					<br>
+					rtcpPacketSent: <span id="audioPacketsSent"></span>
+				</div>
+
+			</div>
 		</div>
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
 			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
@@ -59,6 +82,36 @@
       	<div id="subModal" class="row">
 
 	        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" id="dataModal">
+				<span id="typeVideo"> VIDEO </span>
+				<br>
+				<br>
+				SSRC: <span id="videoSSRC"></span>
+				<br>
+				PLI: <span id="pli"></span>
+				<br>
+				Bandwidth: <span id="videoBandwidth"></span>
+				<br>
+				Fraction Lost: <span id="videoFractionlost"></span>
+				<br>
+				Jitter: <span id="videoJitter"></span>
+				<br>
+				Packets Lost: <span id="videoPacketsLost"></span>
+				<br>
+				Source SSRC: <span id="videoSourceSSRC"></span>
+				<br>
+				<br>
+				<span id="typeAudio"> AUDIO </span>
+				<br>
+				<br>
+				SSRC: <span id="audioSSRC"></span>
+				<br>
+				Fraction Lost: <span id="audioFractionlost"></span>
+				<br>
+				Jitter: <span id="audioJitter"></span>
+				<br>
+				Packets Lost: <span id="audioPacketsLost"></span>
+				<br>
+				Source SSRC: <span id="audioSourceSSRC"></span>
 	        </div>
 	       	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="subscribersModal">
 	        </div>
