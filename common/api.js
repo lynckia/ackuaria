@@ -22,7 +22,7 @@ API.nPubsTotal = 0;
 API.rooms = {};
 API.streams = {};
 API.users = {};
-API.status = {};
+API.states = {};
 
 
 API.streams_ssrc = {};
@@ -55,8 +55,6 @@ API.api = {
                   event.roomID = roomID;
                   event.userID = userID;
                   event.userName = userName;
-                  console.log(event);
-                  console.log(theEvent);
 
                   if (API.rooms[roomID] === undefined) {
                      API.rooms[roomID] = {"roomName": "NombreTest", "nStreams": 1, "streams": [streamID], "users":[userID]};
@@ -72,9 +70,11 @@ API.api = {
                   }
 
                   API.streams[streamID] = {"userID": userID, "roomID": roomID, "userName": userName, "subscribers": [] };
+
+                  API.states[streamID] = {state: 103, subscribers: {}};
                   // Fin memoria local para datos
 
-                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
 
                   break;
 
@@ -116,9 +116,17 @@ API.api = {
                   }
 
                   delete API.streams[streamID];
+                  
+                  for (var stream in API.states){
+                    for (var sub in API.states[stream]["subscribers"]) {
+                        if (sub == userID) {
+                            delete API.states[stream]["subscribers"][sub];
+                        }
+                    }
+                  }
+                  delete API.states[streamID];
 
-                  //Falta statusID
-                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
 
                   break;
 
@@ -141,7 +149,7 @@ API.api = {
                   } else {
                      API.users[userID]["subscribedTo"].push(streamID);
                   }
-                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
 
 
                   break;
@@ -164,28 +172,35 @@ API.api = {
                   if (API.users[userID][nStreams] && API.users[userID]["subscribedTo"].length == 0){
                      delete API.users[userID];
                   }
-                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
 
                   break;
 
                case "connection_status":
                   var event = {};
                   var streamID = theEvent.pub;
-                  var userID = theEvent.subs;
-                  var status = theEvent.status;
+                  var subID = theEvent.subs;
+                  var state = theEvent.status;
+                  var roomID = API.streams[streamID].roomID;
 
+                  event.type = "connection_status";
                   event.streamID = streamID;
-                  event.userID = userID;
-                  event.status = status;
-                  var id = "";
-                  if (!userID) {
-                     id += streamID;
+                  event.subID = subID;
+                  event.state = state;
+                  event.roomID = roomID;
+                  
+                  if (!subID) {
+                    if (!API.states[streamID]){
+                        API.states[streamID] = {state: state, subscribers: {}};
+                    } else {
+                        API.states[streamID].state = state;
+                    }
+
                   } else {
-                     id = userID + "_" + streamID;
+                        API.states[streamID].subscribers[subID] = state;
                   }
 
-                  API.status[id] = status;
-//                  API.send_event_to_clients(event, API.rooms, API.streams, API.users);
+                  API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
 
                   break;
 
@@ -213,13 +228,14 @@ API.api = {
    }
 };
 
-API.send_event_to_clients = function(event, rooms, streams, users) {
+API.send_event_to_clients = function(event, rooms, streams, users, states) {
    for (var s in API.sockets) {
       API.sockets[s].emit('newEvent', {
          event: event,
          rooms: rooms,
          streams: streams,
-         users: users
+         users: users,
+         states: states
       });
    }
 }

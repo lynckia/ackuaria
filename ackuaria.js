@@ -101,15 +101,14 @@ app.get('/room', function(req, res){
    var roomID = req.query.room_id;
    if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
    else var roomName = "Not found";
-
-
    res.render('publishers', {
       view:"publishers",
       roomID: roomID,
       roomName: roomName,
       rooms: API.rooms,
       streams: API.streams,
-      users: API.users
+      users: API.users,
+      states: API.states
    });
 })
 app.get('/pub', function(req, res){
@@ -129,7 +128,8 @@ app.get('/pub', function(req, res){
       userName: userName,
       rooms: API.rooms, 
       streams: API.streams,
-      users: API.users
+      users: API.users,
+      states: API.states
 });
 
 })

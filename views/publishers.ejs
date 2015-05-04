@@ -39,8 +39,8 @@
   var roomName = <%- JSON.stringify(roomName) %>;
   var streams = <%- JSON.stringify(streams) %>;
   var users = <%- JSON.stringify(users) %>;
-  
-  paintPublishersGrid(roomID, rooms, streams, users);
+  var states = <%- JSON.stringify(states) %>;
+  paintPublishersGrid(roomID, rooms, streams, users, states);
   
 
 
