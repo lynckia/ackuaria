@@ -89,6 +89,8 @@ io.on('connection', function(socket) {
 
 
 app.get('/', function(req, res) {
+   API.currentRoom = "";
+
    res.render('rooms', {
       view:"rooms",
       rooms: API.rooms
@@ -99,6 +101,7 @@ app.get('/', function(req, res) {
 //TRASH 
 app.get('/room', function(req, res){
    var roomID = req.query.room_id;
+   API.currentRoom = roomID;
    if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
    else var roomName = "Not found";
    res.render('publishers', {
@@ -114,6 +117,7 @@ app.get('/room', function(req, res){
 app.get('/pub', function(req, res){
    var streamID = req.query.pub_id;
    var roomID = req.query.room_id;
+   API.currentRoom = roomID;
    if (API.streams[streamID])  var userName = API.streams[streamID]["userName"];
    else var userName = "Publisher not found";
 

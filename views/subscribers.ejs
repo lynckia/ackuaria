@@ -15,8 +15,9 @@
 	<div id="dataAndSubs" class="row">
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="dataCol" >
 			<div id="streamInfo">
-				<div id="pubName"><span class="fa fa-circle green"></span> <%= userName %></div>
-				<div id="pubId"><%= streamID %></div>
+				<span id="pubState" class="fa fa-circle"></span>
+				<span id="pubName"><%= userName %></span>
+				<span id="pubId"><%= streamID %></span>
 			</div>
 			<div id="streamData">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" id="videoCol" >
@@ -76,7 +77,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel"><span class="fa fa-circle green"></span><span class="bold dark" id="username"></span></h4>
+        <h4 class="modal-title" id="exampleModalLabel"><span id="subState" class="fa fa-circle"></span><span class="bold dark" id="username"></span></h4>
       </div>
       <div class="modal-body">
       	<div id="subModal" class="row">
@@ -128,8 +129,9 @@
   var streamID = <%- JSON.stringify(streamID) %>;
   var streams = <%- JSON.stringify(streams) %>;
   var users = <%- JSON.stringify(users) %>;
-  
-  paintSubscribersGrid(streamID, roomID, rooms, streams, users);
-  paintPublishers(streamID, roomID, rooms, streams, users);
+  var states = <%- JSON.stringify(states) %>;
+
+  paintSubscribersGrid(streamID, roomID, rooms, streams, users, states);
+  paintPublishers(streamID, roomID, rooms, streams, users, states);
 
 </script>

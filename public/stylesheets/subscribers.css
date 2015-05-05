@@ -46,6 +46,10 @@
 	color: 042762;
 	font-size: 15px;
 }
+
+#pubState {
+	padding: 3px;
+}
 #pubId {
 	position: absolute;
 	margin-top: 25px;
