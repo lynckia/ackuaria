@@ -275,8 +275,7 @@ API.send_stats_to_clients = function(event) {
             API.sockets[s].emit('newSR', {
                 event: event,
                 audio: audio,
-                video: video,
-                stream_ssrc: API.streams_ssrc[pubID]
+                video: video
             });
         }
     } else {
