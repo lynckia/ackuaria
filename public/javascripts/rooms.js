@@ -133,13 +133,13 @@ var createStatus = function(id, status) {
 socket.on('newEvent', function(evt) {
     rooms = evt.rooms;
     if (show_grid){
-        paintRoomsGrid(rooms);
+        paintRoomsGrid();
     } else {
-        paintRoomsList(rooms);
+        paintRoomsList();
     }
 });
 
-var paintRoomsGrid = function(rooms){
+var paintRoomsGrid = function(){
     $('#rooms').html("");
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
@@ -157,7 +157,7 @@ var paintRoomsGrid = function(rooms){
     }
 };
 
-var paintRoomsList = function(rooms){
+var paintRoomsList = function(){
     $('#rooms').html("");
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
@@ -206,18 +206,3 @@ var updateNRooms = function(nRooms) {
     $('#numberRooms').html(nRooms);
 
 }
-
-
-/**
-var paintRooms = function(rooms) {
-    var nRooms = Object.keys(rooms).length
-    updateNRooms(nRooms);
-    for (var room in rooms) {
-        var roomID = room;
-        var nStreams = rooms[room]["nStreams"];
-        var roomName = rooms[room]["roomName"];
-        createNewRoom(roomID, nStreams, roomName);
-    }
-   
-}
-**/

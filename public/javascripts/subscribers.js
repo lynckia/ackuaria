@@ -17,10 +17,10 @@ socket.on('newEvent', function(evt) {
     $('#selected').html("");
 
     if (rooms[roomID]) {
-        if (show_grid) paintSubscribersGrid(streamID, roomID, rooms, streams, users, states);
-        else paintSubscribersList(streamID, roomID, rooms, streams, users, states);
+        if (show_grid) paintSubscribersGrid();
+        else paintSubscribersList();
 
-        paintPublishers(streamID, roomID, rooms, streams, users, states);
+        paintPublishers();
     } else {
         updateNSubscribers(0)
         updateNamePublisher("Room not found");
@@ -131,7 +131,7 @@ $(document).ready(function(){
       if (buffer != undefined && buffer[0]) {
         var audio = buffer[0].audio;
         var video = buffer[0].video;
-        updateRR(subID, audio, video);
+        if (audio && video) updateRR(subID, audio, video);
       }
       updateModalState(subID);
       var modal = $(this)
@@ -221,7 +221,7 @@ $(document).ready(function(){
     
 })
 
-var paintSubscribersGrid = function(streamID, roomID, rooms, streams, users, states) {
+var paintSubscribersGrid = function() {
     $('#subscribers').html("");
 
     if (rooms[roomID] && streams[streamID]) {
@@ -240,7 +240,7 @@ var paintSubscribersGrid = function(streamID, roomID, rooms, streams, users, sta
     }
 }
 
-var paintSubscribersList = function(streamID, roomID, rooms, streams, users, states) {
+var paintSubscribersList = function() {
     $('#subscribers').html("");
     $('#subscribers').append('<div class="subscriberContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     if (rooms[roomID] && streams[streamID]) {
@@ -260,8 +260,7 @@ var paintSubscribersList = function(streamID, roomID, rooms, streams, users, sta
     }
 }
 
-
-var createNewSubscriberGrid = function(userID, userName, state){
+var stateToColor = function(state) {
     var color;
     switch (state) {
         case 500:
@@ -274,25 +273,20 @@ var createNewSubscriberGrid = function(userID, userName, state){
             color = "orange";
             break;
     }
+    return color; 
+}
+
+var createNewSubscriberGrid = function(userID, userName, state){
+    var color = stateToColor(state);
     $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberContainer show_grid" data-toggle="modal" data-target="#subscriberModal" data-state="' + color + '" data-subid="' + userID + '" data-username="' + userName + '" id="sub_' + userID +'"><div class="fa fa-circle ' + color + '"></div><div class="subName">' + userName +'</div></div>');
 }
 var createNewSubscriberList = function(userID, userName, state){
-    var color;
-    switch (state) {
-        case 500:
-            color = "red";
-            break;
-        case 104:
-            color = "green";
-            break;
-        default:
-            color = "orange";
-            break;
-    }
+    var color = stateToColor(state);
+
     $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-state="' + color + '" data-subid="' + userID + '" data-username="' + userName + '" ><th class="subId">' + userID + '</th><th class="subname">' + userName + '</th><th class="status"><span class="fa fa-circle ' + color + '"></span></th></tr>');
 }
 
-var paintPublishers = function(streamID, roomID, rooms, streams, users, states) {
+var paintPublishers = function() {
     if (rooms[roomID]) {
         var roomStreams = rooms[roomID]["streams"];
         for (var stream in roomStreams){
@@ -312,18 +306,8 @@ var paintPublishers = function(streamID, roomID, rooms, streams, users, states) 
 }
 
 var createNewPublisher = function(roomID, streamID, userName, state){
-    var color;
-    switch (state) {
-        case 500:
-            color = "red";
-            break;
-        case 104:
-            color = "green";
-            break;
-        default:
-            color = "orange";
-            break;
-    }
+    var color = stateToColor(state);
+
     $('#others').append('<div class="col-lg-3 publisherCol" id="pub_' + streamID +'"data-pub_id="' + streamID +'"><div class="fa fa-circle ' + color + '"></div><div id="pubNameCarousel">' + userName + '</div></div>');
 
     $('#pub_'+ streamID).click(function() {
@@ -337,18 +321,8 @@ var createNewPublisher = function(roomID, streamID, userName, state){
 }
 
 var createMyPublisher = function(roomID, streamID, userName, state){
-    var color;
-    switch (state) {
-        case 500:
-            color = "red";
-            break;
-        case 104:
-            color = "green";
-            break;
-        default:
-            color = "orange";
-            break;
-    }
+    var color = stateToColor(state);
+
     $('#selected').append('<div class="col-lg-3 publisherCol selected" id="pub_' + streamID +'" data-pub_id="' + streamID +'"><div class="fa fa-circle ' + color +'"></div><div id="pubNameCarousel">' + userName + '</div></div>');
 
     $('#pub_'+ streamID).click(function() {
@@ -368,24 +342,15 @@ var updateNamePublisher = function(name) {
         $('#pubName').html(name);
 }
 var updateStatePublisher = function() {
-    var color, state;
-    if (states[streamID]) state = states[streamID].state;
-    switch (state) {
-        case 103:
-            color = "orange";
-            break;
-        case 104:
-            color = "green";
-            break;
-        default:
-            color = "red";
-            break;
-    }
+    var state;
+    if (states[streamID]) state = states[streamID].state;    
+
+    var color = stateToColor(state);
+
     $('#pubState').removeClass('green');
     $('#pubState').removeClass('orange');
     $('#pubState').removeClass('red');
 
     $('#pubState').addClass(color);
-    console.log("****", color);
 
 }
