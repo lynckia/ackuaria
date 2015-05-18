@@ -45,17 +45,50 @@
 	font-family: "Nunito-Bold";
 	color: 042762;
 	font-size: 15px;
+	left: 30px;
 }
 
 #pubState {
-	padding: 3px;
+	position:absolute;
 }
 #pubId {
 	position: absolute;
-	margin-top: 25px;
+	top: 25px;
 	font-family: "Nunito-Light";
 	color: #55739D;
 
+}
+
+#typeVideo {
+	font-family: 'Nunito-Light';
+	font-size: 20px;
+	color: #042762;
+	text-align: center;
+}
+#typeAudio {
+	font-family: 'Nunito-Light';
+	font-size: 20px;
+	color: #042762;
+	text-align: center;
+}
+
+#videoData {
+	padding: 20px 5px 20px 30px;
+}
+#audioData {
+	padding: 20px 5px 20px 30px;
+}
+
+.propertyTitle {
+	font-family: 'Nunito-Bold';
+	font-size: 15px;
+	color: #55739D;
+}
+
+.propertyContent {
+	font-family: 'Nunito-Light';
+	font-size: 15px;
+	color: #55739D;
 }
 .subsCol {
 	height: 100%;
@@ -69,11 +102,29 @@
 	position: relative;
 	width: 80px;
 	height: 80px;
-	background-color: white;
 	cursor: pointer;
 }
 
 .subscriberContainer.show_list  {
+	padding: 10px;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.subscriberFake.show_grid  {
+	min-width: 80px;
+	max-width: 80px;
+	border: 1px solid #55739D;
+	border-style: dashed;
+	padding: 10px;
+	margin: 10px;
+	position: relative;
+	width: 80px;
+	height: 80px;
+
+}
+
+.subscriberFake.show_list  {
 	padding: 10px;
 	margin: 10px;
 	cursor: pointer;
@@ -144,7 +195,7 @@
 
 #streamData {
 	position: absolute;
-	margin-top: 60px;
+	top: 80px;
 	padding-bottom: 50px;
 	height: 90%;
 	width: 95%;
@@ -250,4 +301,14 @@
 .modal ::-webkit-scrollbar-track {
 
     	margin-bottom: 10px !important;
+}
+
+.close {
+	color: #042762;
+	font-size: 32px;
+	opacity: 1;
+}
+
+.modal-header {
+	border-bottom: none;
 }

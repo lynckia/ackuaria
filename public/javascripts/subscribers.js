@@ -230,6 +230,18 @@ var paintSubscribersGrid = function() {
             var state = states[streamID].subscribers[userID];
             createNewSubscriberGrid(userID, userName, state);
         }
+
+        var overflowing = false;
+        while (!overflowing) {
+            $('#subscribers').append('<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 subscriberFake show_grid"></div>');
+            if ($('#subscribers')[0].offsetHeight < $('#subscribers')[0].scrollHeight) {
+                $('#subscribers div.subscriberFake:last').remove();
+                overflowing=true;
+            } else {
+                overflowing = false;
+            }
+        }
+
     } else {
         updateNamePublisher("Publisher not found");
         updateNSubscribers(0);
