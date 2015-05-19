@@ -15,7 +15,7 @@ $(document).ready(function(){
         if (show_grid) {
             $('.roomContainer').each(function() {
                 var _this = $(this);
-                var title = _this.find('.roomName').text().toLowerCase();
+                var title = _this.find('.roomId').text().toLowerCase();
                 var hidden = 0;
                 for (var i = 0; i < arrayLength; i++) {
                     if (title.indexOf(filter_array[i]) < 0) {
@@ -30,7 +30,7 @@ $(document).ready(function(){
         } else {
             $('.room').each(function() {
                 var _this = $(this);
-                var title = _this.find('.roomName').text().toLowerCase();
+                var title = _this.find('.roomId').text().toLowerCase();
                 var hidden = 0;
                 for (var i = 0; i < arrayLength; i++) {
                      if (title.indexOf(filter_array[i]) < 0) {
