@@ -63,20 +63,18 @@
 	font-family: 'Nunito-Light';
 	font-size: 20px;
 	color: #042762;
-	text-align: center;
 }
 #typeAudio {
 	font-family: 'Nunito-Light';
 	font-size: 20px;
 	color: #042762;
-	text-align: center;
 }
 
 #videoData {
-	padding: 20px 5px 20px 30px;
+	padding-top: 20px;
 }
 #audioData {
-	padding: 20px 5px 20px 30px;
+	padding-top: 20px;
 }
 
 .propertyTitle {
@@ -205,12 +203,12 @@
 #subsCol {
 	padding-left: 30px;
 	border-left: 1px solid #55739D;
-	max-height: calc(100% - 380px);
+	max-height: calc(100% - 390px);
 }
 
 #dataCol {
 
-	max-height: calc(100% - 380px);
+	max-height: calc(100% - 390px);
 }
 
 

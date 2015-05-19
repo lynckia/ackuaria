@@ -13,7 +13,6 @@ API.roomsInfo = {};
 API.userStream = {};
 API.statusId = {};
 API.userName = {};
-//API.rooms = [];
 API.streamRoom = {};
 API.roomUsers = {};
 API.nRoomsTotal = 0;
@@ -86,26 +85,39 @@ API.api = {
                   event.roomID = roomID;
                   event.userID = userID;
 
-                  var indexRoom = API.rooms[roomID]["streams"].indexOf(streamID);
-                  if (indexRoom > -1) API.rooms[roomID]["streams"].splice(indexRoom, 1);
-                  API.rooms[roomID]["nStreams"]--;
-                  API.rooms[roomID]["nStreams"];
-                  if (API.rooms[roomID]["nStreams"] == 0) {
-                     delete API.rooms[roomID];
+
+                  if (API.rooms[roomID] === undefined) {
+                    console.log("WARNING: Cannot find room", roomID);
+                  } else {
+                    var indexRoom = API.rooms[roomID]["streams"].indexOf(streamID);
+                    if (indexRoom > -1) API.rooms[roomID]["streams"].splice(indexRoom, 1);
+                    API.rooms[roomID]["nStreams"]--;
+                    API.rooms[roomID]["nStreams"];
+                    if (API.rooms[roomID]["nStreams"] == 0) {
+                       delete API.rooms[roomID];
+                    }
                   }
 
-                  var indexUser = API.users[userID]["streams"].indexOf(streamID);
-                  if (indexUser > -1) API.users[userID]["streams"].splice(indexUser, 1);
-                  if (API.users[userID]["nStreams"] == 0 && API.users[userID]["subscribedTo"].length == 0){
-                     delete API.users[userID];
+                  if (API.users[userID] === undefined) {
+                    console.log("WARNING: Cannot find user", userID);
+                  } else {
+                    var indexUser = API.users[userID]["streams"].indexOf(streamID);
+                    if (indexUser > -1) API.users[userID]["streams"].splice(indexUser, 1);
+                    if (API.users[userID]["nStreams"] == 0 && API.users[userID]["subscribedTo"].length == 0){
+                       delete API.users[userID];
+                    }
                   }
 
-                  var subscribers = API.streams[streamID]["subscribers"];
-                  for (var s in subscribers) {
-                     if (API.users[subscribers[s]]) {
-                        var indexSub = API.users[subscribers[s]]["subscribedTo"].indexOf(streamID);
-                        if (indexSub > -1) API.users[subscribers[s]]["subscribedTo"].splice(indexSub, 1);
-                     }
+                  if (API.streams[streamID] === undefined) {
+                    console.log("WARNING: Cannot find stream", streamID);
+                  } else {
+                    var subscribers = API.streams[streamID]["subscribers"];
+                    for (var s in subscribers) {
+                       if (API.users[subscribers[s]]) {
+                          var indexSub = API.users[subscribers[s]]["subscribedTo"].indexOf(streamID);
+                          if (indexSub > -1) API.users[subscribers[s]]["subscribedTo"].splice(indexSub, 1);
+                       }
+                    }
                   }
 
                   for (var stream in API.streams){
@@ -155,13 +167,21 @@ API.api = {
                   event.roomID = roomID;
                   event.userID = userID;
 
-                  var indexStream = API.streams[streamID]["subscribers"].indexOf(userID);
-                  if (indexSub > -1) API.streams[streamID]["subscribers"].splice(indexSub, 1);
+                  if (API.streams[streamID] === undefined) {
+                    console.log("WARNING: Cannot find stream", streamID);
+                  } else {
+                    var indexStream = API.streams[streamID]["subscribers"].indexOf(userID);
+                    if (indexSub > -1) API.streams[streamID]["subscribers"].splice(indexSub, 1);
+                  }
 
-                  var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
-                  if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
-                  if (API.users[userID] && API.users[userID]["subscribedTo"].length == 0){
-                     delete API.users[userID];
+                  if (API.users[userID] === undefined) {
+                    console.log("WARNING: Cannot find user", userID);
+                  } else {
+                    var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
+                    if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
+                    if (API.users[userID] && API.users[userID]["subscribedTo"].length == 0){
+                       delete API.users[userID];
+                    }
                   }
 
                   break;
@@ -179,17 +199,18 @@ API.api = {
                         API.streams[streamID]["subscribers"].splice(indexStream, 1);
                       }
                    delete API.states[streamID].subscribers[userID];
-
-
                   }
-                  var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
-                  if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
-                  if (API.users[userID]){
-                     delete API.users[userID];
+
+                  if (API.users[userID] === undefined) {
+                    console.log("WARNING: Cannot find user", userID);
+                  } else {
+                    var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
+                    if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
+                    if (API.users[userID]){
+                       delete API.users[userID];
+                    }
                   }
-                  
                   break;
-
 
                case "connection_status":
                   var streamID = theEvent.pub;
@@ -211,7 +232,7 @@ API.api = {
                     }
 
                   } else {
-                        API.states[streamID].subscribers[subID] = state;
+                    API.states[streamID].subscribers[subID] = state;
                   }
 
                   break;
