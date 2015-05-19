@@ -25,6 +25,15 @@ config.ackuaria.useDB = false; // default value: false
 config.ackuaria.dataBaseURL = "localhost/ackuariadb"; // default value: 'localhost/ackuariadb'
 config.ackuaria.port = 8888 // default value: 80
 
+/*********************************************************
+ NUVE CONFIGURATION
+**********************************************************/
+config.nuve = {};
+config.nuve.dataBaseURL = "localhost/nuvedb"; // default value: 'localhost/nuvedb'
+config.nuve.superserviceID = ''; // default value: ''
+config.nuve.superserviceKey = ''; // default value: ''
+
+
 /***** END *****/
 // Following lines are always needed.
 var module = module || {};
