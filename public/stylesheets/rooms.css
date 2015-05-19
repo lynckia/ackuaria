@@ -67,7 +67,12 @@ TIPO GRID
 	position: absolute;
 	font-family: "Nunito-Bold";
 	color: 042762;
-	font-size: 20px;
+	font-size: 18px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 160px;
+    display: block;
+    overflow: hidden
 
 }
 .show_grid .roomId {

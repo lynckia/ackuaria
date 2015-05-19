@@ -8,42 +8,6 @@ var sessionsRegistry = require('./common/mdb/sessionsRegistry');
 
 GLOBAL.config = config || {};
 
-// Parse command line arguments
-var getopt = new Getopt([
-   ['r', 'rabbit-host=ARG', 'RabbitMQ Host'],
-   ['g', 'rabbit-port=ARG', 'RabbitMQ Port'],
-   ['l', 'logging-config-file=ARG', 'Logging Config File'],
-   ['h', 'help', 'display this help']
-]);
-
-opt = getopt.parse(process.argv.slice(2));
-
-for (var prop in opt.options) {
-   if (opt.options.hasOwnProperty(prop)) {
-      var value = opt.options[prop];
-      switch (prop) {
-         case "help":
-            getopt.showHelp();
-            process.exit(0);
-            break;
-         case "rabbit-host":
-            GLOBAL.config.rabbit = GLOBAL.config.rabbit || {};
-            GLOBAL.config.rabbit.host = value;
-            break;
-         case "rabbit-port":
-            GLOBAL.config.rabbit = GLOBAL.config.rabbit || {};
-            GLOBAL.config.rabbit.port = value;
-            break;
-         case "logging-config-file":
-            GLOBAL.config.logger = GLOBAL.config.logger || {};
-            GLOBAL.config.logger.config_file = value;
-            break;
-         default:
-            break;
-      }
-   }
-}
-
 // Load submodules with updated config
 var amqper = require('./common/amqper');
 
@@ -55,6 +19,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path');
 var partials = require('express-partials');
+var N = require('./nuve');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -74,6 +39,21 @@ http.listen(GLOBAL.config.ackuaria.port, function() {
 
 var api = API.api;
 
+N.API.init(GLOBAL.config.nuve.superserviceID, GLOBAL.config.nuve.superserviceKey, 'http://localhost:3000/');
+
+N.API.getRooms(function(roomList) {
+   var rooms = JSON.parse(roomList);
+   for (var r in rooms) {
+      var room = rooms[r];
+      if (!API.rooms[room._id]) {
+         API.rooms[room._id] = {
+             "roomName": room.name,
+             "streams": [],
+             "users": []
+         };      
+      }
+   }
+})
 
 amqper.connect(function() {
    "use strict";
