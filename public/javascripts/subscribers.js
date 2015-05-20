@@ -250,7 +250,7 @@ var paintSubscribersGrid = function() {
 
 var paintSubscribersList = function() {
     $('#subscribers').html("");
-    $('#subscribers').append('<div class="subscriberContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    $('#subscribers').append('<div class="subscriberContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     if (rooms[roomID] && streams[streamID]) {
         var subscribers = streams[streamID]["subscribers"];
         var nSubscribers = streams[streamID]["subscribers"].length;
@@ -266,7 +266,9 @@ var paintSubscribersList = function() {
         updateNamePublisher("Publisher not found");
         updateNSubscribers(0);
     }
-}
+    Sortable.init()
+
+}   
 
 var createNewSubscriberGrid = function(userID, userName, state){
     var color = stateToColor(state);

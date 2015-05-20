@@ -164,7 +164,6 @@ API.api = {
                                      if (saved) log.info('MongoDB: Added session: ', saved);
                                 })
                             }
-                            // delete API.rooms[roomID];
                         }
                     }
 

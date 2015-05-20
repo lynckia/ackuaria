@@ -141,7 +141,7 @@ var paintPublishersGrid = function() {
 
 var paintPublishersList = function() {
     $('#publishers').html("");
-    $('#publishers').append('<div class="publisherContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     if (rooms[roomID]) {
         var roomStreams = rooms[roomID]["streams"];
         var nStreams = rooms[roomID]["streams"].length;
@@ -156,6 +156,8 @@ var paintPublishersList = function() {
         updateNStreams(rooms[roomID]["streams"].length);
 
     } else updateNStreams(0);
+    Sortable.init()
+
 }
 
 var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, state){

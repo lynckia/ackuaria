@@ -108,7 +108,7 @@ var paintRoomsList = function(){
     $('#rooms').html("");
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
-    $('#rooms').append('<div class="roomContainer show_list"><table class="table table-hover"><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th><th class="col-md-4">Streams in Room</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    $('#rooms').append('<div class="roomContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th><th class="col-md-4">Streams in Room</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     for (var room in rooms) {
         if (!$('#room_'+room).length){
             var roomID = room;
@@ -121,6 +121,7 @@ var paintRoomsList = function(){
             updateNStreams(roomID, nStreams);
         }
     }
+    Sortable.init()
 };
 
 var createNewRoomGrid = function(roomID, nStreams, roomName){
