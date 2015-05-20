@@ -62,7 +62,6 @@ amqper.connect(function() {
 
 });
 
-
 io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
@@ -77,8 +76,6 @@ app.get('/', function(req, res) {
    });
 });
 
-
-//TRASH 
 app.get('/room', function(req, res){
    var roomID = req.query.room_id;
    API.currentRoom = roomID;
@@ -114,17 +111,25 @@ app.get('/pub', function(req, res){
       streams: API.streams,
       users: API.users,
       states: API.states
-});
-
+   });
 })
+
+app.get('/getRooms', function(req, res) {
+   res.send(API.rooms);
+})
+
+app.get('/getSessions', function(req, res) {
+   sessionsRegistry.getSessions(function(sessions){
+         res.send(sessions);
+   })
+})
+
+/*
 app.get('/subs', function(req, res){
    res.render('subscribers', {view: "subscribers"});
 })
-//
-
 
 app.get('/graphs', function(req, res) {
-
 
    res.render('graphs', {
       roomsInfo: API.roomsInfo,
@@ -138,7 +143,6 @@ app.get('/graphs', function(req, res) {
 
 app.get('/text', function(req, res) {
 
-
    res.render('text', {
       view: "index",
       publishers: API.publishers,
@@ -151,9 +155,7 @@ app.get('/text', function(req, res) {
    });
 });
 
-
 app.get('/search', function(req, res) {
-
 
    res.render('search', {
       eventos: "",
@@ -198,24 +200,21 @@ app.post('/search', function(req, res) {
 
    } else {
 
+      eventsRegistry.getEventsByDateAndType(timestampInit, timestampFinal, eventType, function(events) {
+         console.log(events);
+         res.render('search', {
+            eventos: JSON.stringify(events),
+            initDate: dateInit,
+            finalDate: dateFinal,
+            useDB: config.ackuaria.useDB
+         });
 
-   eventsRegistry.getEventsByDateAndType(timestampInit, timestampFinal, eventType, function(events) {
-      console.log(events);
-      res.render('search', {
-         eventos: JSON.stringify(events),
-         initDate: dateInit,
-         finalDate: dateFinal,
-         useDB: config.ackuaria.useDB
-      });
-
-   })
-}
-
+      })
+   }
 });
 
 app.get('/info', function(req, res) {
    if (GLOBAL.config.ackuaria.useDB) {
-
       roomsRegistry.getPublishers(function(publishers) {
          roomsRegistry.getTotalRooms(function(total) {
             if (publishers && total) {
@@ -235,10 +234,7 @@ app.get('/info', function(req, res) {
          nPubs: API.nPubsTotal
       })
    }
-
 });
 
+*/
 
-app.get('/getRooms', function(req, res) {
-   res.send(API.rooms);
-})

@@ -1,3 +1,4 @@
+
 var API = {};
 var logger = require('./logger').logger;
 var config = require('./../ackuaria_config');
@@ -24,7 +25,7 @@ API.users = {};
 API.states = {};
 
 API.currentRoom;
-
+API.sessions_active = {};
 
 API.streams_ssrc = {};
 
@@ -34,6 +35,14 @@ function isEmpty(obj) {
             return false;
     }
     return true;
+}
+
+function search(id, myArray) {
+    for (var i=0; i < myArray.length; i++) {
+        if (myArray[i].streamID === id) {
+            return myArray[i];
+        }
+    }
 }
 
 API.api = {
@@ -49,11 +58,13 @@ API.api = {
                     var roomID = theEvent.room;
                     var userID = theEvent.user;
                     var userName = theEvent.name;
+                    var initTimestamp = theEvent.timestamp;
 
                     event.streamID = streamID;
                     event.roomID = roomID;
                     event.userID = userID;
                     event.userName = userName;
+
 
                     if (API.rooms[roomID] === undefined) {
                         API.rooms[roomID] = {
@@ -62,6 +73,36 @@ API.api = {
                             "users": [userID]
                         };
                     } else {
+
+                        /**********************
+                            SESSION CONTROL
+                        **********************/
+                        if (API.rooms[roomID].streams.length == 0) {
+                            var nSession;
+                            if (!API.sessions_active[roomID]) nSession = 1;
+                            else nSession = API.sessions_active[roomID].nSession + 1;
+                            var sessionID = roomID + "_" + nSession;
+
+                            var session = {
+                                sessionID: sessionID,
+                                nSession: nSession,
+                                roomID: roomID,
+                                initTimestamp: initTimestamp,
+                                streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }]
+                            }
+                            API.sessions_active[roomID] = session;
+                        } else {
+                            var session = API.sessions_active[roomID];
+                            var stream = {
+                                streamID: streamID,
+                                userID: userID,
+                                initPublish: initTimestamp
+                            }
+                            session.streams.push(stream);
+                            API.sessions_active[roomID] = session;
+                        }
+
+
                         API.rooms[roomID]["streams"].push(streamID);
                         if (API.rooms[roomID]["users"].indexOf(userID) > -1) {
                             API.rooms[roomID]["users"].push(userID);
@@ -98,10 +139,15 @@ API.api = {
                     var streamID = theEvent.stream;
                     var roomID = theEvent.room;
                     var userID = theEvent.user;
+                    var finalTimestamp = theEvent.timestamp;
 
                     event.streamID = streamID;
                     event.roomID = roomID;
                     event.userID = userID;
+
+                    var session = API.sessions_active[roomID];
+                    var stream = search(streamID, session.streams);
+                    stream.finalPublish = finalTimestamp;
 
                     if (API.rooms[roomID] === undefined) {
                         console.log("WARNING: Cannot find room", roomID);
@@ -109,6 +155,15 @@ API.api = {
                         var indexRoom = API.rooms[roomID]["streams"].indexOf(streamID);
                         if (indexRoom > -1) API.rooms[roomID]["streams"].splice(indexRoom, 1);
                         if (API.rooms[roomID]["streams"].length == 0) {
+                            // If room is empty the session is over
+                            session.finalTimestamp = finalTimestamp;
+                            API.sessions_active[roomID] = session;
+                            if (config.ackuaria.useDB) {
+                                sessionsRegistry.addSession(session, function(saved, error) {
+                                     if (error) log.warn('MongoDB: Error adding session ', error);
+                                     if (saved) log.info('MongoDB: Added session: ', saved);
+                                })
+                            }
                             // delete API.rooms[roomID];
                         }
                     }
@@ -150,6 +205,8 @@ API.api = {
                         }
                     }
                     delete API.states[streamID];
+
+                    API.sessions_active[roomID] = session;
 
                     break;
 
@@ -221,7 +278,7 @@ API.api = {
                     }
 
                     if (API.users[userID] === undefined) {
-                        console.log("WARNING: Cannot find user", userID);
+                        console.log("WARNING: User ", userID, "already disconnected");
                     } else {
                         var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
                         if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
