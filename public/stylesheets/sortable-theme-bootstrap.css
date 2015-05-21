@@ -25,7 +25,7 @@ table[data-sortable] th:not([data-sortable="false"]) {
   cursor: pointer;
 }
 /* line 26, ../sass/_sortable.sass */
-table[data-sortable] th:after {
+table[data-sortable] thead th:after {
   content: "";
   visibility: hidden;
   display: inline-block;
@@ -71,17 +71,17 @@ table[data-sortable].sortable-theme-bootstrap tbody td {
   border-top: 1px solid #e0e0e0;
 }
 /* line 18, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"] {
+table[data-sortable].sortable-theme-bootstrap thead th[data-sorted="true"] {
   color: #3a87ad;
   background: #d9edf7;
   border-bottom-color: #bce8f1;
 }
 /* line 23, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"][data-sorted-direction="descending"]:after {
+table[data-sortable].sortable-theme-bootstrap thead th[data-sorted="true"][data-sorted-direction="descending"]:after {
   border-top-color: #3a87ad;
 }
 /* line 26, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"][data-sorted-direction="ascending"]:after {
+table[data-sortable].sortable-theme-bootstrap thead th[data-sorted="true"][data-sorted-direction="ascending"]:after {
   border-bottom-color: #3a87ad;
 }
 /* line 31, ../sass/sortable-theme-bootstrap.sass */
