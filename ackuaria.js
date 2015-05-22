@@ -118,11 +118,121 @@ app.get('/getRooms', function(req, res) {
    res.send(API.rooms);
 })
 
+
 app.get('/getSessions', function(req, res) {
    sessionsRegistry.getSessions(function(sessions){
          res.send(sessions);
    })
 })
+
+app.get('/getSessions/room/:roomID', function(req, res) {
+   var roomID = req.params.roomID;
+   sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
+         res.send(sessions);
+   })
+})
+
+app.get('/getSessions/user/:userID', function(req, res) {
+   var userID = req.params.userID;
+   sessionsRegistry.getSessionsOfUser(userID, function(sessions){
+         res.send(sessions);
+   })
+})
+
+app.get('/getSessions/stream/:streamID', function(req, res) {
+   var streamID = req.params.streamID;
+   sessionsRegistry.getSessionsOfUser(streamID, function(sessions){
+         res.send(sessions);
+   })
+})
+
+app.get('/getInfo', function(req, res) {
+   var info = {};
+   sessionsRegistry.getSessions(function(sessions){
+      var nSessions = sessions.length;
+      var minutesPublished = 0;
+      for (var s in sessions) {
+         for (var st in sessions[s].streams){
+            var stream = sessions[s].streams[st];
+            var initPublish = parseInt(stream.initPublish);
+            var finalPublish = parseInt(stream.finalPublish);
+            var streamMinutes = ((finalPublish - initPublish) / 1000);
+            minutesPublished += streamMinutes;
+         }
+      }
+      info.timePublished = minutesPublished;
+      res.send(info);
+   })
+})
+
+app.get('/getInfo/room/:roomID', function(req, res) {
+   var roomID = req.params.roomID;
+   var info = {};
+   sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
+      var nSessions = sessions.length;
+      var minutesPublished = 0;
+      for (var s in sessions) {
+         for (var st in sessions[s].streams){
+            var stream = sessions[s].streams[st];
+            var initPublish = parseInt(stream.initPublish);
+            var finalPublish = parseInt(stream.finalPublish);
+            var streamMinutes = ((finalPublish - initPublish) / 1000);
+            minutesPublished += streamMinutes;
+         }
+      }
+      info.roomID = roomID;
+      info.timePublished = minutesPublished;
+      res.send(info);
+   })
+})
+
+app.get('/getInfo/user/:userID', function(req, res) {
+   var userID = req.params.userID;
+   var streams = [];
+   var info = {};
+   sessionsRegistry.getSessionsOfUser(userID, function(sessions){
+      var nSessions = sessions.length;
+      var minutesPublished = 0;
+      for (var s in sessions) {
+         for (var i in sessions[s].streams){
+            var st = sessions[s].streams[i];
+            if (st.userID == userID) {
+               var initPublish = parseInt(st.initPublish);
+               var finalPublish = parseInt(st.finalPublish);
+               var streamMinutes = ((finalPublish - initPublish) / 1000);
+               var stream = {streamID: st.streamID, minutesPublished: streamMinutes};
+               streams.push(stream);
+               minutesPublished += streamMinutes;
+            }
+         }
+      }
+      info.userID = userID;
+      info.streams = streams;
+      info.totalTimePublished = minutesPublished;
+      res.send(info);
+   })
+})
+
+
+
+/*
+
+app.get("/resetSessions", function(req, res){
+   sessionsRegistry.removeAllSessions();
+   res.redirect('/getSessions');
+});
+
+
+
+*/
+
+
+
+
+
+
+
+
 
 /*
 app.get('/subs', function(req, res){

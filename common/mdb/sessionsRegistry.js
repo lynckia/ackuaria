@@ -38,78 +38,6 @@ exports.addSession = function(session, callback) {
 	});
 };
 
-exports.updateSession = function(sessionId, pubId, callback) {
-
-	var pubs = [];
-	var nPubs;
-
-	db.sessions.findOne({
-		sessionId: sessionId
-	}, function(err, session) {
-		if (session) {
-			pubs = session.publishers;
-			pubs.push(pubId);
-			db.sessions.update({
-				sessionId: sessionId
-			}, {
-				$set: {
-					publishers: pubs
-				}
-			}, function(err, result) {
-				if (err)
-					callback("Couldn't update session info");
-				else
-					callback("Added publisher to session info");
-			})
-		}
-	})
-}
-
-exports.finishSession = function(sessionId, finalTimestamp, callback) {
-
-	db.sessions.findOne({
-		sessionId: sessionId
-	}, function(err, session) {
-		if (session) {
-			
-			db.sessions.update({
-				sessionId: sessionId
-			}, {
-				$set: {
-					finalTimestamp: finalTimestamp
-				}
-			}, function(err, result) {
-				if (err)
-					callback("Couldn't finish session" + sessionId);
-				else
-					callback("Session " + sessionId + " finished!");
-			})
-		}
-	})
-}
-
-exports.initSession = function(sessionId, initTimestamp, callback) {
-	
-	db.sessions.findOne({
-		sessionId: sessionId
-	}, function(err, session) {
-		if (session) {
-
-			db.sessions.update({
-				sessionId: sessionId
-			}, {
-				$set: {
-					initTimestamp: initTimestamp
-				}
-			}, function(err, result) {
-				if (err)
-					callback("Couldn't init session " + sessionId);
-				else
-					callback("Session " + sessionId + " initialized!");
-			})
-		}
-	})
-}
 
 exports.getSessions = function(callback) {
 
@@ -122,9 +50,9 @@ exports.getSessions = function(callback) {
     });
 }
 
-exports.getSessionsByRoom = function(roomId, callback) {
+exports.getSessionsOfRoom = function(roomID, callback) {
 
-    db.sessions.find({room: roomId}).toArray(function(err, sessions) {
+    db.sessions.find({roomID: roomID}).toArray(function(err, sessions) {
         if (err || !sessions) {
             console.log("There are no sessions ");
         } else {
@@ -132,6 +60,46 @@ exports.getSessionsByRoom = function(roomId, callback) {
         }
     });
 }
+
+exports.getSessionsOfUser = function(userID, callback) {
+	var sessions = [];
+    db.sessions.find().forEach(function(err, doc) {
+    	if (!doc) callback(sessions);
+    	else {
+    		var streams = doc.streams;
+    		for (var s in streams) {
+    			if (streams[s].userID == userID) {
+    				sessions.push(doc);
+    				break;
+    			}
+
+    		}
+    	}
+    })
+}
+
+exports.getSessionsOfStream = function(streamID, callback) {
+	var sessions = [];
+    db.sessions.find().forEach(function(err, doc) {
+    	if (!doc) callback(sessions);
+    	else {
+    		var streams = doc.streams;
+    		for (var s in streams) {
+    			if (streams[s].streamID == streamID) {
+    				sessions.push(doc);
+    				break;
+    			}
+
+    		}
+    	}
+    })
+}
+
+
+
+
+
+
 
 exports.getSessionsBySessionId = function(sessionId, callback) {
 
