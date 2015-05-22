@@ -7,7 +7,7 @@ var getSession = exports.getSession = function(id, callback) {
 		_id: db.ObjectId(id)
 	}, function(err, session) {
 		if (session === undefined) {
-			log.warn('Session ', id, ' not found');
+			console.log('Session ', id, ' not found');
 		}
 		if (callback !== undefined) {
 			callback(room);
@@ -31,7 +31,7 @@ exports.addSession = function(session, callback) {
 	"use strict";
 
 	db.sessions.save(session, function(error, saved) {
-		if (error) log.warn('MongoDB: Error adding session: ', error);
+		if (error) console.log('MongoDB: Error adding session: ', error);
 		if (callback !== undefined) {
 			callback(saved);
 		}

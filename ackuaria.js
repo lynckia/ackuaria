@@ -154,21 +154,35 @@ app.get('/getInfo', function(req, res) {
       var nUsers = Object.keys(API.users).length;
       var nStreams = Object.keys(API.streams).length;
 
-      var minutesPublished = 0;
+      var rooms = {};
+      var users = {};
+
+      var totalSeconds = 0;
       for (var s in sessions) {
+         var roomID = sessions[s].roomID;
+         if (!rooms[roomID]) rooms[roomID] = 0;
+
          for (var st in sessions[s].streams){
             var stream = sessions[s].streams[st];
+            if (!users[stream.userID]) users[stream.userID] = 0;
+
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamMinutes = ((finalPublish - initPublish) / 1000);
-            minutesPublished += streamMinutes;
+            var streamSeconds = ((finalPublish - initPublish) / 1000);
+
+            rooms[roomID] += streamSeconds;
+            users[stream.userID] += streamSeconds;
+            totalSeconds += streamSeconds;
          }
       }
       info.nStreams = nStreams;
       info.nUsers = nUsers;
       info.nRooms = nRooms;
       info.nSessions = nSessions;
-      info.timePublished = minutesPublished;
+      info.timeRooms = rooms;
+      info.timeUsers = users;
+      info.timeTotal = totalSeconds;
+      info.info = "Time is represented in seconds";
       res.send(info);
    })
 })
