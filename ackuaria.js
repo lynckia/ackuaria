@@ -150,6 +150,10 @@ app.get('/getInfo', function(req, res) {
    var info = {};
    sessionsRegistry.getSessions(function(sessions){
       var nSessions = sessions.length;
+      var nRooms = Object.keys(API.rooms).length;
+      var nUsers = Object.keys(API.users).length;
+      var nStreams = Object.keys(API.streams).length;
+
       var minutesPublished = 0;
       for (var s in sessions) {
          for (var st in sessions[s].streams){
@@ -160,6 +164,10 @@ app.get('/getInfo', function(req, res) {
             minutesPublished += streamMinutes;
          }
       }
+      info.nStreams = nStreams;
+      info.nUsers = nUsers;
+      info.nRooms = nRooms;
+      info.nSessions = nSessions;
       info.timePublished = minutesPublished;
       res.send(info);
    })

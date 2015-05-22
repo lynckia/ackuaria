@@ -43,6 +43,7 @@ exports.getSessions = function(callback) {
 
     db.sessions.find({}).toArray(function(err, sessions) {
         if (err || !sessions) {
+        	callback([]);
             console.log("There are no sessions ");
         } else {
             callback(sessions);
@@ -54,6 +55,7 @@ exports.getSessionsOfRoom = function(roomID, callback) {
 
     db.sessions.find({roomID: roomID}).toArray(function(err, sessions) {
         if (err || !sessions) {
+         	callback([]);
             console.log("There are no sessions ");
         } else {
             callback(sessions);
