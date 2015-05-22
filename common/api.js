@@ -87,7 +87,7 @@ API.api = {
                                 roomID: roomID,
                                 initTimestamp: initTimestamp,
                                 streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }],
-                                failed: [];
+                                failed: []
                             }
                             API.sessions_active[roomID] = session;
                         } else {
