@@ -27,8 +27,6 @@ API.states = {};
 API.currentRoom;
 API.sessions_active = {};
 
-API.streams_ssrc = {};
-
 function isEmpty(obj) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key))
@@ -88,7 +86,8 @@ API.api = {
                                 nSession: nSession,
                                 roomID: roomID,
                                 initTimestamp: initTimestamp,
-                                streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }]
+                                streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }],
+                                failed: [];
                             }
                             API.sessions_active[roomID] = session;
                         } else {
@@ -274,6 +273,10 @@ API.api = {
                             API.streams[streamID]["subscribers"].splice(indexStream, 1);
                         }
                         delete API.states[streamID].subscribers[userID];
+
+                        if (API.streams[streamID].userID == userID){
+                            delete API.streams[streamID];
+                        }
                     }
 
                     if (API.users[userID] === undefined) {
@@ -311,6 +314,10 @@ API.api = {
 
                     } else {
                         API.states[streamID].subscribers[subID] = state;
+                    }
+
+                    if (state == 500){
+                        API.sessions_active[roomID].failed.push({streamID: streamID, userID: userID});
                     }
 
                     break;
@@ -364,10 +371,6 @@ API.send_stats_to_clients = function(event) {
                 video = stats[1];
                 audio = stats[0];
             }
-            if (API.streams_ssrc[pubID] == undefined) API.streams_ssrc[pubID] = {
-                "audio": audio.ssrc,
-                "video": video.ssrc
-            };
         }
 
         for (var s in API.sockets) {
