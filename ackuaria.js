@@ -49,7 +49,8 @@ N.API.getRooms(function(roomList) {
          API.rooms[room._id] = {
              "roomName": room.name,
              "streams": [],
-             "users": []
+             "users": [],
+             "failed": []
          };      
       }
    }
@@ -66,14 +67,34 @@ io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
 
-
 app.get('/', function(req, res) {
    API.currentRoom = "";
 
-   res.render('rooms', {
-      view:"rooms",
-      rooms: API.rooms
-   });
+   N.API.getRooms(function(roomList) {
+      var rooms = JSON.parse(roomList);
+      var test_rooms = {};
+      for (var i in rooms) {
+         var room = rooms[i];
+         if (!API.rooms[room._id]) {
+            test_rooms[room._id] = {
+                "roomName": room.name,
+                "streams": [],
+                "users": [],
+                "failed": []
+            };
+         } else {
+            test_rooms[room._id] = API.rooms[room._id];
+         }
+      }
+
+      API.rooms = test_rooms;
+      res.render('rooms', {
+         view:"rooms",
+         rooms: API.rooms
+      });
+   })
+
+
 });
 
 app.get('/room', function(req, res){
@@ -114,39 +135,34 @@ app.get('/pub', function(req, res){
    });
 })
 
-app.get('/getRooms', function(req, res) {
-   res.send(API.rooms);
-})
-
-
-app.get('/getSessions', function(req, res) {
+app.get('/sessions', function(req, res) {
    sessionsRegistry.getSessions(function(sessions){
-         res.send(sessions);
+      res.send(sessions);
    })
 })
 
-app.get('/getSessions/room/:roomID', function(req, res) {
+app.get('/sessions/room/:roomID', function(req, res) {
    var roomID = req.params.roomID;
    sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
-         res.send(sessions);
+      res.send(sessions);
    })
 })
 
-app.get('/getSessions/user/:userID', function(req, res) {
+app.get('/sessions/user/:userID', function(req, res) {
    var userID = req.params.userID;
    sessionsRegistry.getSessionsOfUser(userID, function(sessions){
-         res.send(sessions);
+      res.send(sessions);
    })
 })
 
-app.get('/getSessions/stream/:streamID', function(req, res) {
+app.get('/sessions/stream/:streamID', function(req, res) {
    var streamID = req.params.streamID;
    sessionsRegistry.getSessionsOfUser(streamID, function(sessions){
-         res.send(sessions);
+      res.send(sessions);
    })
 })
 
-app.get('/getInfo', function(req, res) {
+app.get('/info', function(req, res) {
    var info = {};
    sessionsRegistry.getSessions(function(sessions){
       var nSessions = sessions.length;
@@ -187,7 +203,7 @@ app.get('/getInfo', function(req, res) {
    })
 })
 
-app.get('/getInfo/room/:roomID', function(req, res) {
+app.get('/info/room/:roomID', function(req, res) {
    var roomID = req.params.roomID;
    var info = {};  
    var streams = [];
@@ -212,7 +228,7 @@ app.get('/getInfo/room/:roomID', function(req, res) {
    })
 })
 
-app.get('/getInfo/user/:userID', function(req, res) {
+app.get('/info/user/:userID', function(req, res) {
    var userID = req.params.userID;
    var streams = [];
    var info = {};
@@ -239,138 +255,9 @@ app.get('/getInfo/user/:userID', function(req, res) {
    })
 })
 
-
-
 /*
-
 app.get("/resetSessions", function(req, res){
    sessionsRegistry.removeAllSessions();
    res.redirect('/getSessions');
 });
-
-
-
 */
-
-
-
-
-
-
-
-
-
-/*
-app.get('/subs', function(req, res){
-   res.render('subscribers', {view: "subscribers"});
-})
-
-app.get('/graphs', function(req, res) {
-
-   res.render('graphs', {
-      roomsInfo: API.roomsInfo,
-      userStream: API.userStream,
-      statusId: API.statusId,
-      userName: API.userName,
-      rooms: API.rooms,
-      streamRoom: API.streamRoom,
-   });
-});
-
-app.get('/text', function(req, res) {
-
-   res.render('text', {
-      view: "index",
-      publishers: API.publishers,
-      roomsInfo: API.roomsInfo,
-      userStream: API.userStream,
-      statusId: API.statusId,
-      userName: API.userName,
-      rooms: API.rooms,
-      streamRoom: API.streamRoom,
-   });
-});
-
-app.get('/search', function(req, res) {
-
-   res.render('search', {
-      eventos: "",
-      initDate: null,
-      finalDate: null,
-      useDB: config.ackuaria.useDB
-   });
-});
-
-app.post('/search', function(req, res) {
-
-   // ARREGLAR
-   var date1 = req.body.initTimestamp;
-   var initDate = date1.split("-");
-   var day1 = parseInt(initDate[0]);
-   var month1 = initDate[1] - 1;
-   var year1 = initDate[2];
-   var dateInit = new Date(year1, month1, day1);
-   var timestampInit = dateInit.getTime();
-
-   var date2 = req.body.finalTimestamp;
-   var finalDate = date2.split("-");
-   var day2 = parseInt(finalDate[0]);
-   var month2 = finalDate[1] - 1;
-   var year2 = finalDate[2];
-   var dateFinal = new Date(year2, month2, day2);
-   var timestampFinal = dateFinal.getTime();
-
-
-   var eventType = req.body.eventType;
-   if (eventType == "all") {
-      eventsRegistry.getEventsByDate(timestampInit, timestampFinal, function(events) {
-         console.log(events);
-         res.render('search', {
-            eventos: JSON.stringify(events),
-            initDate: dateInit,
-            finalDate: dateFinal,
-            useDB: config.ackuaria.useDB
-         });
-
-      })
-
-   } else {
-
-      eventsRegistry.getEventsByDateAndType(timestampInit, timestampFinal, eventType, function(events) {
-         console.log(events);
-         res.render('search', {
-            eventos: JSON.stringify(events),
-            initDate: dateInit,
-            finalDate: dateFinal,
-            useDB: config.ackuaria.useDB
-         });
-
-      })
-   }
-});
-
-app.get('/info', function(req, res) {
-   if (GLOBAL.config.ackuaria.useDB) {
-      roomsRegistry.getPublishers(function(publishers) {
-         roomsRegistry.getTotalRooms(function(total) {
-            if (publishers && total) {
-               res.render('total', {
-                  nRooms: total,
-                  nPubs: publishers.length
-               });
-
-            }
-         })
-
-      })
-   } else {
-
-      res.render('total', {
-         nRooms: API.nRoomsTotal,
-         nPubs: API.nPubsTotal
-      })
-   }
-});
-
-*/
-
