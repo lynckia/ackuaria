@@ -157,7 +157,7 @@ app.get('/getInfo', function(req, res) {
       var rooms = {};
       var users = {};
 
-      var totalSeconds = 0;
+      var timePublished = 0;
       for (var s in sessions) {
          var roomID = sessions[s].roomID;
          if (!rooms[roomID]) rooms[roomID] = 0;
@@ -168,20 +168,20 @@ app.get('/getInfo', function(req, res) {
 
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamSeconds = ((finalPublish - initPublish) / 1000);
+            var streamTime = ((finalPublish - initPublish) / 1000);
 
-            rooms[roomID] += streamSeconds;
-            users[stream.userID] += streamSeconds;
-            totalSeconds += streamSeconds;
+            rooms[roomID] += streamTime;
+            users[stream.userID] += streamTime;
+            timePublished += streamTime;
          }
       }
       info.nStreams = nStreams;
       info.nUsers = nUsers;
       info.nRooms = nRooms;
       info.nSessions = nSessions;
-      info.timeRooms = rooms;
-      info.timeUsers = users;
-      info.timeTotal = totalSeconds;
+      info.rooms = rooms;
+      info.users = users;
+      info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
       res.send(info);
    })
@@ -189,21 +189,25 @@ app.get('/getInfo', function(req, res) {
 
 app.get('/getInfo/room/:roomID', function(req, res) {
    var roomID = req.params.roomID;
-   var info = {};
+   var info = {};  
+   var streams = [];
+
    sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
       var nSessions = sessions.length;
-      var minutesPublished = 0;
+      var timePublished = 0;
       for (var s in sessions) {
          for (var st in sessions[s].streams){
             var stream = sessions[s].streams[st];
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamMinutes = ((finalPublish - initPublish) / 1000);
-            minutesPublished += streamMinutes;
+            var streamTime = ((finalPublish - initPublish) / 1000);
+            streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
+            timePublished += streamTime;
          }
       }
       info.roomID = roomID;
-      info.timePublished = minutesPublished;
+      info.timePublished = timePublished;
+      info.streams = streams;
       res.send(info);
    })
 })
@@ -214,23 +218,23 @@ app.get('/getInfo/user/:userID', function(req, res) {
    var info = {};
    sessionsRegistry.getSessionsOfUser(userID, function(sessions){
       var nSessions = sessions.length;
-      var minutesPublished = 0;
+      var timePublished = 0;
       for (var s in sessions) {
          for (var i in sessions[s].streams){
             var st = sessions[s].streams[i];
             if (st.userID == userID) {
                var initPublish = parseInt(st.initPublish);
                var finalPublish = parseInt(st.finalPublish);
-               var streamMinutes = ((finalPublish - initPublish) / 1000);
-               var stream = {streamID: st.streamID, minutesPublished: streamMinutes};
+               var streamTime = ((finalPublish - initPublish) / 1000);
+               var stream = {streamID: st.streamID, timePublished: streamTime};
                streams.push(stream);
-               minutesPublished += streamMinutes;
+               timePublished += streamTime;
             }
          }
       }
       info.userID = userID;
       info.streams = streams;
-      info.totalTimePublished = minutesPublished;
+      info.timePublished = timePublished;
       res.send(info);
    })
 })

@@ -68,7 +68,8 @@ API.api = {
                         API.rooms[roomID] = {
                             "roomName": "NombreTest",
                             "streams": [streamID],
-                            "users": [userID]
+                            "users": [userID],
+                            "failed": []
                         };
                     } else {
 
@@ -278,15 +279,14 @@ API.api = {
                             delete API.streams[streamID];
                         }
                     }
+                    
+                    delete API.users[userID];
 
-                    if (API.users[userID] === undefined) {
-                        console.log("WARNING: User ", userID, "already disconnected");
+                    if (API.rooms[roomID].streams[streamID] === undefined) {
+                        console.log("WARNING: Stream ", streamID, "already disconnected");
                     } else {
-                        var indexUser = API.users[userID]["subscribedTo"].indexOf(streamID);
-                        if (indexUser > -1) API.users[userID]["subscribedTo"].splice(indexUser, 1);
-                        if (API.users[userID]) {
-                            delete API.users[userID];
-                        }
+                        var indexStream = API.rooms[roomID]["streams"].indexOf(streamID);
+                        if (indexStream > -1) API.rooms[roomID]["streams"].splice(indexStream, 1);
                     }
                     break;
 
@@ -317,7 +317,8 @@ API.api = {
                     }
 
                     if (state == 500){
-                        API.sessions_active[roomID].failed.push({streamID: streamID, userID: userID});
+                        API.sessions_active[roomID].failed.push({streamID: streamID, userID: subID});
+                        API.rooms[roomID].failed.push({streamID: streamID, userID: subID});
                     }
 
                     break;
