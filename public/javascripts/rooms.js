@@ -91,14 +91,14 @@ var paintRoomsGrid = function(){
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
     for (var room in rooms) {
-        if (!$('#room_'+room).length){
+        if (!$('#room_'+ room).length){
             var roomID = room;
-            var nStreams = rooms[room]["streams"].length;
-            var roomName = rooms[room]["roomName"];
+            var nStreams = rooms[room].streams.length;
+            var roomName = rooms[room].roomName;
             createNewRoomGrid(roomID, nStreams, roomName);
         } else {
             var roomID = room;
-            var nStreams = rooms[room]["streams"].length;
+            var nStreams = rooms[room].roomName.length;
             updateNStreams(roomID, nStreams);
         }
     }
@@ -112,12 +112,12 @@ var paintRoomsList = function(){
     for (var room in rooms) {
         if (!$('#room_'+room).length){
             var roomID = room;
-            var nStreams = rooms[room]["streams"].length;
-            var roomName = rooms[room]["roomName"];
+            var nStreams = rooms[room].streams.length;
+            var roomName = rooms[room].roomName;
             createNewRoomList(roomID, nStreams, roomName);        
         } else {
             var roomID = room;
-            var nStreams = rooms[room]["streams"].length;
+            var nStreams = rooms[room].streams.length;
             updateNStreams(roomID, nStreams);
         }
     }

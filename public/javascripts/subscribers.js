@@ -103,15 +103,28 @@ $(document).ready(function(){
 socket.on('newEvent', function(evt) {
     var event = evt.event;
     rooms = evt.rooms;
-    streams = evt.streams;
-    users = evt.users;
-    roomID = event.roomID;
-    states = evt.states;
+
+    streams =  {};
+    var totalStreams = evt.streams;
+    for (var s in totalStreams){
+        if (room.streams.indexOf(parseInt(s)) > -1) {
+         streams[s] = totalStreams[s];
+        }
+    }
+
+    states = {};
+    var totalStates = evt.states;
+    for (var s in totalStates){
+        if (room.streams.indexOf(parseInt(s)) > -1) {
+         states[s] = totalStates[s];
+        }
+    }
+    users = evt.users; 
 
     $('#others').html("");
     $('#selected').html("");
 
-    if (rooms[roomID]) {
+    if (room) {
         if (show_grid) paintSubscribersGrid();
         else paintSubscribersList();
 
@@ -220,13 +233,13 @@ var updateSR = function(audio, video) {
 var paintSubscribersGrid = function() {
     $('#subscribers').html("");
 
-    if (rooms[roomID] && streams[streamID]) {
-        var subscribers = streams[streamID]["subscribers"];
-        var nSubscribers = streams[streamID]["subscribers"].length;
+    if (room && streams[streamID]) {
+        var subscribers = streams[streamID].subscribers;
+        var nSubscribers = subscribers.length;
         updateNSubscribers(nSubscribers);
         for (var sub in subscribers){
             var userID = subscribers[sub];
-            var userName = users[userID]["userName"];
+            var userName = users[userID].userName;
             var state = states[streamID].subscribers[userID];
             createNewSubscriberGrid(userID, userName, state);
         }
@@ -251,13 +264,13 @@ var paintSubscribersGrid = function() {
 var paintSubscribersList = function() {
     $('#subscribers').html("");
     $('#subscribers').append('<div class="subscriberContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
-    if (rooms[roomID] && streams[streamID]) {
-        var subscribers = streams[streamID]["subscribers"];
-        var nSubscribers = streams[streamID]["subscribers"].length;
+    if (room && streams[streamID]) {
+        var subscribers = streams[streamID].subscribers;
+        var nSubscribers = subscribers.length;
         updateNSubscribers(nSubscribers);
         for (var sub in subscribers){
             var userID = subscribers[sub];
-            var userName = users[userID]["userName"];
+            var userName = users[userID].userName;
             var state = states[streamID].subscribers[userID];
 
             createNewSubscriberList(userID, userName, state);
@@ -282,16 +295,16 @@ var createNewSubscriberList = function(userID, userName, state){
 }
 
 var paintPublishers = function() {
-    if (rooms[roomID]) {
-        var roomStreams = rooms[roomID]["streams"];
+    if (room) {
+        var roomStreams = room.streams;
         for (var stream in roomStreams){
             if (streamID != roomStreams[stream]) {
                 var state = states[roomStreams[stream]].state;
-                var userName = streams[roomStreams[stream]]["userName"];
+                var userName = streams[roomStreams[stream]].userName;
                 createNewPublisher(roomID, roomStreams[stream], userName, state);
             } else {
                 var state = states[streamID].state;
-                var userName = streams[roomStreams[stream]]["userName"];
+                var userName = streams[roomStreams[stream]].userName;
                 createMyPublisher(roomID, roomStreams[stream], userName, state);
             }
         }

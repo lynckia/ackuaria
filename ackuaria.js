@@ -99,39 +99,74 @@ app.get('/', function(req, res) {
 
 app.get('/room', function(req, res){
    var roomID = req.query.room_id;
+   var fails = req.query.fails;
    API.currentRoom = roomID;
-   if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
+   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
    else var roomName = "Not found";
+
+   var room = API.rooms[roomID];
+   var streamsInRoom = {};
+   var usersInRoom = {};
+   var statesInRoom = {};
+
+   for (var s in API.streams){
+      if (room.streams.indexOf(parseInt(s)) > -1) {
+         streamsInRoom[s] = API.streams[s];
+      }
+   }
+
+   for (var s in API.states){
+      if (room.streams.indexOf(parseInt(s)) > -1) {
+         statesInRoom[s] = API.states[s];
+      }
+   }
+
    res.render('publishers', {
-      view:"publishers",
+      view: "publishers",
       roomID: roomID,
       roomName: roomName,
-      rooms: API.rooms,
-      streams: API.streams,
-      users: API.users,
-      states: API.states
+      room: room,
+      streams: streamsInRoom,
+      states: statesInRoom
    });
 })
+
 app.get('/pub', function(req, res){
    var streamID = req.query.pub_id;
    var roomID = req.query.room_id;
+   var room = API.rooms[roomID];
+
    API.currentRoom = roomID;
-   if (API.streams[streamID])  var userName = API.streams[streamID]["userName"];
+   if (API.streams[streamID])  var userName = API.streams[streamID].userName;
    else var userName = "Publisher not found";
 
-   if (API.rooms[roomID]) var roomName = API.rooms[roomID]["roomName"];
+   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
    else var roomName = "Not found";
+   
+   var streamsInRoom = {};
+   for (var s in API.streams){
+      if (room.streams.indexOf(parseInt(s)) > -1) {
+         streamsInRoom[s] = API.streams[s];
+      }
+   }
+
+   var statesInRoom = {};
+   for (var s in API.states){
+      if (room.streams.indexOf(parseInt(s)) > -1) {
+         statesInRoom[s] = API.states[s];
+      }
+   }
 
    res.render('subscribers', {
       view: "subscribers",
       roomID: roomID,
       roomName: roomName,
+      room: room,
       streamID: streamID,
       userName: userName,
-      rooms: API.rooms, 
-      streams: API.streams,
+      streams: streamsInRoom,
       users: API.users,
-      states: API.states
+      states: statesInRoom
    });
 })
 

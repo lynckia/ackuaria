@@ -109,11 +109,25 @@ var updateEventStatus = function(streamID, state) {
 
 socket.on('newEvent', function(evt) {
     var event = evt.event;
-    rooms = evt.rooms;
-    streams = evt.streams;
-    users = evt.users;
-    roomID = event.roomID;
-    states = evt.states;
+    var rooms = evt.rooms;
+    room = rooms[roomID];
+
+    streams =  {};
+    var totalStreams = evt.streams;
+    for (var s in totalStreams){
+        if (room.streams.indexOf(parseInt(s)) > -1) {
+         streams[s] = totalStreams[s];
+        }
+    }
+
+    states = {};
+    var totalStates = evt.states;
+    for (var s in totalStates){
+        if (room.streams.indexOf(parseInt(s)) > -1) {
+         states[s] = totalStates[s];
+        }
+    }
+
     if (show_grid) paintPublishersGrid();
     else paintPublishersList();
 });
@@ -121,19 +135,17 @@ socket.on('newEvent', function(evt) {
 
 var paintPublishersGrid = function() {
     $('#publishers').html("");
-    if (rooms[roomID]) {
-        var roomStreams = rooms[roomID]["streams"];
-        var nStreams = rooms[roomID]["streams"].length;
+    if (room) {
+        var nStreams = room.streams.length;
         updateNStreams(nStreams);
-        for (var stream in roomStreams){
-            var streamID = roomStreams[stream];
-            var nSubscribers = streams[roomStreams[stream]]["subscribers"].length;
-            var userName = streams[roomStreams[stream]]["userName"];
-            var state = states[streamID].state;
-            createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
+        for (var streamID in streams){
+            if (streams[streamID] !== undefined) {
+                var nSubscribers = streams[streamID].subscribers.length;
+                var userName = streams[streamID].userName;
+                var state = states[streamID].state;
+                createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
+            }
         }
-        updateNStreams(rooms[roomID]["streams"].length);
-
     } else {
         updateNStreams(0);
     }
@@ -142,20 +154,20 @@ var paintPublishersGrid = function() {
 var paintPublishersList = function() {
     $('#publishers').html("");
     $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
-    if (rooms[roomID]) {
-        var roomStreams = rooms[roomID]["streams"];
-        var nStreams = rooms[roomID]["streams"].length;
+    if (room) {
+        var nStreams = room.streams.length;
         updateNStreams(nStreams);
-        for (var stream in roomStreams){
-            var streamID = roomStreams[stream];
-            var nSubscribers = streams[roomStreams[stream]]["subscribers"].length;
-            var userName = streams[roomStreams[stream]]["userName"];
-            var state = states[streamID].state;
-            createNewPublisherList(roomID, streamID, nSubscribers, userName, state);
+        for (var streamID in streams){
+            if (streams[streamID] !== undefined) {
+                var nSubscribers = streams[streamID].subscribers.length;
+                var userName = streams[streamID].userName;
+                var state = states[streamID].state;
+                createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
+            }
         }
-        updateNStreams(rooms[roomID]["streams"].length);
-
-    } else updateNStreams(0);
+    } else {
+        updateNStreams(0);
+    }
     Sortable.init()
 
 }
