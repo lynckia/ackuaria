@@ -162,7 +162,7 @@ var paintPublishersList = function() {
                 var nSubscribers = streams[streamID].subscribers.length;
                 var userName = streams[streamID].userName;
                 var state = states[streamID].state;
-                createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
+                createNewPublisherList(roomID, streamID, nSubscribers, userName, state);
             }
         }
     } else {

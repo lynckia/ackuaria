@@ -30,7 +30,7 @@ $(document).ready(function(){
         } else {
             $('.room').each(function() {
                 var _this = $(this);
-                var title = _this.find('.roomId').text().toLowerCase();
+                var title = _this.find('.roomID').text().toLowerCase();
                 var hidden = 0;
                 for (var i = 0; i < arrayLength; i++) {
                      if (title.indexOf(filter_array[i]) < 0) {
@@ -135,7 +135,7 @@ var createNewRoomGrid = function(roomID, nStreams, roomName){
 }
 
 var createNewRoomList = function(roomID, nStreams, roomName, last){
-    $('#bodyTable').append('<tr class="room" id="room_' + roomID + '" data-room_id="' + roomID + '"><th>'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
+    $('#bodyTable').append('<tr class="room" id="room_' + roomID + '" data-room_id="' + roomID + '"><th class="roomID">'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {
