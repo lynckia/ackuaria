@@ -75,7 +75,7 @@ exports.removeEventsByRoom = function(roomId, callback) {
     })
 };
 
-exports.getEventsByRoom = function(roomId, callback) {
+exports.getEventsOfRoom = function(roomId, callback) {
 
     if (!roomId) {
 

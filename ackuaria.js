@@ -290,6 +290,20 @@ app.get('/info/user/:userID', function(req, res) {
    })
 })
 
+app.get('/events', function(req, res) {
+   eventsRegistry.getEvents(function(events){
+      res.send(events);
+   })
+})
+
+app.get('/events/room/:roomID', function(req, res) {
+   var roomID = req.params.roomID;
+   eventsRegistry.getEventsOfRoom(roomID, function(events){
+      res.send(events);
+   })
+})
+
+
 /*
 app.get("/resetSessions", function(req, res){
    sessionsRegistry.removeAllSessions();

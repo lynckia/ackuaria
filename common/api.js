@@ -41,7 +41,7 @@ function search(id, myArray) {
 API.api = {
     event: function(theEvent) {
         try {
-            //log.info("Event:", theEvent);
+            log.info("Event:", theEvent);
             var event = {};
             switch (theEvent.type) {
 
@@ -311,6 +311,12 @@ API.api = {
             }
             if (API.currentRoom == event.roomID || API.currentRoom == "") {
                 API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
+            }
+            if (config.ackuaria.useDB) {        
+                eventsRegistry.addEvent(theEvent, function(saved, error) {
+                    // if (saved) log.info(saved);
+                    if (error) log.error(error);
+                })
             }
 
             //}
