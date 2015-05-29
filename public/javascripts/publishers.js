@@ -2,7 +2,7 @@ var socket = io();
 var show_grid = true;
 
 $(document).ready(function(){
-
+    updateAlerts();
     $('#back').click(function(){ window.location='/'});
 
     $('#searchBar').keyup(function () {
@@ -61,6 +61,10 @@ $(document).ready(function(){
         $('#grid').addClass('btn-default');
         $('#grid').removeClass('active');
         $('#grid').removeClass('btn-primary');
+
+        $('#fails').addClass('btn-default');
+        $('#fails').removeClass('active');
+        $('#fails').removeClass('btn-primary');
            
     });
 
@@ -77,6 +81,28 @@ $(document).ready(function(){
         $('#list').addClass('btn-default');
         $('#list').removeClass('active');
         $('#list').removeClass('btn-primary');
+
+        $('#fails').addClass('btn-default');
+        $('#fails').removeClass('active');
+        $('#fails').removeClass('btn-primary');
+           
+    });
+    $('#fails').click(function() {
+        if (!$(this).hasClass("active")){
+            show_grid = undefined;
+            paintPublishersFails();
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#list').addClass('btn-default');
+        $('#list').removeClass('active');
+        $('#list').removeClass('btn-primary');
+
+        $('#grid').addClass('btn-default');
+        $('#grid').removeClass('active');
+        $('#grid').removeClass('btn-primary');
            
     });
 });
@@ -128,8 +154,11 @@ socket.on('newEvent', function(evt) {
         }
     }
 
-    if (show_grid) paintPublishersGrid();
-    else paintPublishersList();
+    if (show_grid == true) paintPublishersGrid();
+    else if (show_grid == false) paintPublishersList();
+    else paintPublishersFails();
+
+    updateAlerts();
 });
 
 
@@ -142,7 +171,8 @@ var paintPublishersGrid = function() {
             if (streams[streamID] !== undefined) {
                 var nSubscribers = streams[streamID].subscribers.length;
                 var userName = streams[streamID].userName;
-                var state = states[streamID].state;
+                if (states[streamID] == undefined) var state = undefined;
+                else var state = states[streamID].state;
                 createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
             }
         }
@@ -172,6 +202,28 @@ var paintPublishersList = function() {
 
 }
 
+
+var paintPublishersFails = function() {
+    $('#publishers').html("");
+    if (room) {
+        var streamsFailed = room.failed;
+        var nStreams = room.failed.length;
+        updateNStreams(nStreams);
+        for (var s in streamsFailed){
+            if (streamsFailed[s] !== undefined) {
+                var fail = streamsFailed[s];
+                var userName = fail.userName;
+                var userID = fail.userID;
+                var streamID = fail.streamID;
+                var state = 500;
+                createNewStreamFailed(roomID, streamID, userID, userName, state);
+            }
+        }
+    } else {
+        updateNStreams(0);
+    }
+}
+
 var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, state){
     var color = stateToColor(state);
     $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + nSubscribers + '</span> <span class="light">SUBSCRIBERS</span> <span class="fa fa-users"></span></div></div></div></div>')
@@ -194,9 +246,30 @@ var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, 
     })
 }
 
+var createNewStreamFailed = function(roomID, streamID, userID, userName, state){
+    var color = stateToColor(state);
+    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + userID + '</span></div></div></div></div>')
+    /*
+    $('#pub_'+ streamID).click(function() {
+        var pub_id = $(this).data('pub_id');
+        if (pub_id != undefined || pub_id != null) {
+            window.location = '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
+        }
+    })
+*/
+}
+
 var updateNSubscribers = function(streamID, nSubscribers){
     $('#pub_' + streamID + ' #subscribers ' + '#number').html(nSubscribers);
 }
 var updateNStreams = function(nStreams) {
     $('#numberStreams').html(nStreams);
+}
+
+var updateAlerts = function(){
+    if (room.failed.length != 0){
+        $('#fails span').css("color", "rgb(213, 15, 30)");
+        $('#fails span').html(room.failed.length);
+    }
+
 }

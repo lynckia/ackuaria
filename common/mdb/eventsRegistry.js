@@ -75,6 +75,16 @@ exports.removeEventsByRoom = function(roomId, callback) {
     })
 };
 
+exports.getEvents = function(callback) {
+    db.events.find({}).toArray(function(err, events) {
+        if (err) {
+            console.log("Error: " + err);
+        } else {
+            callback(events);
+        }
+    });
+};
+
 exports.getEventsOfRoom = function(roomId, callback) {
 
     if (!roomId) {

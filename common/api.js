@@ -119,7 +119,6 @@ API.api = {
                         userName: userName,
                         subscribers: []
                     };
-
                     break;
 
                 case "unpublish":
@@ -159,16 +158,6 @@ API.api = {
                     if (API.users[userID] !== undefined) {
                         var indexUser = API.users[userID].streams.indexOf(streamID);
                         if (indexUser > -1) API.users[userID].streams.splice(indexUser, 1);
-                        if (API.users[userID].streams.length == 0 && API.users[userID].subscribedTo.length == 0) {
-                            delete API.users[userID];
-
-                            for (var stream in API.streams) {
-                                var indexStream = API.streams[stream].subscribers.indexOf(userID);
-                                if (indexStream > -1) API.streams[stream].subscribers.splice(indexStream, 1);
-                                delete API.states[stream].subscribers[userID];
-                            }
-
-                        }
                     }
 
                     if (API.streams[streamID] !== undefined) {
@@ -250,7 +239,7 @@ API.api = {
 
                     event.roomID = roomID;
                     event.subID = userID;
-
+                    
                     for (var streamID in API.streams) {
                         var indexStream = API.streams[streamID].subscribers.indexOf(userID);
                         if (indexStream > -1) API.streams[streamID].subscribers.splice(indexStream, 1);
@@ -294,18 +283,32 @@ API.api = {
                         } else {
                             API.states[streamID].state = state;
                         }
+                        subID = API.streams[streamID].userID;
 
                     } else {
                         API.states[streamID].subscribers[subID] = state;
                     }
 
-                    if (state == 500){
-                        API.sessions_active[roomID].failed.push({streamID: streamID, userID: subID});
-                        API.rooms[roomID].failed.push({streamID: streamID, userID: subID});
-                    }
 
                     break;
 
+                case "failed":
+                    var roomID = theEvent.room;
+                    var userID = theEvent.user;
+                    var userName = API.users[userID].userName;
+                    var streamID = theEvent.stream;
+
+
+                    event.type = "failed";
+                    event.streamID = streamID;
+                    event.subID = subID;
+                    event.roomID = roomID;
+                    API.sessions_active[roomID].failed.push({streamID: streamID, userID: userID, userName: userName});
+                    API.rooms[roomID].failed.push({streamID: streamID, userID: userID, userName: userName});
+
+                    var indexRoom = API.rooms[roomID].streams.indexOf(streamID);
+                    if (indexRoom > -1) API.rooms[roomID].streams.splice(indexRoom, 1);
+                    break;
                 default:
                     break;
             }
