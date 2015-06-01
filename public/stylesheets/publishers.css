@@ -168,5 +168,39 @@ TIPO LIST
 
 
 
+#dataModal {
+	padding:20px;
+	height: 100%;
+	margin-bottom: 10px;
+	overflow: auto;
+}
 
+#publisherModal {
+		height: 100%;
+		padding:20px;
+		margin-bottom: 10px;
+		border-left: 1px solid #55739D;
+}
 
+#pubModal {
+	max-height: calc(100% - 300px);
+	height: 100%;
+}
+.modal, .modal.fade.in {
+    top: 120px; /* was 10% */
+}
+
+.modal-backdrop.in {
+	opacity: 0;
+}
+
+.modal ::-webkit-scrollbar-track {
+
+    	margin-bottom: 10px !important;
+}
+
+.close {
+	color: #042762;
+	font-size: 32px;
+	opacity: 1;
+}

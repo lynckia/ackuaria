@@ -297,14 +297,15 @@ API.api = {
                     var userID = theEvent.user;
                     var userName = API.users[userID].userName;
                     var streamID = theEvent.stream;
-
+                    var sdp = theEvent.sdp;
 
                     event.type = "failed";
                     event.streamID = streamID;
                     event.subID = subID;
                     event.roomID = roomID;
-                    API.sessions_active[roomID].failed.push({streamID: streamID, userID: userID, userName: userName});
-                    API.rooms[roomID].failed.push({streamID: streamID, userID: userID, userName: userName});
+                    event.sdp = sdp;
+                    API.sessions_active[roomID].failed.push({streamID: streamID, userID: userID, userName: userName, sdp:sdp});
+                    API.rooms[roomID].failed.push({streamID: streamID, userID: userID, userName: userName, sdp:sdp});
 
                     var indexRoom = API.rooms[roomID].streams.indexOf(streamID);
                     if (indexRoom > -1) API.rooms[roomID].streams.splice(indexRoom, 1);

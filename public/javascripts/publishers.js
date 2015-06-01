@@ -1,10 +1,27 @@
 var socket = io();
-var show_grid = true;
+var view_type = "grid";
 
 $(document).ready(function(){
     updateAlerts();
     $('#back').click(function(){ window.location='/'});
+    $('#publisherModal').on('show.bs.modal', function (event) {
+      var publisher = $(event.relatedTarget);
+      var streamID = publisher.data('streamid');
+      var oldSDP = "";
+      var sdp = "";
+      for (var f in room.failed) {
+        if (room.failed[f].streamID == streamID){
+            oldSDP = room.failed[f].sdp;
+            sdp = oldSDP.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        }
+      }
+      var userName = publisher.data('username');
+      var subID = publisher.data('subid');
+      $('#username').html(" " + userName);
+      $('#userid').html(" " + subID);
+      $('#dataModal').html(sdp);
 
+    })
     $('#searchBar').keyup(function () {
         search();
     });
@@ -15,7 +32,7 @@ $(document).ready(function(){
         filter_array = filter.split(' '); // split the user input at the spaces
         var arrayLength = filter_array.length; // Get the length of the filter array
 
-        if (show_grid) {
+        if (view_type == "grid" || view_type == "failed") {
             $('.publisherContainer').each(function() {
                 var _this = $(this);
                 var title = _this.find('.pubName').text().toLowerCase();
@@ -50,7 +67,7 @@ $(document).ready(function(){
 
     $('#list').click(function() {
         if (!$(this).hasClass("active")){
-            show_grid = false;
+            view_type = "list";
             paintPublishersList();
             search();
         }
@@ -70,7 +87,7 @@ $(document).ready(function(){
 
     $('#grid').click(function() {
         if (!$(this).hasClass("active")){
-            show_grid = true;
+            view_type = "grid";
             paintPublishersGrid();
             search();
         }
@@ -89,7 +106,7 @@ $(document).ready(function(){
     });
     $('#fails').click(function() {
         if (!$(this).hasClass("active")){
-            show_grid = undefined;
+            view_type = "failed";
             paintPublishersFails();
         }
         $(this).addClass('active');  
@@ -154,8 +171,8 @@ socket.on('newEvent', function(evt) {
         }
     }
 
-    if (show_grid == true) paintPublishersGrid();
-    else if (show_grid == false) paintPublishersList();
+    if (view_type == "grid") paintPublishersGrid();
+    else if (view_type == "list") paintPublishersList();
     else paintPublishersFails();
 
     updateAlerts();
@@ -248,7 +265,7 @@ var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, 
 
 var createNewStreamFailed = function(roomID, streamID, userID, userName, state){
     var color = stateToColor(state);
-    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + userID + '</span></div></div></div></div>')
+    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid" data-toggle="modal" data-target="#publisherModal" data-subid="' + userID + '" data-username="' + userName + '" data-streamid="' + streamID + '"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + userID + '</span></div></div></div></div>')
     /*
     $('#pub_'+ streamID).click(function() {
         var pub_id = $(this).data('pub_id');
