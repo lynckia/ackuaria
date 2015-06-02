@@ -303,6 +303,12 @@ app.get('/events/room/:roomID', function(req, res) {
    })
 })
 
+app.get('/events/user/:userID', function(req, res) {
+   var userID = req.params.userID;
+   eventsRegistry.getEventsOfUser(userID, function(events){
+      res.send(events);
+   })
+})
 
 /*
 app.get("/resetSessions", function(req, res){

@@ -86,32 +86,18 @@ exports.getEvents = function(callback) {
 };
 
 exports.getEventsOfRoom = function(roomId, callback) {
-
-    if (!roomId) {
-
-        db.events.find({}).toArray(function(err, events) {
-            if (err || !events) {
-                console.log("There are no events for room " + roomId);
-            } else {
-                callback(events);
-            }
-        });
-
-    } else {
-        db.events.find({
-            room: roomId
-        }).toArray(function(err, events) {
-            if (err || !events) {
-                console.log("There are no events for room " + roomId);
-            } else {
-                callback(events);
-            }
-        })
-    }
+    db.events.find({
+        room: roomId
+    }).toArray(function(err, events) {
+        if (err || !events) {
+            console.log("There are no events for room " + roomId);
+        } else {
+            callback(events);
+        }
+    })
 };
 
-exports.getEventsByUser = function(userId, callback) {
-
+exports.getEventsOfUser = function(userId, callback) {
     db.events.find({
         user: userId
     }).toArray(function(err, events) {
