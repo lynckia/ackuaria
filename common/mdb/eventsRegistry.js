@@ -109,8 +109,7 @@ exports.getEventsOfUser = function(userId, callback) {
     })
 };
 
-exports.getEventsByType = function(type, callback) {
-
+exports.getEventsOfType = function(type, callback) {
     db.events.find({
         type: type
     }).toArray(function(err, events) {

@@ -310,6 +310,13 @@ app.get('/events/user/:userID', function(req, res) {
    })
 })
 
+app.get('/events/type/:type', function(req, res) {
+   var type = req.params.type;
+   eventsRegistry.getEventsOfType(type, function(events){
+      res.send(events);
+   })
+})
+
 /*
 app.get("/resetSessions", function(req, res){
    sessionsRegistry.removeAllSessions();
