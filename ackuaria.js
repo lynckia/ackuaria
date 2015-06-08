@@ -101,10 +101,14 @@ app.get('/room', function(req, res){
    var roomID = req.query.room_id;
    var fails = req.query.fails;
    API.currentRoom = roomID;
-   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
-   else var roomName = "Not found";
-
    var room = API.rooms[roomID];
+
+   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
+   else {
+      room = null;
+      var roomName = "Not found";
+   }
+
    var streamsInRoom = {};
    var usersInRoom = {};
    var statesInRoom = {};
@@ -316,10 +320,3 @@ app.get('/events/type/:type', function(req, res) {
       res.send(events);
    })
 })
-
-/*
-app.get("/resetSessions", function(req, res){
-   sessionsRegistry.removeAllSessions();
-   res.redirect('/getSessions');
-});
-*/

@@ -2,7 +2,6 @@ var socket = io();
 var view_type = "grid";
 
 $(document).ready(function(){
-    updateAlerts();
     $('#back').click(function(){ window.location='/'});
     $('#publisherModal').on('show.bs.modal', function (event) {
       var publisher = $(event.relatedTarget);
@@ -180,8 +179,8 @@ socket.on('newEvent', function(evt) {
 
 
 var paintPublishersGrid = function() {
-    $('#publishers').html("");
     if (room) {
+        $('#publishers').html("");
         var nStreams = room.streams.length;
         updateNStreams(nStreams);
         for (var streamID in streams){
@@ -193,15 +192,15 @@ var paintPublishersGrid = function() {
                 createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
             }
         }
-    } else {
-        updateNStreams(0);
+        updateAlerts();
     }
+
 }
 
 var paintPublishersList = function() {
-    $('#publishers').html("");
-    $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     if (room) {
+        $('#publishers').html("");
+        $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
         var nStreams = room.streams.length;
         updateNStreams(nStreams);
         for (var streamID in streams){
@@ -212,20 +211,19 @@ var paintPublishersList = function() {
                 createNewPublisherList(roomID, streamID, nSubscribers, userName, state);
             }
         }
-    } else {
-        updateNStreams(0);
-    }
-    Sortable.init()
+        updateAlerts();
 
+        Sortable.init()
+    }
 }
 
 
 var paintPublishersFails = function() {
-    $('#publishers').html("");
     if (room) {
+        $('#publishers').html("");
         var streamsFailed = room.failed;
         var nStreams = room.failed.length;
-        updateNStreams(nStreams);
+        updateNStreams(nStreams + " FAILED ");
         for (var s in streamsFailed){
             if (streamsFailed[s] !== undefined) {
                 var fail = streamsFailed[s];
@@ -236,8 +234,6 @@ var paintPublishersFails = function() {
                 createNewStreamFailed(roomID, streamID, userID, userName, state);
             }
         }
-    } else {
-        updateNStreams(0);
     }
 }
 
@@ -266,14 +262,6 @@ var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, 
 var createNewStreamFailed = function(roomID, streamID, userID, userName, state){
     var color = stateToColor(state);
     $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid" data-toggle="modal" data-target="#publisherModal" data-subid="' + userID + '" data-username="' + userName + '" data-streamid="' + streamID + '"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + userID + '</span></div></div></div></div>')
-    /*
-    $('#pub_'+ streamID).click(function() {
-        var pub_id = $(this).data('pub_id');
-        if (pub_id != undefined || pub_id != null) {
-            window.location = '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
-        }
-    })
-*/
 }
 
 var updateNSubscribers = function(streamID, nSubscribers){
