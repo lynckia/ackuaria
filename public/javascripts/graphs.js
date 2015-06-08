@@ -1,70 +1,132 @@
-var x, y, xAxis, yAxis, line, svg, maxWidth, margin, width, height;
+var xVideo, yVideo, xAxisVideo, yAxisVideo, lineVideo, svgVideo, maxWidth, margin, width, height;
+var xAudio, yAudio, xAxisAudio, yAxisAudio, lineAudio, svgAudio;
+
 var dataVideo = [];
+var dataAudio = [];
 
 $(document).ready(function(){
 
 
-    maxWidth = $("#chart").width();
+    maxWidth = $("#chartVideo").width();
 
 
-    margin = {top: 20, right: 20, bottom: 20, left: 40};
+    margin = {top: 50, right: 20, bottom: 20, left: 40};
     width = maxWidth - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 
-    x = d3.time.scale()
+    xVideo = d3.time.scale()
         .range([0, width]);
 
-    y = d3.scale.linear()
+    yVideo = d3.scale.linear()
         .range([height, 0]);
 
-    xAxis = d3.svg.axis()
-        .scale(x)
+    xAxisVideo = d3.svg.axis()
+        .scale(xVideo)
         .orient("bottom")
         .ticks(d3.time.seconds, 20)
         .tickFormat(d3.time.format("%H:%M:%S"));
 
-    yAxis = d3.svg.axis()
-        .scale(y)
+    yAxisVideo = d3.svg.axis()
+        .scale(yVideo)
         .orient("left")
         .tickFormat(d3.format("d"));
 
-    line = d3.svg.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.kbps); });
+    lineVideo = d3.svg.line()
+        .x(function(d) { return xVideo(d.date); })
+        .y(function(d) { return yVideo(d.kbps); });
 
-    svg = d3.select("#chartVideo").append("svg")
+
+    svgVideo = d3.select("#chartVideo").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    data.forEach(function(d) {
+    dataVideo.forEach(function(d) {
         dataCallback(d);
     })
 
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.kbps; })]);
+    xVideo.domain(d3.extent(dataVideo, function(d) { return d.date; }));
+    yVideo.domain([0, d3.max(dataVideo, function(d) { return d.kbps; })]);
 
-    svg.append("path")
-      .data([data])
+    svgVideo.append("path")
+      .data([dataVideo])
       .attr("class", "line")
-      .attr("d", line);
+      .attr("id", "videoChart")
+      .attr("d", lineVideo);
 
-    svg.append("g")
+    svgVideo.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(xAxisVideo);
 
-    svg.append("g")
+    svgVideo.append("g")
       .attr("class", "y axis")
-      .call(yAxis)
+      .call(yAxisVideo)
     .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 2)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("Kbps ");
+      .text("Kbps Video ");
 
+     // AUDIO *************
+
+    xAudio = d3.time.scale()
+        .range([0, width]);
+
+    yAudio = d3.scale.linear()
+        .range([height, 0]);
+
+    xAxisAudio = d3.svg.axis()
+        .scale(xAudio)
+        .orient("bottom")
+        .ticks(d3.time.seconds, 20)
+        .tickFormat(d3.time.format("%H:%M:%S"));
+
+    yAxisAudio = d3.svg.axis()
+        .scale(yAudio)
+        .orient("left")
+        .tickFormat(d3.format("d"));
+
+    lineAudio = d3.svg.line()
+        .x(function(d) { return xAudio(d.date); })
+        .y(function(d) { return yAudio(d.kbps); });
+
+
+    svgAudio = d3.select("#chartAudio").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    dataAudio.forEach(function(d) {
+        dataCallback(d);
+    })
+
+    xAudio.domain(d3.extent(dataAudio, function(d) { return d.date; }));
+    yAudio.domain([0, d3.max(dataAudio, function(d) { return d.kbps; })]);
+
+    svgAudio.append("path")
+      .data([dataAudio])
+      .attr("class", "line")
+      .attr("id", "audioChart")
+      .attr("d", lineAudio);
+
+    svgAudio.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxisAudio);
+
+    svgAudio.append("g")
+      .attr("class", "y axis")
+      .call(yAxisAudio)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "end")
+      .text("Kbps Audio");
 
 })    
 
@@ -77,16 +139,33 @@ var dataCallback = function(d) {
 }
 
 var newData = function(newObject, type) {
-    if (data.length == 50) data.splice(0,1);
-    data.push(newObject);
+	if (type == "video"){
+		if (dataVideo.length == 50) dataVideo.splice(0,1);
+	    dataVideo.push(newObject);
 
-    dataCallback(data[data.length - 1]);
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.kbps; })]);
+	    dataCallback(dataVideo[dataVideo.length - 1]);
+	    xVideo.domain(d3.extent(dataVideo, function(d) { return d.date; }));
+	    yVideo.domain([0, d3.max(dataVideo, function(d) { return d.kbps; })]);
 
-    svg.select("g.x.axis").call(xAxis);
-    svg.select("g.y.axis").call(yAxis); 
+	    svgVideo.select("g.x.axis").call(xAxisVideo);
+	    svgVideo.select("g.y.axis").call(yAxisVideo); 
 
-    svg.selectAll("path").data([data])
-        .attr("d", line);
+	    svgVideo.select("path#videoChart").data([dataVideo])
+	        .attr("d", lineVideo);
+	} else {
+		if (dataAudio.length == 50) dataAudio.splice(0,1);
+	    dataAudio.push(newObject);
+
+	    dataCallback(dataAudio[dataAudio.length - 1]);
+	    xAudio.domain(d3.extent(dataAudio, function(d) { return d.date; }));
+	    yAudio.domain([0, d3.max(dataAudio, function(d) { return d.kbps; })]);
+
+	    svgAudio.select("g.x.axis").call(xAxisAudio);
+	    svgAudio.select("g.y.axis").call(yAxisAudio); 
+
+	    svgAudio.select("path#AudioChart").data([dataAudio])
+	        .attr("d", lineAudio);
+	}
+
+
 }

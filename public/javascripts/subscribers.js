@@ -1,6 +1,5 @@
 var socket = io();
 var show_grid = true;
-var data = [];
 var audio, video;
 var subscribers = {};
 var sub_modal_now;
@@ -256,9 +255,12 @@ $(document).ready(function(){
 
         var dateStr = hour + ":" + minutes +":" + seconds;
 
-        var kbps = Math.round(bpsVideo * 100)/100;
+        var kbpsVideo = Math.round(bpsVideo * 100)/100;
+        var kbpsAudio = Math.round(bpsAudio * 100)/100;
 
-        newData({date: dateStr, kbps: kbps});
+        newData({date: dateStr, kbps: kbpsVideo}, "video");
+        newData({date: dateStr, kbps: kbpsAudio}, "audio");
+
     }
 
     var paintSubscribersGrid = function() {
