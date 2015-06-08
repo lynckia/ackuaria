@@ -234,8 +234,8 @@ $(document).ready(function(){
             return;
         } else {
             var timeSince = (timestamp - lastTimestamp) / 1000;
-            bpsAudio = ((audio.rtcpBytesSent - lastBytesAudio) / timeSince) * 8 / 1000;
-            bpsVideo = ((video.rtcpBytesSent - lastBytesVideo) / timeSince) * 8 / 1000;
+            bpsAudio = (((audio.rtcpBytesSent - lastBytesAudio) / timeSince) / 1000) * 8;
+            bpsVideo = (((video.rtcpBytesSent - lastBytesVideo) / timeSince) / 1000) * 8;
             lastTimestamp = timestamp;
             lastBytesAudio = audio.rtcpBytesSent;
             lastBytesVideo = video.rtcpBytesSent;
@@ -250,7 +250,15 @@ $(document).ready(function(){
         $('#audioPacketsSent').html(audio.rtcpPacketSent);
 
         var date = new Date(timestamp);
-        var Kbps = Math.round(bpsVideo * 100)/100;
+        var seconds = date.getSeconds();
+        var minutes = date.getMinutes();
+        var hour = date.getHours();
+
+        var dateStr = hour + ":" + minutes +":" + seconds;
+
+        var kbps = Math.round(bpsVideo * 100)/100;
+
+        newData({date: dateStr, kbps: kbps});
     }
 
     var paintSubscribersGrid = function() {
@@ -322,13 +330,17 @@ $(document).ready(function(){
             var roomStreams = room.streams;
             for (var stream in roomStreams){
                 if (streamID != roomStreams[stream]) {
-                    var state = states[roomStreams[stream]].state;
-                    var userName = streams[roomStreams[stream]].userName;
-                    createNewPublisher(roomID, roomStreams[stream], userName, state);
+                    if (states[streamID]){
+                        var state = states[roomStreams[stream]].state;
+                        var userName = streams[roomStreams[stream]].userName;
+                        createNewPublisher(roomID, roomStreams[stream], userName, state);
+                    }
                 } else {
-                    var state = states[streamID].state;
-                    var userName = streams[roomStreams[stream]].userName;
-                    createMyPublisher(roomID, roomStreams[stream], userName, state);
+                    if (states[streamID]){
+                        var state = states[streamID].state;
+                        var userName = streams[roomStreams[stream]].userName;
+                        createMyPublisher(roomID, roomStreams[stream], userName, state);
+                    }
                 }
             }
             updateStatePublisher();

@@ -1,200 +1,92 @@
-var charts = [];
-var GRAPH = {};
-var ppsLost = [];
-// var ppsLostXAxis = [];
-var ppsLostTime = [];
-var BpsSentTime = [];
+var x, y, xAxis, yAxis, line, svg, maxWidth, margin, width, height;
+var dataVideo = [];
 
-var BpsSent = [];
-var BpsSentValue = [];
-var xVal=[];
-///////////////////////////////////////////////////////////////
-
-GRAPH.generatePpsLost = function(id, value, time) {
-  xVal[id] = 0;
-
-  ppsLostTime[id] = time;
-  ppsLost[id] = [];
-
-  ppsLost[id].push({
-    x: new Date(time),
-    y: 0
-  })
-  charts[id] = new CanvasJS.Chart(id, {
-    title: {
-      text: "Pps Lost"
-    },
-    axisX:{      
-            interval: 1,
-            intervalType: "minute",
-            valueFormatString: "hh:mm:ss" ,
-            labelAngle: -50
-        },
-      axisY:{
-        minimum: 0
-      },
-    height:300,
-    width:600,
-    data: [{
-      type: "area",
-      color: "rgba(200,0,0,0.9)",
-      dataPoints: ppsLost[id]
-    }]
-  });
-
-}
-GRAPH.updatePpsLost = function(id, value, time) {
-  var date = new Date(time);
-  xVal[id] = date;
-  var dataLength = 100; // number of dataPoints visible at any point
-
-  var timeElapsed = time - ppsLostTime[id];
-
-  if (timeElapsed != 0) {
-    var data = (value / timeElapsed) * 1000;
-  }
-  else {
-    var data = 0;
-  }
-
-  ppsLostTime[id] = time;
-
-  ppsLost[id].push({
-    x: xVal[id],
-    y: data
-  });
+$(document).ready(function(){
 
 
-  if (ppsLost[id].length > dataLength) {
-    ppsLost[id].shift();
-  }
-
-  charts[id].render();
-
-};
+    maxWidth = $("#chart").width();
 
 
-//////////////////////////////////////////////////////////////////
+    margin = {top: 20, right: 20, bottom: 20, left: 40};
+    width = maxWidth - margin.left - margin.right;
+    height = 250 - margin.top - margin.bottom;
 
-GRAPH.generateFractionLost = function(id, value) {
-  var bind = '#' + id;
-  var chart = c3.generate({
-    bindto: bind,
-    // size: {
-    //     height: 240,
-    //     width: 480
-    // },
-    data: {
-      columns: [
-        ['fractionLost', value]
-      ],
-      type: 'gauge',
+    x = d3.time.scale()
+        .range([0, width]);
 
-    },
-    transition: {
-      duration: 1000
-    },
-    // gauge: {
-    //    label: {
-    //        format: function(value, ratio) {
-    //            return value;
-    //        },
-    //        show: true // to turn off the min/max labels.
-    //    },
-    // min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-    // max: 100, // 100 is default
-    // units: ' %',
-    // width: 39 // for adjusting arc thickness
-    //  },
-    color: {
-      pattern: ['#60B044', '#F6C600', '#F97600', '#FF0000'], // the three color levels for the percentage values.
-      threshold: {
-        //            unit: 'value', // percentage is default
-        //            max: 200, // 100 is default
-        values: [30, 60, 90, 100]
-      }
-    }
-  });
+    y = d3.scale.linear()
+        .range([height, 0]);
 
-  charts[id] = chart;
+    xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(d3.time.seconds, 20)
+        .tickFormat(d3.time.format("%H:%M:%S"));
+
+    yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(d3.format("d"));
+
+    line = d3.svg.line()
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.kbps); });
+
+    svg = d3.select("#chartVideo").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    data.forEach(function(d) {
+        dataCallback(d);
+    })
+
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.kbps; })]);
+
+    svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", line);
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "end")
+      .text("Kbps ");
 
 
+})    
 
+var parseDate = d3.time.format("%H:%M:%S");
+
+
+var dataCallback = function(d) {
+    d.date = parseDate.parse(d.date);
+    d.kbps = +d.kbps;
 }
 
-GRAPH.updateFractionLost = function(id, value) {
-  var chart = charts[id];
+var newData = function(newObject, type) {
+    if (data.length == 50) data.splice(0,1);
+    data.push(newObject);
 
-  chart.load({
-    columns: [
-      ['fractionLost', value]
-    ]
-  });
-};
+    dataCallback(data[data.length - 1]);
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.kbps; })]);
 
-GRAPH.generateBpsSent = function(id, value, time, type) {
+    svg.select("g.x.axis").call(xAxis);
+    svg.select("g.y.axis").call(yAxis); 
 
-  xVal[id] = 0;
-
-  BpsSentTime[id] = time;
-  BpsSent[id] = [];
-  BpsSent[id].push({
-    x: new Date(time),
-    y: 0
-  })
-  BpsSentValue[id] = value;
-
-  charts[id] = new CanvasJS.Chart(id, {
-    title: {
-      text: "bps Sent " + type
-    },
-    axisX:{      
-            interval: 1,
-            intervalType: "minute",
-            valueFormatString: "hh:mm:ss" ,
-            labelAngle: -50
-        },
-    height: 300,
-    width: 600,
-    data: [{
-            type: "area",
-            color: "rgba(0,150,300,0.9)",
-            dataPoints: BpsSent[id]
-    }]
-  });
-
-
-}
-
-GRAPH.updateBpsSent = function(id, value, time) {
-
-
-  var bytesSent = value - BpsSentValue[id];
-  var timeElapsed = time - BpsSentTime[id];
-  var date = new Date(time);
-  xVal[id] = date;
-
-  var dataLength = 100; // number of dataPoints visible at any point
-  if (timeElapsed != 0) {
-    var data = ((bytesSent * 8)/ timeElapsed) * 1000;
-  }
-  else {
-    var data = 0;
-  }
-
-  BpsSentTime[id] = time;
-  BpsSentValue[id] = value;
-
-  BpsSent[id].push({
-    x: xVal[id],
-    y: data
-  });
-
-
-  if (BpsSent[id].length > dataLength) {
-    BpsSent[id].shift();
-  }
-
-  charts[id].render();
-
+    svg.selectAll("path").data([data])
+        .attr("d", line);
 }
