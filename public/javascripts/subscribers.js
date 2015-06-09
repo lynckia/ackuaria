@@ -14,7 +14,7 @@ $(document).ready(function(){
     socket.on('newEvent', function(evt) {
         var event = evt.event;
         rooms = evt.rooms;
-
+        room = rooms[roomID];
         streams =  {};
         var totalStreams = evt.streams;
         for (var s in totalStreams){
@@ -331,17 +331,15 @@ $(document).ready(function(){
         if (room) {
             var roomStreams = room.streams;
             for (var stream in roomStreams){
-                if (streamID != roomStreams[stream]) {
-                    if (states[streamID]){
-                        var state = states[roomStreams[stream]].state;
-                        var userName = streams[roomStreams[stream]].userName;
-                        createNewPublisher(roomID, roomStreams[stream], userName, state);
-                    }
-                } else {
+                if ((streamID != roomStreams[stream]) && states[roomStreams[stream]] && streams[roomStreams[stream]]) {
+                    var state = states[roomStreams[stream]].state;
+                    var userName = streams[roomStreams[stream]].userName;
+                    createNewPublisher(roomID, roomStreams[stream], userName, state);
+                } else if ((streamID == roomStreams[stream]) && states[streamID] && streams[streamID]) {
                     if (states[streamID]){
                         var state = states[streamID].state;
-                        var userName = streams[roomStreams[stream]].userName;
-                        createMyPublisher(roomID, roomStreams[stream], userName, state);
+                        var userName = streams[streamID].userName;
+                        createMyPublisher(roomID, streamID, userName, state);
                     }
                 }
             }
