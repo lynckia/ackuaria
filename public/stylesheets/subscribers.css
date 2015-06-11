@@ -231,7 +231,12 @@
 	padding:20px;
 	margin-bottom: 10px;
 	border-left: 1px solid #55739D;
-	overflow: auto;
+}
+#subscribersCharts {	
+	height: 100%;
+	margin-top: 10px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #subModal {
