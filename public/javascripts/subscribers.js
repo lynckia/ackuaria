@@ -5,9 +5,6 @@ var subscribers = {};
 var sub_modal_now;
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
 
-
-
-
 $(document).ready(function(){
 
 
@@ -61,22 +58,17 @@ $(document).ready(function(){
 
     socket.on('newRR', function(evt) {
         var event = evt.event;
+
         var audio = evt.audio;
         var video = evt.video;
         var pubID = event.pub;
         var subID = event.subs;
-        var stats = {"audio": audio, "video": video};
+        var timestamp = event.timestamp;
+        var stats = {audio: audio, video: video};
         if (pubID == streamID) {
-            if (!subscribers[subID]){
-                subscribers[subID] = [stats];
-            } else if (subscribers[subID] && subscribers[subID].length < 10) {
-                subscribers[subID].unshift(stats);
-            } else {
-                subscribers[subID].pop();
-                subscribers[subID].unshift(stats);
-            }
+            subscribers[subID] = stats;
             if (sub_modal_now == subID && audio && video) {
-                updateRR(subID, audio, video);
+                updateRR(subID, audio, video, timestamp);
             }
         }
     });
@@ -89,16 +81,23 @@ $(document).ready(function(){
       var subscriber = $(event.relatedTarget);
       var userName = subscriber.data('username');
       var subID = subscriber.data('subid');
-      sub_modal_now = subID;
-      var buffer = subscribers[subID];
-      if (buffer != undefined && buffer[0]) {
-        var audio = buffer[0].audio;
-        var video = buffer[0].video;
+      var stats = subscribers[subID];
+      if (stats) {
+        var audio = stats.audio;
+        var video = stats.video;
         if (audio && video) updateRR(subID, audio, video);
       }
       updateModalState(subID);
       var modal = $(this)
       $('#username').html(" " + userName);
+      newDataSub(subID);
+    })
+
+    $('#subscriberModal').on('hidden.bs.modal', function () {
+        sub_modal_now = undefined;
+        $("#chartFLVideo").html("");
+        $("#chartFLAudio").html("");
+        $("#chartBW").html("");
 
     })
     $('#searchBar').keyup(function () {
@@ -172,7 +171,62 @@ $(document).ready(function(){
         $('#list').addClass('btn-default');
         $('#list').removeClass('active');
         $('#list').removeClass('btn-primary');
-    });  
+    });
+
+    $('#switchVideo').click(function() {
+        if (!$(this).hasClass("active")){
+            $( ".audioChart" ).hide();
+            $( ".videoChart" ).show();
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchAudio').addClass('btn-default');
+        $('#switchAudio').removeClass('active');
+        $('#switchAudio').removeClass('btn-primary');
+
+        $('#switchAll').addClass('btn-default');
+        $('#switchAll').removeClass('active');
+        $('#switchAll').removeClass('btn-primary');
+    });
+
+    $('#switchAudio').click(function() {
+        if (!$(this).hasClass("active")){
+            $( ".videoChart" ).hide();
+            $( ".audioChart" ).show();
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchVideo').addClass('btn-default');
+        $('#switchVideo').removeClass('active');
+        $('#switchVideo').removeClass('btn-primary');
+
+        $('#switchAll').addClass('btn-default');
+        $('#switchAll').removeClass('active');
+        $('#switchAll').removeClass('btn-primary');
+    });
+
+    $('#switchAll').click(function() {
+        if (!$(this).hasClass("active")){
+            $( ".audioChart" ).show();
+            $( ".videoChart" ).show();
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchVideo').addClass('btn-default');
+        $('#switchVideo').removeClass('active');
+        $('#switchVideo').removeClass('btn-primary');
+
+        $('#switchAudio').addClass('btn-default');
+        $('#switchAudio').removeClass('active');
+        $('#switchAudio').removeClass('btn-primary');
+    });
+
 
     var stateToColor = function(state) {
         var color;
@@ -204,7 +258,22 @@ $(document).ready(function(){
 
     }
 
-    var updateRR = function(subID, audio, video) {
+    var updateRR = function(subID, audio, video, timestamp) {
+        var FLVideo, FLAudio, BW;
+        FLVideo = video.fractionLost;
+        FLAudio = audio.fractionLost;
+        BW = video.bandwidth;
+
+        var date = new Date(timestamp);
+        var seconds = date.getSeconds();
+        var minutes = date.getMinutes();
+        var hour = date.getHours();
+
+        var dateStr = hour + ":" + minutes +":" + seconds;
+
+        var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
+        newDataSub(subID, data)
+
         $('#dataModal #videoSSRC').html(video.ssrc);
         $('#dataModal #audioSSRC').html(audio.ssrc);
       
@@ -222,6 +291,7 @@ $(document).ready(function(){
 
         $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
         $('#dataModal #audioSourceSSRC').html(audio.sourceSsrc);
+
     }
 
     var updateSR = function(audio, video, timestamp) {
@@ -258,8 +328,7 @@ $(document).ready(function(){
         var kbpsVideo = Math.round(bpsVideo * 100)/100;
         var kbpsAudio = Math.round(bpsAudio * 100)/100;
 
-        newData({date: dateStr, kbps: kbpsVideo}, "video");
-        newData({date: dateStr, kbps: kbpsAudio}, "audio");
+        newDataPub({date: dateStr, kbpsVideo: kbpsVideo, kbpsAudio: kbpsAudio});
 
     }
 
