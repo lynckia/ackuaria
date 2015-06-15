@@ -88,7 +88,7 @@ socket.on('newEvent', function(evt) {
 
 var paintRoomsGrid = function(){
     $('#rooms').html("");
-    var nRooms = Object.keys(rooms).length
+    var nRooms = Object.keys(rooms).length;
     updateNRooms(nRooms);
     for (var room in rooms) {
         if (!$('#room_'+ room).length){
@@ -101,6 +101,9 @@ var paintRoomsGrid = function(){
             var nStreams = rooms[room].roomName.length;
             updateNStreams(roomID, nStreams);
         }
+    }
+    if (nRooms == 0) {
+        $('#rooms').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no rooms created</strong></div>')
     }
 };
 
@@ -120,6 +123,9 @@ var paintRoomsList = function(){
             var nStreams = rooms[room].streams.length;
             updateNStreams(roomID, nStreams);
         }
+    }
+    if (nRooms == 0) {
+        $('#rooms').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no rooms created</strong></div>')
     }
     Sortable.init()
 };

@@ -16,7 +16,6 @@ $(document).ready(function(){
             } else {
                 sdp = "No SDP found for this failed stream"
             }
-
         }
       }
       var userName = publisher.data('username');
@@ -197,6 +196,9 @@ var paintPublishersGrid = function() {
                 createNewPublisherGrid(roomID, streamID, nSubscribers, userName, state);
             }
         }
+        if (nStreams == 0) {
+            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no publishers in this room right now</strong></div>')
+        }
         updateAlerts();
     }
 
@@ -215,6 +217,9 @@ var paintPublishersList = function() {
                 var state = states[streamID].state;
                 createNewPublisherList(roomID, streamID, nSubscribers, userName, state);
             }
+        }
+        if (nStreams == 0) {
+            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no publishers in this room right now</strong></div>')
         }
         updateAlerts();
 
