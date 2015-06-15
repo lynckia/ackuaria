@@ -10,8 +10,13 @@ $(document).ready(function(){
       var sdp = "";
       for (var f in room.failed) {
         if (room.failed[f].streamID == streamID){
-            oldSDP = room.failed[f].sdp;
-            sdp = oldSDP.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            if (oldSDP) {
+                oldSDP = room.failed[f].sdp;
+                sdp = oldSDP.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            } else {
+                sdp = "No SDP found for this failed stream"
+            }
+
         }
       }
       var userName = publisher.data('username');
