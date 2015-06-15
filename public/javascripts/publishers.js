@@ -244,6 +244,9 @@ var paintPublishersFails = function() {
                 createNewStreamFailed(roomID, streamID, userID, userName, state);
             }
         }
+        if (nStreams == 0) {
+            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no failed streams in this room</strong></div>')
+        }
     }
 }
 
