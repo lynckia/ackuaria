@@ -6,7 +6,6 @@ var log = logger.getLogger("Ackuaria");
 var db = require('./mdb/dataBase').db;
 var eventsRegistry = require('./mdb/eventsRegistry');
 var statsRegistry = require('./mdb/statsRegistry');
-var roomsRegistry = require('./mdb/roomsRegistry');
 var sessionsRegistry = require('./mdb/sessionsRegistry');
 var N = require('./../nuve');
 

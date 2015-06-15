@@ -2,9 +2,10 @@ var Getopt = require('node-getopt');
 var config = require('./ackuaria_config');
 var db = require('./common/mdb/dataBase').db;
 var eventsRegistry = require('./common/mdb/eventsRegistry');
-var statsRegistry = require('./common/mdb/statsRegistry');
-var roomsRegistry = require('./common/mdb/roomsRegistry');
 var sessionsRegistry = require('./common/mdb/sessionsRegistry');
+var ackuariaController = require('./controllers/ackuaria_controller');
+var apiController = require('./controllers/api_controller');
+
 
 GLOBAL.config = config || {};
 
@@ -67,256 +68,30 @@ io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
 
-app.get('/', function(req, res) {
-   API.currentRoom = "";
+app.get('/', ackuariaController.loadRooms)
 
-   N.API.getRooms(function(roomList) {
-      var rooms = JSON.parse(roomList);
-      var test_rooms = {};
-      for (var i in rooms) {
-         var room = rooms[i];
-         if (!API.rooms[room._id]) {
-            test_rooms[room._id] = {
-                "roomName": room.name,
-                "streams": [],
-                "users": [],
-                "failed": []
-            };
-         } else {
-            test_rooms[room._id] = API.rooms[room._id];
-         }
-      }
+app.get('/room', ackuariaController.loadPublishers)
 
-      API.rooms = test_rooms;
-      res.render('rooms', {
-         view:"rooms",
-         rooms: API.rooms
-      });
-   })
+app.get('/pub', ackuariaController.loadSubscribers)
 
+app.get('/sessions', apiController.sessions)
 
-});
+app.get('/sessions/room/:roomID', apiController.sessionsOfRoom)
 
-app.get('/room', function(req, res){
-   var roomID = req.query.room_id;
-   var fails = req.query.fails;
-   API.currentRoom = roomID;
-   var room = API.rooms[roomID];
+app.get('/sessions/user/:userID', apiController.sessionsOfUser)
 
-   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
-   else {
-      room = null;
-      var roomName = "Not found";
-   }
+app.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
 
-   var streamsInRoom = {};
-   var usersInRoom = {};
-   var statesInRoom = {};
+app.get('/info', apiController.info)
 
-   for (var s in API.streams){
-      if (room.streams.indexOf(parseInt(s)) > -1) {
-         streamsInRoom[s] = API.streams[s];
-      }
-   }
+app.get('/info/room/:roomID', apiController.infoOfRoom)
 
-   for (var s in API.states){
-      if (room.streams.indexOf(parseInt(s)) > -1) {
-         statesInRoom[s] = API.states[s];
-      }
-   }
+app.get('/info/user/:userID', apiController.infoOfUser)
 
-   res.render('publishers', {
-      view: "publishers",
-      roomID: roomID,
-      roomName: roomName,
-      room: room,
-      streams: streamsInRoom,
-      states: statesInRoom
-   });
-})
+app.get('/events', apiController.events)
 
-app.get('/pub', function(req, res){
-   var streamID = req.query.pub_id;
-   var roomID = req.query.room_id;
-   var room = API.rooms[roomID];
+app.get('/events/room/:roomID', apiController.eventsOfRoom)
 
-   API.currentRoom = roomID;
-   if (API.streams[streamID])  var userName = API.streams[streamID].userName;
-   else var userName = "Publisher not found";
+app.get('/events/user/:userID', apiController.eventsOfUser)
 
-   if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
-   else var roomName = "Not found";
-   
-   var streamsInRoom = {};
-   for (var s in API.streams){
-      if (room.streams.indexOf(parseInt(s)) > -1) {
-         streamsInRoom[s] = API.streams[s];
-      }
-   }
-
-   var statesInRoom = {};
-   for (var s in API.states){
-      if (room.streams.indexOf(parseInt(s)) > -1) {
-         statesInRoom[s] = API.states[s];
-      }
-   }
-
-   res.render('subscribers', {
-      view: "subscribers",
-      roomID: roomID,
-      roomName: roomName,
-      room: room,
-      streamID: streamID,
-      userName: userName,
-      streams: streamsInRoom,
-      users: API.users,
-      states: statesInRoom
-   });
-})
-
-app.get('/sessions', function(req, res) {
-   sessionsRegistry.getSessions(function(sessions){
-      res.send(sessions);
-   })
-})
-
-app.get('/sessions/room/:roomID', function(req, res) {
-   var roomID = req.params.roomID;
-   sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
-      res.send(sessions);
-   })
-})
-
-app.get('/sessions/user/:userID', function(req, res) {
-   var userID = req.params.userID;
-   sessionsRegistry.getSessionsOfUser(userID, function(sessions){
-      res.send(sessions);
-   })
-})
-
-app.get('/sessions/stream/:streamID', function(req, res) {
-   var streamID = req.params.streamID;
-   sessionsRegistry.getSessionsOfUser(streamID, function(sessions){
-      res.send(sessions);
-   })
-})
-
-app.get('/info', function(req, res) {
-   var info = {};
-   sessionsRegistry.getSessions(function(sessions){
-      var nSessions = sessions.length;
-      var nRooms = Object.keys(API.rooms).length;
-      var nUsers = Object.keys(API.users).length;
-      var nStreams = Object.keys(API.streams).length;
-
-      var rooms = {};
-      var users = {};
-
-      var timePublished = 0;
-      for (var s in sessions) {
-         var roomID = sessions[s].roomID;
-         if (!rooms[roomID]) rooms[roomID] = 0;
-
-         for (var st in sessions[s].streams){
-            var stream = sessions[s].streams[st];
-            if (!users[stream.userID]) users[stream.userID] = 0;
-
-            var initPublish = parseInt(stream.initPublish);
-            var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = ((finalPublish - initPublish) / 1000);
-
-            rooms[roomID] += streamTime;
-            users[stream.userID] += streamTime;
-            timePublished += streamTime;
-         }
-      }
-      info.nStreams = nStreams;
-      info.nUsers = nUsers;
-      info.nRooms = nRooms;
-      info.nSessions = nSessions;
-      info.rooms = rooms;
-      info.users = users;
-      info.timePublished = timePublished;
-      info.info = "Time is represented in seconds";
-      res.send(info);
-   })
-})
-
-app.get('/info/room/:roomID', function(req, res) {
-   var roomID = req.params.roomID;
-   var info = {};  
-   var streams = [];
-
-   sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
-      var nSessions = sessions.length;
-      var timePublished = 0;
-      for (var s in sessions) {
-         for (var st in sessions[s].streams){
-            var stream = sessions[s].streams[st];
-            var initPublish = parseInt(stream.initPublish);
-            var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = ((finalPublish - initPublish) / 1000);
-            streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
-            timePublished += streamTime;
-         }
-      }
-      info.roomID = roomID;
-      info.timePublished = timePublished;
-      info.streams = streams;
-      res.send(info);
-   })
-})
-
-app.get('/info/user/:userID', function(req, res) {
-   var userID = req.params.userID;
-   var streams = [];
-   var info = {};
-   sessionsRegistry.getSessionsOfUser(userID, function(sessions){
-      var nSessions = sessions.length;
-      var timePublished = 0;
-      for (var s in sessions) {
-         for (var i in sessions[s].streams){
-            var st = sessions[s].streams[i];
-            if (st.userID == userID) {
-               var initPublish = parseInt(st.initPublish);
-               var finalPublish = parseInt(st.finalPublish);
-               var streamTime = ((finalPublish - initPublish) / 1000);
-               var stream = {streamID: st.streamID, timePublished: streamTime};
-               streams.push(stream);
-               timePublished += streamTime;
-            }
-         }
-      }
-      info.userID = userID;
-      info.streams = streams;
-      info.timePublished = timePublished;
-      res.send(info);
-   })
-})
-
-app.get('/events', function(req, res) {
-   eventsRegistry.getEvents(function(events){
-      res.send(events);
-   })
-})
-
-app.get('/events/room/:roomID', function(req, res) {
-   var roomID = req.params.roomID;
-   eventsRegistry.getEventsOfRoom(roomID, function(events){
-      res.send(events);
-   })
-})
-
-app.get('/events/user/:userID', function(req, res) {
-   var userID = req.params.userID;
-   eventsRegistry.getEventsOfUser(userID, function(events){
-      res.send(events);
-   })
-})
-
-app.get('/events/type/:type', function(req, res) {
-   var type = req.params.type;
-   eventsRegistry.getEventsOfType(type, function(events){
-      res.send(events);
-   })
-})
+app.get('/events/type/:type', apiController.eventsOfType)
