@@ -6,6 +6,8 @@ var xFLVideo, yFLVideo, xAxisFLVideo, yAxisFLVideo, lineFLVideo, svgFLVideo;
 var data = {audio: [], video: []};
 var dataSub = {FLVideo: [], FLAudio: [], BW: []};
 var buffer = [];
+var counterVideo = 1;
+var counterAudio = 1;
 var bufferLength = 5;
 var graphLengthPub = 25;
 var graphLengthSub = 100;
@@ -29,29 +31,23 @@ var dataCallback = function(d) {
 }
 
 var newDataPub = function(newObject) {
-    buffer.push(newObject);
+      var date = newObject.date;
 
-    if (buffer.length == bufferLength) {
-      var date = buffer[2].date;
-      var kbpsAudio = 0;
-      var kbpsVideo = 0;
-
-      for (var i in buffer){
-        kbpsAudio += buffer[i].kbpsAudio;
-        kbpsVideo += buffer[i].kbpsVideo;
+      if (newObject.kbpsVideo == 0) counterVideo++;
+      else {
+        var kbpsVideo = newObject.kbpsVideo / counterVideo;
+        counterVideo = 1;
+        var newDataVideo = {date: date, val: kbpsVideo};
+        updateVideoKbpsChart(newDataVideo);
       }
 
-      kbpsAudio = kbpsAudio / bufferLength;
-      kbpsVideo = kbpsVideo / bufferLength;
-
-      var newDataVideo = {date: date, val: kbpsVideo};
-      var newDataAudio = {date: date, val: kbpsAudio};
-
-      buffer = [];
-
-      updateVideoKbpsChart(newDataVideo);
-      updateAudioKbpsChart(newDataAudio);
-  }
+      if (newObject.kbpsAudio == 0) counterAudio++;
+      else {
+        var kbpsAudio = newObject.kbpsAudio / counterAudio;
+        counterAudio = 1;
+        var newDataAudio = {date: date, val: kbpsAudio};
+        updateAudioKbpsChart(newDataAudio);
+      }
 }
 
 var newDataSub = function(subID, data) {
@@ -71,16 +67,16 @@ var newDataSub = function(subID, data) {
       var newDataFLVideo = {date: date, val: FLVideo};
       var newDataFLAudio = {date: date, val: FLAudio};
       var newDataBW = {date: date, val: BW};
-
+      
+      updateBWChart(newDataBW);
       updateFLVideoChart(newDataFLVideo);
       updateFLAudioChart(newDataFLAudio);
-      updateBWChart(newDataBW);
   }
 }
 
 var drawVideoKbpsChart = function() {
 
-    margin = {top: 50, right: 20, bottom: 20, left: 40};
+    margin = {top: 50, right: 40, bottom: 20, left: 40};
     width = maxWidth - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 
@@ -99,6 +95,7 @@ var drawVideoKbpsChart = function() {
     yAxisVideo = d3.svg.axis()
         .scale(yVideo)
         .orient("left")
+        .ticks(6)
         .tickFormat(d3.format("d"));
 
     lineVideo = d3.svg.line()
@@ -128,17 +125,21 @@ var drawVideoKbpsChart = function() {
     svgVideo.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxisVideo);
+      .call(xAxisVideo)
 
     svgVideo.append("g")
       .attr("class", "y axis")
       .call(yAxisVideo)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -30)
+      .attr("x", 60)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("Kbps Video ");
+      .style("font-family", 'Nunito-Light')
+      .style("font-size", "16px")
+      .style("fill", "#042762")
+      .text(" Video (Kbps)");
+
 }
 
 var drawAudioKbpsChart = function() {
@@ -158,6 +159,7 @@ var drawAudioKbpsChart = function() {
     yAxisAudio = d3.svg.axis()
         .scale(yAudio)
         .orient("left")
+        .ticks(6)
         .tickFormat(d3.format("d"));
 
     lineAudio = d3.svg.line()
@@ -196,11 +198,14 @@ var drawAudioKbpsChart = function() {
       .attr("class", "y axis")
       .call(yAxisAudio)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -30)
+      .attr("x", 60)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("Kbps Audio");
+      .style("font-family", 'Nunito-Light')
+      .style("font-size", "16px")
+      .style("fill", "#042762")
+      .text(" Audio (Kbps)");
 }
 
 var drawFLVideoChart = function() {
@@ -225,6 +230,7 @@ var drawFLVideoChart = function() {
     yAxisFLVideo = d3.svg.axis()
         .scale(yFLVideo)
         .orient("left")
+        .ticks(6)
         .tickFormat(d3.format("d"));
 
     lineFLVideo = d3.svg.line()
@@ -243,7 +249,7 @@ var drawFLVideoChart = function() {
     })
 
     xFLVideo.domain(d3.extent(dataSub.FLVideo, function(d) { return d.date; }));
-    yFLVideo.domain([0, d3.max(dataSub.FLVideo, function(d) { return d.val; })]);
+    yFLVideo.domain([0, 100]);
 
     svgFLVideo.append("path")
       .data([dataSub.FLVideo])
@@ -260,11 +266,14 @@ var drawFLVideoChart = function() {
       .attr("class", "y axis")
       .call(yAxisFLVideo)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -30)
+      .attr("x", 160)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("FL Video");
+      .style("font-family", 'Nunito-Light')
+      .style("font-size", "16px")
+      .style("fill", "#042762")
+      .text(" Fraction Lost Video (%)");
 }
 
 var drawFLAudioChart = function() {
@@ -289,6 +298,7 @@ var drawFLAudioChart = function() {
     yAxisFLAudio = d3.svg.axis()
         .scale(yFLAudio)
         .orient("left")
+        .ticks(6)
         .tickFormat(d3.format("d"));
 
     lineFLAudio = d3.svg.line()
@@ -307,7 +317,7 @@ var drawFLAudioChart = function() {
     })
 
     xFLAudio.domain(d3.extent(dataSub.FLAudio, function(d) { return d.date; }));
-    yFLAudio.domain([0, d3.max(dataSub.FLAudio, function(d) { return d.val; })]);
+    yFLAudio.domain([0, 100]);
 
     svgFLAudio.append("path")
       .data([dataSub.FLAudio])
@@ -324,11 +334,14 @@ var drawFLAudioChart = function() {
       .attr("class", "y axis")
       .call(yAxisFLAudio)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -30)
+      .attr("x", 160)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("FL Audio");
+      .style("font-family", 'Nunito-Light')
+      .style("font-size", "16px")
+      .style("fill", "#042762")
+      .text(" Fraction Lost Audio (%)");
 }
 
 var drawBWChart = function() {
@@ -352,6 +365,7 @@ var drawBWChart = function() {
     yAxisBW = d3.svg.axis()
         .scale(yBW)
         .orient("left")
+        .ticks(6)
         .tickFormat(d3.format("d"));
 
     lineBW = d3.svg.line()
@@ -387,11 +401,14 @@ var drawBWChart = function() {
       .attr("class", "y axis")
       .call(yAxisBW)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -30)
+      .attr("x", 160)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .text("BW");
+      .style("font-family", 'Nunito-Light')
+      .style("font-size", "16px")
+      .style("fill", "#042762")
+      .text(" Bandwidth Video (Kbps)");
 }
 
 var updateVideoKbpsChart = function(newData) {
@@ -430,7 +447,7 @@ var updateFLVideoChart = function(newData) {
 
       dataCallback(dataSub.FLVideo[dataSub.FLVideo.length - 1]);
       xFLVideo.domain(d3.extent(dataSub.FLVideo, function(d) { return d.date; }));
-      yFLVideo.domain([0, d3.max(dataSub.FLVideo, function(d) { return d.val; })]);
+      yFLVideo.domain([0, 100]);
 
       svgFLVideo.select("g.x.axis").call(xAxisFLVideo);
       svgFLVideo.select("g.y.axis").call(yAxisFLVideo); 
@@ -444,7 +461,7 @@ var updateFLAudioChart = function(newData) {
 
       dataCallback(dataSub.FLAudio[dataSub.FLAudio.length - 1]);
       xFLAudio.domain(d3.extent(dataSub.FLAudio, function(d) { return d.date; }));
-      yFLAudio.domain([0, d3.max(dataSub.FLAudio, function(d) { return d.val; })]);
+      yFLAudio.domain([0, 100]);
 
       svgFLAudio.select("g.x.axis").call(xAxisFLAudio);
       svgFLAudio.select("g.y.axis").call(yAxisFLAudio); 

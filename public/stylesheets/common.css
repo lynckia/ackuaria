@@ -31,7 +31,7 @@ html, body {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 20px;
-	width:80px;
+	width: 60px;
 }
 
 #logo {
@@ -44,7 +44,7 @@ html, body {
 #ackuaria {
 	text-align: center;
 	font-family: 'Nunito-Light';
-	font-size: 25px;
+	font-size: 20px;
 	color: #55739D;
 }
 
