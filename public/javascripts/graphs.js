@@ -9,7 +9,7 @@ var buffer = [];
 var counterVideo = 1;
 var counterAudio = 1;
 var bufferLength = 5;
-var graphLengthPub = 25;
+var graphLengthPub = 50;
 var graphLengthSub = 100;
 
 $(document).ready(function(){
@@ -95,7 +95,7 @@ var drawVideoKbpsChart = function() {
     yAxisVideo = d3.svg.axis()
         .scale(yVideo)
         .orient("left")
-        .ticks(6)
+        .ticks(5)
         .tickFormat(d3.format("d"));
 
     lineVideo = d3.svg.line()
@@ -132,7 +132,7 @@ var drawVideoKbpsChart = function() {
       .call(yAxisVideo)
     .append("text")
       .attr("y", -30)
-      .attr("x", 60)
+      .attr("x", 80)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .style("font-family", 'Nunito-Light')
@@ -159,7 +159,7 @@ var drawAudioKbpsChart = function() {
     yAxisAudio = d3.svg.axis()
         .scale(yAudio)
         .orient("left")
-        .ticks(6)
+        .ticks(5)
         .tickFormat(d3.format("d"));
 
     lineAudio = d3.svg.line()
@@ -199,7 +199,7 @@ var drawAudioKbpsChart = function() {
       .call(yAxisAudio)
     .append("text")
       .attr("y", -30)
-      .attr("x", 60)
+      .attr("x", 80)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .style("font-family", 'Nunito-Light')
