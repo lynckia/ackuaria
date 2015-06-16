@@ -2,6 +2,17 @@ var socket = io();
 var view_type = "grid";
 
 $(document).ready(function(){
+
+    $("#removeFails").click(function(){
+        var route = "/delete/" + roomID;
+        $.post(route, function(newRoom){
+            room = newRoom;
+            paintPublishersFails();
+            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Done! Removed all failed streams in this room</strong></div>')
+
+        });
+    });
+
     $('#back').click(function(){ window.location='/'});
     $('#publisherModal').on('show.bs.modal', function (event) {
       var publisher = $(event.relatedTarget);
@@ -86,6 +97,7 @@ $(document).ready(function(){
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
            
+        $('#removeFails').hide();
     });
 
     $('#grid').click(function() {
@@ -105,7 +117,8 @@ $(document).ready(function(){
         $('#fails').addClass('btn-default');
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
-           
+        
+        $('#removeFails').hide();
     });
     $('#fails').click(function() {
         if (!$(this).hasClass("active")){
@@ -123,6 +136,8 @@ $(document).ready(function(){
         $('#grid').addClass('btn-default');
         $('#grid').removeClass('active');
         $('#grid').removeClass('btn-primary');
+
+        $('#removeFails').show();
            
     });
 });
@@ -233,7 +248,7 @@ var paintPublishersFails = function() {
         $('#publishers').html("");
         var streamsFailed = room.failed;
         var nStreams = room.failed.length;
-        updateNStreams(nStreams + " FAILED ");
+        updateNStreams(nStreams + ' FAILED');
         for (var s in streamsFailed){
             if (streamsFailed[s] !== undefined) {
                 var fail = streamsFailed[s];
@@ -244,6 +259,8 @@ var paintPublishersFails = function() {
                 createNewStreamFailed(roomID, streamID, userID, userName, state);
             }
         }
+        updateAlerts();
+
         if (nStreams == 0) {
             $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no failed streams in this room</strong></div>')
         }
@@ -288,6 +305,8 @@ var updateAlerts = function(){
     if (room.failed.length != 0){
         $('#fails span').css("color", "rgb(213, 15, 30)");
         $('#fails span').html(room.failed.length);
+    } else {
+        $('#fails span').removeAttr('style');;
+        $('#fails span').html("");
     }
-
 }

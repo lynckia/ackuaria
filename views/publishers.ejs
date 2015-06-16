@@ -1,11 +1,13 @@
 
-
-
 <div id="pubsContainer" class="container">
 	<div id="roomInfo">
 		<div id="roomName">Room <%= roomName %></div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
 		<div id="roomId"><%= roomID %></div>
-		<div id="pubsCount"> <span id="numberStreams">0</span> STREAMS <i class="fa fa-users"></i></div>
+		<div id="pubsCount"> 
+			<span id="numberStreams">0</span> STREAMS <i class="fa fa-users"></i>
+		</div>
+		<button class="btn btn-sm btn-default" id="removeFails"> <span class="glyphicon glyphicon-trash" hidden></span> </button>
+
 	    <div class="btn-group btn-toggle" id="switch">
 	        <button class="btn btn-sm btn-default" id="fails"> <span class="glyphicon glyphicon-warning-sign"></span> </button>
 	        <button class="btn btn-sm btn-primary active" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>

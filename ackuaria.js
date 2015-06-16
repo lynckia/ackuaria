@@ -95,3 +95,9 @@ app.get('/events/room/:roomID', apiController.eventsOfRoom)
 app.get('/events/user/:userID', apiController.eventsOfUser)
 
 app.get('/events/type/:type', apiController.eventsOfType)
+
+app.post('/delete/:roomID', function(req, res) {
+  var roomID = req.params.roomID;
+  API.rooms[roomID].failed = [];
+  res.send(API.rooms[roomID]);
+})

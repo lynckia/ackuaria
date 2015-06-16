@@ -44,6 +44,13 @@
 	margin-right: 25%;
 	right: 0;
 }
+#removeFails {
+	position: absolute;
+	margin-top: 42px;
+	margin-right: 35%;
+	right: 0;
+	display: none;
+}
 
 #publishers {
 	position: absolute;
