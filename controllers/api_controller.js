@@ -80,7 +80,7 @@ exports.info = function(req, res) {
 
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = ((finalPublish - initPublish) / 1000);
+            var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
 
             rooms[roomID] += streamTime;
             users[stream.userID] += streamTime;
@@ -112,7 +112,7 @@ exports.infoOfRoom = function(req, res) {
             var stream = sessions[s].streams[st];
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = ((finalPublish - initPublish) / 1000);
+            var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
             streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
             timePublished += streamTime;
          }
@@ -137,7 +137,7 @@ exports.infoOfUser = function(req, res) {
             if (st.userID == userID) {
                var initPublish = parseInt(st.initPublish);
                var finalPublish = parseInt(st.finalPublish);
-               var streamTime = ((finalPublish - initPublish) / 1000);
+               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
                var stream = {streamID: st.streamID, timePublished: streamTime};
                streams.push(stream);
                timePublished += streamTime;
