@@ -13,38 +13,49 @@
 
 <div id="subsContainer" class="container">
 	<div id="dataAndSubs" class="row">
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="dataCol" >
+		<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 subsCol" id="dataCol" >
 			<div id="streamInfo">
 				<span id="pubState" class="fa fa-circle"></span>
 				<span id="pubName"><%= userName %></span>
 				<span id="pubId"><%= streamID %></span>
 			</div>
+
+			<div class="btn-group btn-toggle" id="switchPub">
+
+			    	<button class="btn btn-sm btn-primary active" id="switchAllPub"><span class="fa fa-globe"></button>
+			        <button class="btn btn-sm btn-default" id="switchVideoPub"><span class="fa fa-video-camera"></span></button>
+			        <button class="btn btn-sm btn-default" id="switchAudioPub"><span class="fa fa-volume-up"></span> </button>
+
+			</div>
 			<div id="streamData">
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" id="videoCol" >
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="videoCol" >
 					<div id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </div>
 					<div id="videoData">
 						<div id="videoSSRCDiv" class="propertyTitle"> SSRC: <span id="videoSSRC" class="propertyContent"></span> </div>
-						<div id="videoBytesSentDiv" class="propertyTitle"> rtcpBytesSent: <span id="videoBytesSent" class="propertyContent"></span> </div>
-						<div id="videoPacketsSentDiv" class="propertyTitle">rtcpPacketSent: <span id="videoPacketsSent" class="propertyContent"></span></div>
+						<div id="videoBytesSentDiv" class="propertyTitle"> Bytes Sent: <span id="videoBytesSent" class="propertyContent"></span> </div>
+						<div id="videoPacketsSentDiv" class="propertyTitle">Packets Sent: <span id="videoPacketsSent" class="propertyContent"></span></div>
 					</div>
 				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartVideo" ></div>
 
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" id="audioCol" >
+
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="audioCol" >
 					<div id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </div>
 					<div id="audioData">
 						<div id="audioSSRCDiv" class="propertyTitle"> SSRC: <span id="audioSSRC" class="propertyContent"></span> </div>
-						<div id="audioBytesSentDiv" class="propertyTitle"> rtcpBytesSent: <span id="audioBytesSent" class="propertyContent"></span> </div>
-						<div id="audioPacketsSentDiv" class="propertyTitle"> rtcpPacketSent: <span id="audioPacketsSent" class="propertyContent"></span> </div>
+						<div id="audioBytesSentDiv" class="propertyTitle"> Bytes Sent: <span id="audioBytesSent" class="propertyContent"></span> </div>
+						<div id="audioPacketsSentDiv" class="propertyTitle"> Packets Sent: <span id="audioPacketsSent" class="propertyContent"></span> </div>
 					</div>
 				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartAudio" ></div>
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="chartVideo" ></div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="chartAudio" ></div>
+
+        
 
 
 			</div>
 		</div>
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 subsCol" id="subsCol">
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 subsCol" id="subsCol">
 			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
 		    <div class="btn-group btn-toggle" id="switch">
 		        <button class="btn btn-sm btn-primary active" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>

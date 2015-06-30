@@ -103,7 +103,7 @@ var paintRoomsGrid = function(){
         }
     }
     if (nRooms == 0) {
-        $('#rooms').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no rooms created</strong></div>')
+        $('#rooms').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no rooms created</strong></div>')
     }
 };
 
@@ -125,13 +125,13 @@ var paintRoomsList = function(){
         }
     }
     if (nRooms == 0) {
-        $('#rooms').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no rooms created</strong></div>')
+        $('#rooms').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no rooms created</strong></div>')
     }
     Sortable.init()
 };
 
 var createNewRoomGrid = function(roomID, nStreams, roomName){
-    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 roomContainer show_grid"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><p><div class="roomName">' + roomName + '</div></p><p><div class="roomId">' + roomID + '</div></p><div class="streamsInRoom"><div class="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
+    $('#rooms').append('<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 roomContainer show_grid"><div class="room" id="room_' + roomID + '"data-room_id="' + roomID + '"><div class="roomName">' + roomName + '</div><div class="roomId">' + roomID + '</div><div class="streamsInRoom"><div class="streams"><span id="number" class="bold">' + nStreams + '</span> <span class="light">STREAMS</span> <span class="fa fa-user"></span></div></div></div></div>');
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {
@@ -141,7 +141,7 @@ var createNewRoomGrid = function(roomID, nStreams, roomName){
 }
 
 var createNewRoomList = function(roomID, nStreams, roomName, last){
-    $('#bodyTable').append('<tr class="room" id="room_' + roomID + '" data-room_id="' + roomID + '"><th class="roomID">'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
+    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><th class="roomID">'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {
@@ -157,3 +157,6 @@ var updateNStreams = function(roomID, nStreams){
 var updateNRooms = function(nRooms) {
     $('#numberRooms').html(nRooms);
 }
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

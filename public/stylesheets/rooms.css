@@ -77,7 +77,7 @@ TIPO GRID
 }
 .show_grid .roomId {
 	position: absolute;
-	bottom: 80;
+	bottom: 50;
 	font-family: "Nunito-Light";
 	color: #55739D;
 	font-size: 12px;
@@ -115,19 +115,19 @@ TIPO LIST
 
 .show_list .roomName {
 	font-family: "Nunito-Bold";
-	color: 042762;
-	font-size: 20px;
+	color: #286090;
+	font-size: 16px;
 
 }
 .show_list .roomId {
 	font-family: "Nunito-Light";
 	color: #55739D;
-	font-size: 12px;
+	font-size: 13px;
 }
 
-.show_list .streamsInRoom {
-	background-color: #55739D;
-	color: white;
+.show_list #number {
+	color: #55739D;
+	padding-left: 60px;
 	font-size: 15px;
 }
 

@@ -79,13 +79,14 @@
 
 .propertyTitle {
 	font-family: 'Nunito-Bold';
-	font-size: 15px;
+	font-size: 14px;
 	color: #55739D;
+	padding-bottom: 10px;
 }
 
 .propertyContent {
 	font-family: 'Nunito-Light';
-	font-size: 15px;
+	font-size: 14px;
 	color: #55739D;
 }
 .subsCol {
@@ -151,6 +152,13 @@
 #switchSub {
 	position: absolute;
 	margin-right: 40%;
+	right: 0;
+	top: 0;
+}
+
+#switchPub {
+	position: absolute;
+	margin-right: 35%;
 	right: 0;
 	top: 0;
 }

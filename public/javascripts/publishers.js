@@ -8,7 +8,7 @@ $(document).ready(function(){
         $.post(route, function(newRoom){
             room = newRoom;
             paintPublishersFails();
-            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Done! Removed all failed streams in this room</strong></div>')
+            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Done! Removed all failed streams in this room</strong></div>')
 
         });
     });
@@ -212,7 +212,7 @@ var paintPublishersGrid = function() {
             }
         }
         if (nStreams == 0) {
-            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no publishers in this room right now</strong></div>')
+            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no publishers in this room right now</strong></div>')
         }
         updateAlerts();
     }
@@ -234,7 +234,7 @@ var paintPublishersList = function() {
             }
         }
         if (nStreams == 0) {
-            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no publishers in this room right now</strong></div>')
+            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no publishers in this room right now</strong></div>')
         }
         updateAlerts();
 
@@ -262,7 +262,7 @@ var paintPublishersFails = function() {
         updateAlerts();
 
         if (nStreams == 0) {
-            $('#publishers').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops! There are no failed streams in this room</strong></div>')
+            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no failed streams in this room</strong></div>')
         }
     }
 }
@@ -280,7 +280,7 @@ var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, 
 
 var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, state){
     var color = stateToColor(state);
-    $('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th>' + streamID + '</th><th class="pubName">' + userName + '</th><th><span class="status fa fa-circle ' + color + '"></th><th>' + nSubscribers + '</th></tr>');
+    $('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th class="pubId">' + streamID + '</th><th class="pubName">' + userName + '</th><th><span class="status fa fa-circle ' + color + '"></th><th id="subsInPub">' + nSubscribers + '</th></tr>');
     $('#pub_'+ streamID).click(function() {
         var pub_id = $(this).data('pub_id');
         if (pub_id != undefined || pub_id != null) {
@@ -310,3 +310,7 @@ var updateAlerts = function(){
         $('#fails span').html("");
     }
 }
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

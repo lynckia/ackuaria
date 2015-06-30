@@ -76,7 +76,7 @@ var newDataSub = function(subID, data) {
 
 var drawVideoKbpsChart = function() {
 
-    margin = {top: 50, right: 40, bottom: 20, left: 40};
+    margin = {top: 30, right: 10, bottom: 20, left: 35};
     width = maxWidth - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 

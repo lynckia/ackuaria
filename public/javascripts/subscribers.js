@@ -227,6 +227,72 @@ $(document).ready(function(){
         $('#switchAudio').removeClass('btn-primary');
     });
 
+    $('#switchVideoPub').click(function() {
+        if (!$(this).hasClass("active")){
+            $( "#chartAudio" ).hide();
+            $( "#audioCol" ).hide();
+
+            $( "#chartVideo" ).show();
+            $( "#videoCol" ).show();
+
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchAudioPub').addClass('btn-default');
+        $('#switchAudioPub').removeClass('active');
+        $('#switchAudioPub').removeClass('btn-primary');
+
+        $('#switchAllPub').addClass('btn-default');
+        $('#switchAllPub').removeClass('active');
+        $('#switchAllPub').removeClass('btn-primary');
+    });
+
+    $('#switchAudioPub').click(function() {
+        if (!$(this).hasClass("active")){
+            $( "#chartVideo" ).hide();
+            $( "#videoCol" ).hide();
+
+            $( "#chartAudio" ).show();
+            $( "#audioCol" ).show();
+
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchVideoPub').addClass('btn-default');
+        $('#switchVideoPub').removeClass('active');
+        $('#switchVideoPub').removeClass('btn-primary');
+
+        $('#switchAllPub').addClass('btn-default');
+        $('#switchAllPub').removeClass('active');
+        $('#switchAllPub').removeClass('btn-primary');
+    });
+
+    $('#switchAllPub').click(function() {
+        if (!$(this).hasClass("active")){
+            $( "#chartVideo" ).show();
+            $( "#videoCol" ).show();
+
+            $( "#chartAudio" ).show();
+            $( "#audioCol" ).show();
+
+        }
+        $(this).addClass('active');  
+        $(this).addClass('btn-primary');
+        $(this).removeClass('btn-default');
+
+        $('#switchVideoPub').addClass('btn-default');
+        $('#switchVideoPub').removeClass('active');
+        $('#switchVideoPub').removeClass('btn-primary');
+
+        $('#switchAudioPub').addClass('btn-default');
+        $('#switchAudioPub').removeClass('active');
+        $('#switchAudioPub').removeClass('btn-primary');
+    });
+
 
     var stateToColor = function(state) {
         var color;

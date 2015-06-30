@@ -45,10 +45,7 @@
 	right: 0;
 }
 #removeFails {
-	position: absolute;
-	margin-top: 42px;
-	margin-right: 45%;
-	right: 0;
+	margin-right: 10px;
 	display: none;
 }
 
@@ -135,26 +132,27 @@ TIPO LIST
 
 .show_list .pubName {
 	font-family: "Nunito-Bold";
-	font-size: 13px;
-	color: 042762;
+	color: #286090;
+	font-size: 16px;
 
 }
 .show_list .pubId {
 	font-family: "Nunito-Light";
 	color: #55739D;
-	font-size: 11px;
-}
-.show_list .subsInPub {
-	background-color: #55739D; 
-	color: white;
 	font-size: 13px;
+}
+.show_list #subsInPub {
+	color: #55739D;
+	padding-left: 45px;
+	font-size: 15px;
 
 }
 .show_list .subscribers {
 	text-align: center;
 }
 .show_list .status {
-
+	padding-left: 50px;
+	font-size: 15px;
 }
 
 

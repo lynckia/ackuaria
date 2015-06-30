@@ -152,3 +152,12 @@ Search bar properties
 .search-query:focus + button {
     z-index: 3;   
 }
+
+
+.glyphicon {
+  top: 0px !important;
+}
+
+.table>tbody>tr>th {
+  line-height: inherit !important;
+}
