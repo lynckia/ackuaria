@@ -20,9 +20,7 @@ html, body {
 	background-color: #55739D;
 	width: 100%;
 	height: 25px;
-	position: fixed;
 	top: 0;
-	z-index: 1;
 }
 
 #star {
@@ -41,11 +39,11 @@ html, body {
 	width:65px;
 }
 
-#ackuaria {
-	text-align: center;
-	font-family: 'Nunito-Light';
-	font-size: 20px;
-	color: #55739D;
+#brand {
+  height: 150px;
+  display: block;
+  margin: auto;
+  cursor: pointer;
 }
 
 .footer {
@@ -160,4 +158,8 @@ Search bar properties
 
 .table>tbody>tr>th {
   line-height: inherit !important;
+}
+
+.btn-group .btn+.btn {
+  margin-left: 0px !important;
 }
