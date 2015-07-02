@@ -76,9 +76,9 @@ var newDataSub = function(subID, data) {
 
 var drawVideoKbpsChart = function() {
 
-    margin = {top: 30, right: 10, bottom: 20, left: 35};
+    margin = {top: 30, right: 10, bottom: 50, left: 35};
     width = maxWidth - margin.left - margin.right;
-    height = 250 - margin.top - margin.bottom;
+    height = 220 - margin.top - margin.bottom;
 
     xVideo = d3.time.scale()
         .range([0, width]);
