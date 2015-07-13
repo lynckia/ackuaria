@@ -32,6 +32,10 @@
 	font-size: 15px;
 }
 
+#user_id {
+	font-size: 11px;
+}
+
 #search {
 	position: absolute;
 	margin-top: 42px;

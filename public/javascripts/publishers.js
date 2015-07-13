@@ -262,7 +262,7 @@ var paintPublishersFails = function() {
         updateAlerts();
 
         if (nStreams == 0) {
-            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no failed streams in this room</strong></div>')
+            $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Yay! There are no failed streams in this room</strong></div>')
         }
     }
 }
@@ -291,7 +291,7 @@ var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, 
 
 var createNewStreamFailed = function(roomID, streamID, userID, userName, state){
     var color = stateToColor(state);
-    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid" data-toggle="modal" data-target="#publisherModal" data-subid="' + userID + '" data-username="' + userName + '" data-streamid="' + streamID + '"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="number" class="bold">' + userID + '</span></div></div></div></div>')
+    $('#publishers').append('<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 publisherContainer show_grid" data-toggle="modal" data-target="#publisherModal" data-subid="' + userID + '" data-username="' + userName + '" data-streamid="' + streamID + '"><div class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><p><div class="pubName"><span id="conn_state_' + streamID + '" class="status fa fa-circle ' + color + '"></span> ' + userName +'</div></p><p><div class="pubId">' + streamID +'</div></p><div class="subsInPub"><div class="subscribers"><span id="user_id" class="bold">' + userID + '</span></div></div></div></div>')
 }
 
 var updateNSubscribers = function(streamID, nSubscribers){
