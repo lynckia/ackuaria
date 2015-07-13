@@ -346,8 +346,8 @@ $(document).ready(function(){
         $('#dataModal #pli').html(video.PLI);
         $('#dataModal #videoBandwidth').html(video.bandwidth);
 
-        $('#dataModal #videoFractionLost').html(video.fractionLost);
-        $('#dataModal #audioFractionLost').html(audio.fractionLost);
+        $('#dataModal #videoFractionLost').html(Math.round((video.fractionLost * 100 / 256) *100) / 100 + "%");
+        $('#dataModal #audioFractionLost').html(Math.round((audio.fractionLost * 100 / 256) *100) / 100 + "%");
 
         $('#dataModal #videoJitter').html(video.jitter);
         $('#dataModal #audioJitter').html(audio.jitter);

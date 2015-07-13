@@ -60,8 +60,8 @@ var newDataSub = function(subID, data) {
       return;
   } else if (sub_modal_now == subID) {
       var date = data.date;
-      var FLVideo = data.FLVideo;
-      var FLAudio = data.FLAudio;
+      var FLVideo = data.FLVideo * 100 / 256;
+      var FLAudio = data.FLAudio * 100 / 256;
       var BW = data.BW / 1000;
 
       var newDataFLVideo = {date: date, val: FLVideo};
@@ -249,7 +249,7 @@ var drawFLVideoChart = function() {
     })
 
     xFLVideo.domain(d3.extent(dataSub.FLVideo, function(d) { return d.date; }));
-    yFLVideo.domain([0, d3.max(dataSub.FLVideo, function(d) { return d.val; })]);
+    yFLVideo.domain([0, 100]);
 
     svgFLVideo.append("path")
       .data([dataSub.FLVideo])
@@ -267,13 +267,13 @@ var drawFLVideoChart = function() {
       .call(yAxisFLVideo)
     .append("text")
       .attr("y", -30)
-      .attr("x", 140)
+      .attr("x", 160)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .style("font-family", 'Nunito-Light')
       .style("font-size", "16px")
       .style("fill", "#042762")
-      .text("Fraction Lost Video");
+      .text(" Fraction Lost Video (%)");
 }
 
 var drawFLAudioChart = function() {
@@ -317,7 +317,7 @@ var drawFLAudioChart = function() {
     })
 
     xFLAudio.domain(d3.extent(dataSub.FLAudio, function(d) { return d.date; }));
-    yFLAudio.domain([0, d3.max(dataSub.FLAudio, function(d) { return d.val; })]);
+    yFLAudio.domain([0, 100]);
 
     svgFLAudio.append("path")
       .data([dataSub.FLAudio])
@@ -335,13 +335,13 @@ var drawFLAudioChart = function() {
       .call(yAxisFLAudio)
     .append("text")
       .attr("y", -30)
-      .attr("x", 140)
+      .attr("x", 160)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .style("font-family", 'Nunito-Light')
       .style("font-size", "16px")
       .style("fill", "#042762")
-      .text("Fraction Lost Audio");
+      .text(" Fraction Lost Audio (%)");
 }
 
 var drawBWChart = function() {
