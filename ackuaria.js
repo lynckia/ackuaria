@@ -77,39 +77,40 @@ app.use(function(req, res, next){
     if (req.session && req.session.user && (new Date()).getTime() < req.session.user.expires) {
         next();
     } else {
-        res.redirect('/login');
+        next();
+        //res.redirect('/login');
     }
 });
 
-app.get('', ackuariaController.loadRooms)
+app.get('/', ackuariaController.loadRooms)
 
-app.get('room', ackuariaController.loadPublishers)
+app.get('/room', ackuariaController.loadPublishers)
 
-app.get('pub', ackuariaController.loadSubscribers)
+app.get('/pub', ackuariaController.loadSubscribers)
 
-app.get('sessions', apiController.sessions)
+app.get('/sessions', apiController.sessions)
 
-app.get('sessions/room/:roomID', apiController.sessionsOfRoom)
+app.get('/sessions/room/:roomID', apiController.sessionsOfRoom)
 
-app.get('sessions/user/:userID', apiController.sessionsOfUser)
+app.get('/sessions/user/:userID', apiController.sessionsOfUser)
 
-app.get('sessions/stream/:streamID', apiController.sessionsOfStream)
+app.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
 
-app.get('info', apiController.info)
+app.get('/info', apiController.info)
 
-app.get('info/room/:roomID', apiController.infoOfRoom)
+app.get('/info/room/:roomID', apiController.infoOfRoom)
 
-app.get('info/user/:userID', apiController.infoOfUser)
+app.get('/info/user/:userID', apiController.infoOfUser)
 
-app.get('events', apiController.events)
+app.get('/events', apiController.events)
 
-app.get('events/room/:roomID', apiController.eventsOfRoom)
+app.get('/events/room/:roomID', apiController.eventsOfRoom)
 
-app.get('events/user/:userID', apiController.eventsOfUser)
+app.get('/events/user/:userID', apiController.eventsOfUser)
 
-app.get('events/type/:type', apiController.eventsOfType)
+app.get('/events/type/:type', apiController.eventsOfType)
 
-app.post('delete/:roomID', function(req, res) {
+app.post('/delete/:roomID', function(req, res) {
   var roomID = req.params.roomID;
   API.rooms[roomID].failed = [];
   res.send(API.rooms[roomID]);
