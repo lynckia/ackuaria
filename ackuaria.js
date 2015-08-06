@@ -14,6 +14,7 @@ var amqper = require('./common/amqper');
 
 var API = require('./common/api');
 var express = require('express');
+var ackuaria_router = express.Router();
 var bodyParser = require('body-parser');
 var app = express();
 var cookieParser = require('cookie-parser');
@@ -27,7 +28,7 @@ var N = require('./nuve');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(partials());
 app.use(bodyParser.urlencoded({
    extended: true
@@ -73,6 +74,10 @@ io.on('connection', function(socket) {
 app.use(cookieParser('bla bla bla'));
 app.use(session());
 
+app.use('/ackuaria', ackuaria_router);
+
+ackuaria_router.use(express.static(path.join(__dirname, 'public')));
+
 app.use(function(req, res, next){
     if (req.session && req.session.user && (new Date()).getTime() < req.session.user.expires) {
         next();
@@ -82,35 +87,35 @@ app.use(function(req, res, next){
     }
 });
 
-app.get('/', ackuariaController.loadRooms)
+ackuaria_router.get('/', ackuariaController.loadRooms)
 
-app.get('/room', ackuariaController.loadPublishers)
+ackuaria_router.get('/room', ackuariaController.loadPublishers)
 
-app.get('/pub', ackuariaController.loadSubscribers)
+ackuaria_router.get('/pub', ackuariaController.loadSubscribers)
 
-app.get('/sessions', apiController.sessions)
+ackuaria_router.get('/sessions', apiController.sessions)
 
-app.get('/sessions/room/:roomID', apiController.sessionsOfRoom)
+ackuaria_router.get('/sessions/room/:roomID', apiController.sessionsOfRoom)
 
-app.get('/sessions/user/:userID', apiController.sessionsOfUser)
+ackuaria_router.get('/sessions/user/:userID', apiController.sessionsOfUser)
 
-app.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
+ackuaria_router.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
 
-app.get('/info', apiController.info)
+ackuaria_router.get('/info', apiController.info)
 
-app.get('/info/room/:roomID', apiController.infoOfRoom)
+ackuaria_router.get('/info/room/:roomID', apiController.infoOfRoom)
 
-app.get('/info/user/:userID', apiController.infoOfUser)
+ackuaria_router.get('/info/user/:userID', apiController.infoOfUser)
 
-app.get('/events', apiController.events)
+ackuaria_router.get('/events', apiController.events)
 
-app.get('/events/room/:roomID', apiController.eventsOfRoom)
+ackuaria_router.get('/events/room/:roomID', apiController.eventsOfRoom)
 
-app.get('/events/user/:userID', apiController.eventsOfUser)
+ackuaria_router.get('/events/user/:userID', apiController.eventsOfUser)
 
-app.get('/events/type/:type', apiController.eventsOfType)
+ackuaria_router.get('/events/type/:type', apiController.eventsOfType)
 
-app.post('/delete/:roomID', function(req, res) {
+ackuaria_router.post('/delete/:roomID', function(req, res) {
   var roomID = req.params.roomID;
   API.rooms[roomID].failed = [];
   res.send(API.rooms[roomID]);

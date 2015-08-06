@@ -135,7 +135,7 @@ var createNewRoomGrid = function(roomID, nStreams, roomName){
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {
-            window.location = '/room?room_id=' + room_id;
+            window.location += '/room?room_id=' + room_id;
         }
     })
 }
@@ -145,7 +145,7 @@ var createNewRoomList = function(roomID, nStreams, roomName, last){
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {
-            window.location = '/room?room_id=' + room_id;
+            window.location += '/room?room_id=' + room_id;
         }
     })
 }

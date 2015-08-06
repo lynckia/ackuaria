@@ -6,24 +6,24 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    	<script src="/ackuaria/lib/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
-    	<script src="/ackuaria/socket.io/socket.io.js"></script>
-    	<script src="/ackuaria/javascripts/graphs.js" type="text/javascript"></script>
-		<script src="/ackuaria/javascripts/<%=view%>.js" type="text/javascript"></script>
-		<script src="/ackuaria/lib/sortable.min.js"></script>
+    	<script src="lib/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
+    	<script src="socket.io/socket.io.js"></script>
+    	<script src="javascripts/graphs.js" type="text/javascript"></script>
+		<script src="javascripts/<%=view%>.js" type="text/javascript"></script>
+		<script src="lib/sortable.min.js"></script>
 
 
-    	<link rel="stylesheet" type="text/css" href="/ackuaria/lib/bootstrap-3.3.2-dist/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="7lib/font-awesome-4.3.0/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="/ackuaria/stylesheets/common.css" />
-  		<link rel='stylesheet' href='/ackuaria/stylesheets/<%=view%>.css'/>
-		<link rel="stylesheet" href="/ackuaria/stylesheets/sortable-theme-bootstrap.css" />
+    	<link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.2-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="lib/font-awesome-4.3.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="stylesheets/common.css" />
+  		<link rel='stylesheet' href='stylesheets/<%=view%>.css'/>
+		<link rel="stylesheet" href="stylesheets/sortable-theme-bootstrap.css" />
 	</head>
 
 	<body>
 		<div id="navbar" class="fixed-top"></div>
 		<div id="ackuaria">
-			<img id="brand" src="/ackuaria/images/brand.svg" alt="ACKUARIA" onclick='window.location="/"'>
+			<img id="brand" src="images/brand.svg" alt="ACKUARIA" onclick='window.location="/ackuaria"'>
 		</div>
 
 		<%- body %>
@@ -33,7 +33,7 @@
 
     <div class="footer">
     	<div class="container">
-			<br><img id="logo" alt="Logo" src="/ackuaria/images/logo.svg"></p>
+			<br><img id="logo" alt="Logo" src="images/logo.svg"></p>
      	</div>
     </div>
 </html>
