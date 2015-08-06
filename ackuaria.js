@@ -16,6 +16,8 @@ var API = require('./common/api');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path');
@@ -67,6 +69,9 @@ amqper.connect(function() {
 io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
+
+app.use(cookieParser('bla bla bla'));
+app.use(session());
 
 app.use(function(req, res, next){
     if (req.session && req.session.user && (new Date()).getTime() < req.session.user.expires) {
