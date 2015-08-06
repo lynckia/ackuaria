@@ -23,13 +23,13 @@ config.logger.config_file = './log4js_configuration.json'; //default value: "../
 config.ackuaria = {};
 config.ackuaria.useDB = false; // default value: false
 config.ackuaria.dataBaseURL = "localhost/ackuariadb"; // default value: 'localhost/ackuariadb'
-config.ackuaria.port = 8888 // default value: 80
+config.ackuaria.port = 8888 // default value: 8888
 
 /*********************************************************
  NUVE CONFIGURATION
 **********************************************************/
 config.nuve = {};
-config.nuve.dataBaseURL = "localhost/nuvedb"; // default value: 'localhost/nuvedb'
+config.nuve.host = 'http://localhost:3000/'; // default value: 'http://localhost:3000/'
 config.nuve.superserviceID = ''; // default value: ''
 config.nuve.superserviceKey = ''; // default value: ''
 
