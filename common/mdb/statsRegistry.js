@@ -8,7 +8,7 @@ var getStat = exports.getStat = function(id, callback) {
         _id: db.ObjectId(id)
     }, function(err, stat) {
         if (stat === undefined) {
-            log.warn('Stat ', id, ' not found');
+            console.log('Stat ', id, ' not found');
         }
         if (callback !== undefined) {
             callback(stat);
@@ -32,7 +32,7 @@ exports.addStat = function(stat, callback) {
     "use strict";
 
     db.stats.save(stat, function(error, saved) {
-        if (error) log.warn('MongoDB: Error adding stat: ', error);
+        if (error) console.log('MongoDB: Error adding stat: ', error);
         if (callback !== undefined) {
             callback(saved);
         }
@@ -51,7 +51,7 @@ var removeStat = exports.removeStat = function(id, callback) {
             db.stats.remove({
                 _id: db.ObjectId(id)
             }, function(error, removed) {
-                if (error) log.warn('MongoDB: Error removing stat: ', error);
+                if (error) console.log('MongoDB: Error removing stat: ', error);
                 callback(success);
             });
         }

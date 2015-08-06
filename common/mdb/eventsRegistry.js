@@ -7,7 +7,7 @@ var getEvent = exports.getEvent = function(id, callback) {
         _id: db.ObjectId(id)
     }, function(err, event) {
         if (event === undefined) {
-            log.warn('Event ', id, ' not found');
+            console.log('Event ', id, ' not found');
         }
         if (callback !== undefined) {
             callback(event);
@@ -31,7 +31,7 @@ exports.addEvent = function(event, callback) {
     "use strict";
 
     db.events.save(event, function(error, saved) {
-        if (error) log.warn('MongoDB: Error adding event: ', error);
+        if (error) console.log('MongoDB: Error adding event: ', error);
         if (callback !== undefined) {
             callback(saved);
         }
@@ -49,7 +49,7 @@ var removeEvent = exports.removeEvent = function(id, callback) {
             db.events.remove({
                 _id: db.ObjectId(id)
             }, function(error, removed) {
-                if (error) log.warn('MongoDB: Error removing event: ', error);
+                if (error) console.log('MongoDB: Error removing event: ', error);
                 callback("yes");
             });
         }

@@ -7,7 +7,7 @@ var getRoom = exports.getRoom = function(id, callback) {
         _id: db.ObjectId(id)
     }, function(err, room) {
         if (room === undefined) {
-            log.warn('Room ', id, ' not found');
+            console.log('Room ', id, ' not found');
         }
         if (callback !== undefined) {
             callback(room);
@@ -48,7 +48,7 @@ exports.getRoomByRoomId = function(roomId, callback) {
         roomId: roomId
     }, function(err, room) {
         if (room === undefined) {
-            log.warn('Room ', id, ' not found');
+            console.log('Room ', id, ' not found');
         }
         if (callback !== undefined) {
             callback(room);
@@ -61,7 +61,7 @@ exports.addRoom = function(room, callback) {
     "use strict";
 
     db.rooms.save(room, function(error, saved) {
-        if (error) log.warn('MongoDB: Error adding room: ', error);
+        if (error) console.log('MongoDB: Error adding room: ', error);
         if (callback !== undefined) {
             callback(saved);
         }
