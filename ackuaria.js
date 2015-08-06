@@ -17,8 +17,6 @@ var express = require('express');
 var ackuaria_router = express.Router();
 var bodyParser = require('body-parser');
 var app = express();
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path');
@@ -71,21 +69,9 @@ io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
 
-app.use(cookieParser('bla bla bla'));
-app.use(session());
-
 app.use('/ackuaria', ackuaria_router);
 
 ackuaria_router.use(express.static(path.join(__dirname, 'public')));
-
-app.use(function(req, res, next){
-    if (req.session && req.session.user && (new Date()).getTime() < req.session.user.expires) {
-        next();
-    } else {
-        next();
-        //res.redirect('/login');
-    }
-});
 
 ackuaria_router.get('/', ackuariaController.loadRooms)
 
