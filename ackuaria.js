@@ -24,10 +24,10 @@ var path = require('path');
 var partials = require('express-partials');
 var N = require('./nuve');
 
-app.set('views', path.join(__dirname, '/ackuaria/views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, '/ackuaria/public')));
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(partials());
 app.use(bodyParser.urlencoded({
    extended: true
