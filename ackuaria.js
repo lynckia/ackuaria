@@ -40,7 +40,7 @@ http.listen(GLOBAL.config.ackuaria.port, function() {
 
 var api = API.api;
 
-N.API.init(GLOBAL.config.nuve.superserviceID, GLOBAL.config.nuve.superserviceKey, 'http://localhost:3000/');
+N.API.init(GLOBAL.config.nuve.superserviceID, GLOBAL.config.nuve.superserviceKey, GLOBAL.config.nuve.host);
 
 N.API.getRooms(function(roomList) {
    var rooms = JSON.parse(roomList);
