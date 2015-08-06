@@ -68,6 +68,14 @@ io.on('connection', function(socket) {
    API.sockets.push(socket);
 });
 
+app.use(function(req, res, next){
+    if (req.session && req.session.user && (new Date()).getTime() < req.session.user.expires) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+});
+
 app.get('/', ackuariaController.loadRooms)
 
 app.get('/room', ackuariaController.loadPublishers)
