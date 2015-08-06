@@ -24,10 +24,10 @@ var path = require('path');
 var partials = require('express-partials');
 var N = require('./nuve');
 
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(partials());
 app.use(bodyParser.urlencoded({
    extended: true
@@ -81,35 +81,35 @@ app.use(function(req, res, next){
     }
 });
 
-app.get('/ackuaria', ackuariaController.loadRooms)
+app.get('', ackuariaController.loadRooms)
 
-app.get('/ackuaria/room', ackuariaController.loadPublishers)
+app.get('room', ackuariaController.loadPublishers)
 
-app.get('/ackuaria/pub', ackuariaController.loadSubscribers)
+app.get('pub', ackuariaController.loadSubscribers)
 
-app.get('/ackuaria/sessions', apiController.sessions)
+app.get('sessions', apiController.sessions)
 
-app.get('/ackuaria/sessions/room/:roomID', apiController.sessionsOfRoom)
+app.get('sessions/room/:roomID', apiController.sessionsOfRoom)
 
-app.get('/ackuaria/sessions/user/:userID', apiController.sessionsOfUser)
+app.get('sessions/user/:userID', apiController.sessionsOfUser)
 
-app.get('/ackuaria/sessions/stream/:streamID', apiController.sessionsOfStream)
+app.get('sessions/stream/:streamID', apiController.sessionsOfStream)
 
-app.get('/ackuaria/info', apiController.info)
+app.get('info', apiController.info)
 
-app.get('/ackuaria/info/room/:roomID', apiController.infoOfRoom)
+app.get('info/room/:roomID', apiController.infoOfRoom)
 
-app.get('/ackuaria/info/user/:userID', apiController.infoOfUser)
+app.get('info/user/:userID', apiController.infoOfUser)
 
-app.get('/ackuaria/events', apiController.events)
+app.get('events', apiController.events)
 
-app.get('/ackuaria/events/room/:roomID', apiController.eventsOfRoom)
+app.get('events/room/:roomID', apiController.eventsOfRoom)
 
-app.get('/ackuaria/events/user/:userID', apiController.eventsOfUser)
+app.get('events/user/:userID', apiController.eventsOfUser)
 
-app.get('/ackuaria/events/type/:type', apiController.eventsOfType)
+app.get('events/type/:type', apiController.eventsOfType)
 
-app.post('/ackuaria/delete/:roomID', function(req, res) {
+app.post('delete/:roomID', function(req, res) {
   var roomID = req.params.roomID;
   API.rooms[roomID].failed = [];
   res.send(API.rooms[roomID]);
