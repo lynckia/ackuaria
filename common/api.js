@@ -40,6 +40,7 @@ function search(id, myArray) {
 API.api = {
     event: function(theEvent) {
         try {
+            theEvent = theEvent.message;
             log.info("Event:", theEvent);
             var event = {};
             switch (theEvent.type) {

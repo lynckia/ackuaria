@@ -73,9 +73,9 @@ $(document).ready(function(){
         }
     });
 
-    $('.publisher').click(function(){ window.location+='/subs'});
-    $('#backRooms').click(function(){ window.location='/ackuaria'});
-    $('#backStreams').click(function(){ window.location+='/room?room_id=' + roomID});
+    $('.publisher').click(function(){ window.location = '/ackuaria/subs'});
+    $('#backRooms').click(function(){ window.location = '/ackuaria'});
+    $('#backStreams').click(function(){ window.location = '/ackuaria/room?room_id=' + roomID});
 
     $('#subscriberModal').on('show.bs.modal', function (event) {
       var subscriber = $(event.relatedTarget);
@@ -488,7 +488,7 @@ $(document).ready(function(){
         $('#pub_'+ streamID).click(function() {
             var pub_id = $(this).data('pub_id');
             if (pub_id != undefined || pub_id != null) {
-                window.location += '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
+                window.location = '/ackuaria/pub?pub_id=' + pub_id + '&room_id='+ roomID;
             }
         })
     }
@@ -499,7 +499,7 @@ $(document).ready(function(){
         $('#pub_'+ streamID).click(function() {
             var pub_id = $(this).data('pub_id');
             if (pub_id != undefined || pub_id != null) {
-                window.location += '/pub?pub_id=' + pub_id + '&room_id='+ roomID;
+                window.location = '/ackuaria/pub?pub_id=' + pub_id + '&room_id='+ roomID;
             }
         })
     }
