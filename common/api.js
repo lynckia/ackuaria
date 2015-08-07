@@ -331,6 +331,7 @@ API.api = {
     },
     stats: function(theStats) {
         //log.info('Stat: ', theStats);
+        theStats = theStats.message;
         try {
             API.send_stats_to_clients(theStats);
 
