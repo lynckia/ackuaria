@@ -4,6 +4,14 @@ var db = require('./../common/mdb/dataBase').db;
 var sessionsRegistry = require('./../common/mdb/sessionsRegistry');
 var eventsRegistry = require('./../common/mdb/eventsRegistry');
 
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
 exports.sessions = function(req, res) {
    sessionsRegistry.getSessions(function(sessions){
       res.send(sessions);
@@ -86,8 +94,8 @@ exports.info = function(req, res) {
             }
          }
       }
-      info.nUsers = users.length;
-      info.nRooms = rooms.length;
+      info.nUsers = Object.size(users);
+      info.nRooms = Object.size(rooms);
       info.nSessions = nSessions;
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
