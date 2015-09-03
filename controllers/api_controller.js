@@ -58,13 +58,11 @@ exports.eventsOfType = function(req, res) {
    })
 };
 
+//Show total number of sessions, minutes published, streams and rooms used
 exports.info = function(req, res) {
    var info = {};
    sessionsRegistry.getSessions(function(sessions){
       var nSessions = sessions.length;
-      var nRooms = Object.keys(API.rooms).length;
-      var nUsers = Object.keys(API.users).length;
-      var nStreams = Object.keys(API.streams).length;
 
       var rooms = {};
       var users = {};
@@ -80,23 +78,21 @@ exports.info = function(req, res) {
 
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
-
-            rooms[roomID] += streamTime;
-            users[stream.userID] += streamTime;
-            timePublished += streamTime;
+            if (initPublish && finalPublish) {
+               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
+               rooms[roomID] += streamTime;
+               users[stream.userID] += streamTime;
+               timePublished += streamTime;
+            }
          }
       }
-      info.nStreams = nStreams;
-      info.nUsers = nUsers;
-      info.nRooms = nRooms;
+      info.nUsers = users.length;
+      info.nRooms = rooms.length;
       info.nSessions = nSessions;
-      info.rooms = rooms;
-      info.users = users;
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
       res.send(info);
-   })
+   }) 
 };
 
 exports.infoOfRoom = function(req, res) {
