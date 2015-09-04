@@ -69,15 +69,24 @@ exports.eventsOfType = function(req, res) {
 //Show total number of sessions, minutes published, streams and rooms used
 exports.info = function(req, res) {
    var info = {};
+   var initDate = parseInt(req.query.init);
+   var finalDate = parseInt(req.query.final);
    sessionsRegistry.getSessions(function(sessions){
-      var nSessions = sessions.length;
-
+      
+      var nSessions = 0;
       var rooms = {};
       var users = {};
-
       var timePublished = 0;
+
       for (var s in sessions) {
          var roomID = sessions[s].roomID;
+         var initSession = parseInt(sessions[s].initTimestamp);
+         var finalSession = parseInt(sessions[s].finalTimestamp);
+
+         if (initSession > finalDate || finalSession < initDate) continue;
+
+         nSessions++;
+         
          if (!rooms[roomID]) rooms[roomID] = 0;
 
          for (var st in sessions[s].streams){
@@ -86,7 +95,9 @@ exports.info = function(req, res) {
 
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
+
             if (initPublish && finalPublish) {
+               if (initPublish > finalDate || finalPublish < initDate) continue;
                var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
                rooms[roomID] += streamTime;
                users[stream.userID] += streamTime;
