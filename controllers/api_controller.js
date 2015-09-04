@@ -12,6 +12,17 @@ Object.size = function(obj) {
     return size;
 };
 
+var formatDate = function(date) {
+   var day =  date.substring(0,2);
+   var month = parseInt(date.substring(2,4)) - 1;
+   var year = date.substring(4,8);
+   var hours = date.substring(8,10);
+   var mins = date.substring(10,12);
+   var newDate = new Date(year, month, day, hours, mins);
+   return newDate.getTime();
+}
+
+
 exports.sessions = function(req, res) {
    sessionsRegistry.getSessions(function(sessions){
       res.send(sessions);
@@ -69,8 +80,13 @@ exports.eventsOfType = function(req, res) {
 //Show total number of sessions, minutes published, streams and rooms used
 exports.info = function(req, res) {
    var info = {};
-   var initDate = parseInt(req.query.init);
-   var finalDate = parseInt(req.query.final);
+   var initURL = req.query.init;
+   var finalURL = req.query.final;
+   var initDate, finalDate;
+
+   if (initURL) initDate = formatDate(initURL);
+   if (finalURL) finalDate = formatDate(finalURL);
+   
    sessionsRegistry.getSessions(function(sessions){
       
       var nSessions = 0;
@@ -86,7 +102,7 @@ exports.info = function(req, res) {
          if (initSession > finalDate || finalSession < initDate) continue;
 
          nSessions++;
-         
+
          if (!rooms[roomID]) rooms[roomID] = 0;
 
          for (var st in sessions[s].streams){
