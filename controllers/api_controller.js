@@ -121,9 +121,10 @@ exports.info = function(req, res) {
             }
          }
       }
-      info.nUsers = Object.size(users);
-      info.nRooms = Object.size(rooms);
+
       info.nSessions = nSessions;
+      info.nRooms = Object.size(rooms);
+      info.nUsers = Object.size(users);
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
       res.send(info);
@@ -183,9 +184,9 @@ exports.info_plus = function(req, res) {
          }
 
       }
-      info.nUsers = Object.size(users);
-      info.nRooms = Object.size(rooms);
       info.nSessions = nSessions;
+      info.nRooms = Object.size(rooms);
+      info.nUsers = Object.size(users);
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
       info.rooms = rooms;
