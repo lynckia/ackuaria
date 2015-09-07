@@ -30,7 +30,7 @@ case "$1" in
 		echo "          +                                                           +"
 		echo "          + Response format: JSON                                     +"
 		echo "          + Dates format: DD/MM/YYYY-hh:mm                            +"
-		echo "          + If you don't specificate any time, it will use 00:00      +"
+		echo "          + If you don't specificate any time, 00:00 will be used     +"
 		echo "          + Please, always use double digits for days, month and time +"
 		echo "          +                                                           +"
 		echo "          + Example: ./info_ackuaria.sh -d -i 01/07/2014-07:53        +"
