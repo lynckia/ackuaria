@@ -87,7 +87,9 @@ ackuaria_router.get('/sessions/user/:userID', apiController.sessionsOfUser)
 
 ackuaria_router.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
 
-ackuaria_router.get('/info', apiController.info)
+ackuaria_router.get('/info/general', apiController.info)
+
+ackuaria_router.get('/info/detailed', apiController.info_plus)
 
 ackuaria_router.get('/info/room/:roomID', apiController.infoOfRoom)
 
