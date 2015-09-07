@@ -1,7 +1,9 @@
 
-ACKUARIA_URL="http://poochie.dit.upm.es:8888/ackuaria"
-# FORMAT: YYYY/DD/MM-hh/mm
+ACKUARIA_URL="" #HOST URL http://hostname:port/ackuaria
 
+# DATE FORMAT: YYYY/DD/MM-hh/mm
+DATE=`date +%Y-%m-%d:%H:%M:%S`
+FILE_NAME="./reports/"$DATE"_report.json"
 case "$1" in
 	-g)
 		TYPE="general"
@@ -40,10 +42,9 @@ case "$2" in
 
 	-t)
 		echo "Showing total info"
-		URL="http://poochie.dit.upm.es:8888/ackuaria/info/"$TYPE""
-		
+		URL=""$ACKUARIA_URL"/info/"$TYPE""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
-		echo "$json_resp"
+		echo "$json_resp" >> "$FILE_NAME"
 	;;
 	-q)
 		echo "Showing info query between specified dates..."
@@ -53,7 +54,7 @@ case "$2" in
 		FINALTIME=$(echo "$final" | sed 's%/%%g;s%-%%g;s%:%%g')
 		URL=""$ACKUARIA_URL"/info/"$TYPE"?init="$INITTIME"?final="$FINALTIME""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
-		echo "$json_resp"
+		echo "$json_resp" >> "$FILE_NAME"
 
 	;;
 	-i) 
@@ -62,7 +63,7 @@ case "$2" in
 		INITTIME=$(echo "$init" | sed 's%/%%g;s%-%%g;s%:%%g')
 		URL=""$ACKUARIA_URL"/info/"$TYPE"?init="$INITTIME""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
-		echo "$json_resp"
+		echo "$json_resp" >> "$FILE_NAME"
 
 	;;
 	-f)
@@ -71,7 +72,7 @@ case "$2" in
 		FINALTIME=$(echo "$final" | sed 's%/%%g;s%-%%g;s%:%%g')
 		URL=""$ACKUARIA_URL"/info?final="$FINALTIME""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
-		echo "$json_resp"
+		echo "$json_resp" >> "$FILE_NAME"
 
 	;;
 
