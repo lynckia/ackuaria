@@ -130,6 +130,69 @@ exports.info = function(req, res) {
    }) 
 };
 
+//Show total number of sessions, minutes published, streams and detailed room info
+exports.info_plus = function(req, res) {
+   var info = {};
+   var initURL = req.query.init;
+   var finalURL = req.query.final;
+   var initDate, finalDate;
+
+   if (initURL) initDate = formatDate(initURL);
+   if (finalURL) finalDate = formatDate(finalURL);
+   
+   sessionsRegistry.getSessions(function(sessions){
+      
+      var nSessions = 0;
+      var rooms = {};
+      var users = {};
+      var usersByRoom = {};
+      var timePublished = 0;
+
+      for (var s in sessions) {
+         var roomID = sessions[s].roomID;
+         var initSession = parseInt(sessions[s].initTimestamp);
+         var finalSession = parseInt(sessions[s].finalTimestamp);
+
+         if (initSession > finalDate || finalSession < initDate) continue;
+
+         nSessions++;
+
+         if (!rooms[roomID]) rooms[roomID] = {nSessions: 1, nUsers: 0, timePublished: 0};
+         else rooms[roomID].nSessions++;
+
+         if (!usersByRoom[roomID]) usersByRoom[roomID] = [];
+
+         for (var st in sessions[s].streams){
+            var stream = sessions[s].streams[st];
+            if (!users[stream.userID]) users[stream.userID] = 0;
+            if (usersByRoom[roomID].indexOf(stream.userID) < 0) {
+               usersByRoom[roomID].push(stream.userID);
+               rooms[roomID].nUsers++;
+            }
+
+            var initPublish = parseInt(stream.initPublish);
+            var finalPublish = parseInt(stream.finalPublish);
+
+            if (initPublish && finalPublish) {
+               if (initPublish > finalDate || finalPublish < initDate) continue;
+               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
+               rooms[roomID].timePublished += streamTime;
+               users[stream.userID] += streamTime;
+               timePublished += streamTime;
+            }
+         }
+
+      }
+      info.nUsers = Object.size(users);
+      info.nRooms = Object.size(rooms);
+      info.nSessions = nSessions;
+      info.timePublished = timePublished;
+      info.info = "Time is represented in seconds";
+      info.rooms = rooms;
+      res.send(info);
+   }) 
+};
+
 exports.infoOfRoom = function(req, res) {
    var roomID = req.params.roomID;
    var info = {};  
