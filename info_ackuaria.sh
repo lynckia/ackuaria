@@ -52,7 +52,7 @@ case "$2" in
 		final="$4"
 		INITTIME=$(echo "$init" | sed 's%/%%g;s%-%%g;s%:%%g')
 		FINALTIME=$(echo "$final" | sed 's%/%%g;s%-%%g;s%:%%g')
-		URL=""$ACKUARIA_URL"/info/"$TYPE"?init="$INITTIME"?final="$FINALTIME""
+		URL=""$ACKUARIA_URL"/info/"$TYPE"?init="$INITTIME"&final="$FINALTIME""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
 		echo "$json_resp" >> "$FILE_NAME"
 
@@ -70,7 +70,7 @@ case "$2" in
 		echo "Showing info query until date..."
 		final="$3"
 		FINALTIME=$(echo "$final" | sed 's%/%%g;s%-%%g;s%:%%g')
-		URL=""$ACKUARIA_URL"/info?final="$FINALTIME""
+		URL=""$ACKUARIA_URL"/info/"$TYPE"?final="$FINALTIME""
 		json_resp=$(curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "$URL")
 		echo "$json_resp" >> "$FILE_NAME"
 

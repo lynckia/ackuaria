@@ -127,6 +127,10 @@ exports.info = function(req, res) {
       info.nUsers = Object.size(users);
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
+      if (initDate) info.initDate = new Date(initDate);
+      else info.initDate = "Not specified Date";
+      if (finalDate) info.finalDate = new Date(finalDate);
+      else info.finalDate = new Date();
       res.send(info);
    }) 
 };
@@ -190,6 +194,10 @@ exports.info_plus = function(req, res) {
       info.timePublished = timePublished;
       info.info = "Time is represented in seconds";
       info.rooms = rooms;
+      if (initDate) info.initDate = new Date(initDate);
+      else info.initDate = "Not specified Date";
+      if (finalDate) info.finalDate = new Date(finalDate);
+      else info.finalDate = new Date();
       res.send(info);
    }) 
 };
