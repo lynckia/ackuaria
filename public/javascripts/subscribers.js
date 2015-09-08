@@ -3,6 +3,7 @@ var show_grid = true;
 var audio, video;
 var subscribers = {};
 var sub_modal_now;
+var ssrcs = {};
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
 
 $(document).ready(function(){
@@ -330,8 +331,6 @@ $(document).ready(function(){
             FLVideo = video.fractionLost;
             BW = video.bandwidth;
         }
-        
-
         if (audio) FLAudio = audio.fractionLost;
 
         var date = new Date(timestamp);
@@ -344,7 +343,7 @@ $(document).ready(function(){
         var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
         newDataSub(subID, data)
 
-        if (video) {
+        if (video && ssrcs[video.sourceSsrc]) {
             $('#dataModal #videoSSRC').html(video.ssrc);
             $('#dataModal #videoBandwidth').html(video.bandwidth);
             $('#dataModal #pli').html(video.PLI);
@@ -353,7 +352,7 @@ $(document).ready(function(){
             $('#dataModal #videoPacketsLost').html(video.packetsLost);
             $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
         }
-        if (audio) {
+        if (audio && ssrcs[audio.sourceSsrc]) {
             $('#dataModal #audioSSRC').html(audio.ssrc);
             $('#dataModal #audioFractionLost').html(Math.round((audio.fractionLost * 100 / 256) *100) / 100 + "%");
             $('#dataModal #audioJitter').html(audio.jitter);
@@ -394,12 +393,14 @@ $(document).ready(function(){
             if (bpsAudio != 0) $('#audioBytesSent').html(Math.round(bpsAudio * 100)/100 + " Kbps");
             $('#audioPacketsSent').html(audio.rtcpPacketSent);
             kbpsAudio = Math.round(bpsAudio * 100)/100;
+            ssrcs[audio.ssrc] = "audio";
         }
         if (video) {
             $('#videoSSRC').html(video.ssrc);
             if (bpsVideo != 0) $('#videoBytesSent').html(Math.round(bpsVideo * 100)/100 + " Kbps");
             $('#videoPacketsSent').html(video.rtcpPacketSent);
             kbpsVideo = Math.round(bpsVideo * 100)/100;
+            ssrcs[video.ssrc] = "video";
         }
 
         newDataPub({date: dateStr, kbpsVideo: kbpsVideo, kbpsAudio: kbpsAudio});
