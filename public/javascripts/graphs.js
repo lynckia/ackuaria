@@ -32,21 +32,23 @@ var dataCallback = function(d) {
 
 var newDataPub = function(newObject) {
       var date = newObject.date;
-
-      if (newObject.kbpsVideo == 0) counterVideo++;
-      else {
-        var kbpsVideo = newObject.kbpsVideo / counterVideo;
-        counterVideo = 1;
-        var newDataVideo = {date: date, val: kbpsVideo};
-        updateVideoKbpsChart(newDataVideo);
+      if (newObject.kbpsVideo) {
+        if (newObject.kbpsVideo == 0) counterVideo++;
+        else {
+          var kbpsVideo = newObject.kbpsVideo / counterVideo;
+          counterVideo = 1;
+          var newDataVideo = {date: date, val: kbpsVideo};
+          updateVideoKbpsChart(newDataVideo);
+        }
       }
-
-      if (newObject.kbpsAudio == 0) counterAudio++;
-      else {
-        var kbpsAudio = newObject.kbpsAudio / counterAudio;
-        counterAudio = 1;
-        var newDataAudio = {date: date, val: kbpsAudio};
-        updateAudioKbpsChart(newDataAudio);
+      if (newObject.kbpsAudio) {
+        if (newObject.kbpsAudio == 0) counterAudio++;
+        else {
+          var kbpsAudio = newObject.kbpsAudio / counterAudio;
+          counterAudio = 1;
+          var newDataAudio = {date: date, val: kbpsAudio};
+          updateAudioKbpsChart(newDataAudio);
+        }
       }
 }
 
@@ -60,17 +62,23 @@ var newDataSub = function(subID, data) {
       return;
   } else if (sub_modal_now == subID) {
       var date = data.date;
-      var FLVideo = data.FLVideo * 100 / 256;
-      var FLAudio = data.FLAudio * 100 / 256;
-      var BW = data.BW / 1000;
+      if (data.FLVideo) {
+        var FLVideo = data.FLVideo * 100 / 256;
+        var newDataFLVideo = {date: date, val: FLVideo};
+        updateFLVideoChart(newDataFLVideo);
+      }
+      if (data.FLAudio) {
+        var FLAudio = data.FLAudio * 100 / 256;
+        var newDataFLAudio = {date: date, val: FLAudio};
+        updateFLAudioChart(newDataFLAudio);
+      }
+      if (data.BW) {
+        var BW = data.BW / 1000;
+        var newDataBW = {date: date, val: BW};
+        updateBWChart(newDataBW);
+      }
 
-      var newDataFLVideo = {date: date, val: FLVideo};
-      var newDataFLAudio = {date: date, val: FLAudio};
-      var newDataBW = {date: date, val: BW};
-      
-      updateBWChart(newDataBW);
-      updateFLVideoChart(newDataFLVideo);
-      updateFLAudioChart(newDataFLAudio);
+        
   }
 }
 

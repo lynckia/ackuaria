@@ -51,7 +51,7 @@ $(document).ready(function(){
         audio = evt.audio;
         video = evt.video;
         var timestamp = event.timestamp;
-        if (pubID == streamID && audio && video){
+        if (pubID == streamID){
             updateSR(audio, video, timestamp);
         }
     });
@@ -67,7 +67,7 @@ $(document).ready(function(){
         var stats = {audio: audio, video: video};
         if (pubID == streamID) {
             subscribers[subID] = stats;
-            if (sub_modal_now == subID && audio && video) {
+            if (sub_modal_now == subID) {
                 updateRR(subID, audio, video, timestamp);
             }
         }
@@ -85,7 +85,7 @@ $(document).ready(function(){
       if (stats) {
         var audio = stats.audio;
         var video = stats.video;
-        if (audio && video) updateRR(subID, audio, video);
+        updateRR(subID, audio, video);
       }
       updateModalState(subID);
       var modal = $(this)
@@ -326,9 +326,13 @@ $(document).ready(function(){
 
     var updateRR = function(subID, audio, video, timestamp) {
         var FLVideo, FLAudio, BW;
-        FLVideo = video.fractionLost;
-        FLAudio = audio.fractionLost;
-        BW = video.bandwidth;
+        if (video) {
+            FLVideo = video.fractionLost;
+            BW = video.bandwidth;
+        }
+        
+
+        if (audio) FLAudio = audio.fractionLost;
 
         var date = new Date(timestamp);
         var seconds = date.getSeconds();
@@ -340,50 +344,44 @@ $(document).ready(function(){
         var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
         newDataSub(subID, data)
 
-        $('#dataModal #videoSSRC').html(video.ssrc);
-        $('#dataModal #audioSSRC').html(audio.ssrc);
-      
-        $('#dataModal #pli').html(video.PLI);
-        $('#dataModal #videoBandwidth').html(video.bandwidth);
-
-        $('#dataModal #videoFractionLost').html(Math.round((video.fractionLost * 100 / 256) *100) / 100 + "%");
-        $('#dataModal #audioFractionLost').html(Math.round((audio.fractionLost * 100 / 256) *100) / 100 + "%");
-
-        $('#dataModal #videoJitter').html(video.jitter);
-        $('#dataModal #audioJitter').html(audio.jitter);
-
-        $('#dataModal #videoPacketsLost').html(video.packetsLost);
-        $('#dataModal #audioPacketsLost').html(audio.packetsLost);
-
-        $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
-        $('#dataModal #audioSourceSSRC').html(audio.sourceSsrc);
+        if (video) {
+            $('#dataModal #videoSSRC').html(video.ssrc);
+            $('#dataModal #videoBandwidth').html(video.bandwidth);
+            $('#dataModal #pli').html(video.PLI);
+            $('#dataModal #videoFractionLost').html(Math.round((video.fractionLost * 100 / 256) *100) / 100 + "%");
+            $('#dataModal #videoJitter').html(video.jitter);
+            $('#dataModal #videoPacketsLost').html(video.packetsLost);
+            $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
+        }
+        if (audio) {
+            $('#dataModal #audioSSRC').html(audio.ssrc);
+            $('#dataModal #audioFractionLost').html(Math.round((audio.fractionLost * 100 / 256) *100) / 100 + "%");
+            $('#dataModal #audioJitter').html(audio.jitter);
+            $('#dataModal #audioPacketsLost').html(audio.packetsLost);
+            $('#dataModal #audioSourceSSRC').html(audio.sourceSsrc);
+        }
 
     }
 
     var updateSR = function(audio, video, timestamp) {
-        var bpsAudio, bpsVideo;
+        var bpsAudio, bpsVideo, kbpsAudio, kbpsVideo;
         if (!lastTimestamp && !lastBytesAudio && !lastBytesVideo) {
             lastTimestamp = timestamp;
-            lastBytesAudio = audio.rtcpBytesSent;
-            lastBytesVideo = video.rtcpBytesSent;
+            if (audio) lastBytesAudio = audio.rtcpBytesSent;
+            if (video) lastBytesVideo = video.rtcpBytesSent;
             return;
         } else {
             var timeSince = (timestamp - lastTimestamp) / 1000;
-            bpsAudio = (((audio.rtcpBytesSent - lastBytesAudio) / timeSince) / 1000) * 8;
-            bpsVideo = (((video.rtcpBytesSent - lastBytesVideo) / timeSince) / 1000) * 8;
-            lastTimestamp = timestamp;
-            lastBytesAudio = audio.rtcpBytesSent;
-            lastBytesVideo = video.rtcpBytesSent;
+            if (audio) {
+                bpsAudio = (((audio.rtcpBytesSent - lastBytesAudio) / timeSince) / 1000) * 8;
+                lastBytesAudio = audio.rtcpBytesSent;
+            }
+            if (video) {
+                bpsVideo = (((video.rtcpBytesSent - lastBytesVideo) / timeSince) / 1000) * 8;
+                lastBytesVideo = video.rtcpBytesSent;
+            }
+            if (audio || video) lastTimestamp = timestamp;
         }
-        $('#videoSSRC').html(video.ssrc);
-        $('#audioSSRC').html(audio.ssrc);
-
-        $('#videoBytesSent').html(Math.round(bpsVideo * 100)/100 + " Kbps");
-        $('#audioBytesSent').html(Math.round(bpsAudio * 100)/100 + " Kbps");
-
-        $('#videoPacketsSent').html(video.rtcpPacketSent);
-        $('#audioPacketsSent').html(audio.rtcpPacketSent);
-
         var date = new Date(timestamp);
         var seconds = date.getSeconds();
         var minutes = date.getMinutes();
@@ -391,8 +389,18 @@ $(document).ready(function(){
 
         var dateStr = hour + ":" + minutes +":" + seconds;
 
-        var kbpsVideo = Math.round(bpsVideo * 100)/100;
-        var kbpsAudio = Math.round(bpsAudio * 100)/100;
+        if (audio) {
+            $('#audioSSRC').html(audio.ssrc);
+            if (bpsAudio != 0) $('#audioBytesSent').html(Math.round(bpsAudio * 100)/100 + " Kbps");
+            $('#audioPacketsSent').html(audio.rtcpPacketSent);
+            kbpsAudio = Math.round(bpsAudio * 100)/100;
+        }
+        if (video) {
+            $('#videoSSRC').html(video.ssrc);
+            if (bpsVideo != 0) $('#videoBytesSent').html(Math.round(bpsVideo * 100)/100 + " Kbps");
+            $('#videoPacketsSent').html(video.rtcpPacketSent);
+            kbpsVideo = Math.round(bpsVideo * 100)/100;
+        }
 
         newDataPub({date: dateStr, kbpsVideo: kbpsVideo, kbpsAudio: kbpsAudio});
 
