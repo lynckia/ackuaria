@@ -1,9 +1,9 @@
 
-ACKUARIA_URL="" #HOST URL http://hostname:port/ackuaria
+ACKUARIA_URL="http://poochie.dit.upm.es:8888/ackuaria" #HOST URL http://hostname:port/ackuaria
 
 # DATE FORMAT: YYYY/DD/MM-hh/mm
 DATE=`date +%Y-%m-%d:%H:%M:%S`
-FILE_NAME="./reports/"$DATE"_report.json"
+FILE_NAME="../reports/"$DATE"_report.json"
 case "$1" in
 	-g)
 		TYPE="general"
