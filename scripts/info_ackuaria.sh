@@ -1,9 +1,48 @@
+#!/bin/bash
 
-ACKUARIA_URL="http://poochie.dit.upm.es:8888/ackuaria" #HOST URL http://hostname:port/ackuaria
+ACKUARIA_URL="" #HOST URL http://hostname:port/ackuaria
 
 # DATE FORMAT: YYYY/DD/MM-hh/mm
-DATE=`date +%Y-%m-%d:%H:%M:%S`
-FILE_NAME="../reports/"$DATE"_report.json"
+DATE=`date +%Y%m%d%H%M%S`
+
+SCRIPT=`pwd`/$0
+PATHNAME=`dirname $SCRIPT`
+ROOT=$PATHNAME/..
+REPORT_DIR=$ROOT/reports/
+FILE_NAME=$REPORT_DIR$DATE"_report.json"
+
+
+usage() 
+{
+cat << EOF
+
+        + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+        + Welcome to the help page of the Ackuaria Stats Script.    +
+        +                                                           +
+        + Commands:                                                 +
+        +                                                           +
+        +     . First Parameter: Level of detail                    +
+        +           -g       --> General information                +
+        +           -d       --> Add Detailed information by Room   +
+        +                                                           +
+        +     . Second Parameter: Query by dates                    +
+        +           -t                    --> Total information     +
+        +           -q INITDATE FINALDATE --> Between two dates     +
+        +           -i INITDATE           --> Since date            +
+        +           -f FINALDATE          --> Until date            +
+        +                                                           +
+        + Response format: JSON                                     +
+        + Dates format: DD/MM/YYYY-hh:mm                            +
+        + If you dont specificate any time, 00:00 will be used      +
+        + Please, always use double digits for days, month and time +
+        +                                                           +
+        + Example: ./info_ackuaria.sh -d -i 01/07/2014-07:53        +
+        + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+
+
+EOF
+}
+
 case "$1" in
 	-g)
 		TYPE="general"
@@ -12,29 +51,8 @@ case "$1" in
 	-d) TYPE="detailed"
 	;;
 
-	*)
-		echo "          + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +"
-		echo "          + Welcome to the help page of the Ackuaria Stats Script.    +"
-		echo "          +                                                           +"
-		echo "          + Commands:                                                 +"
-		echo "          +                                                           +"
-		echo "          +     . First Parameter: Level of detail                    +"
-		echo "          +           -g       --> General information                +"
-		echo "          +           -d       --> Add Detailed information by Room   +"
-		echo "          +                                                           +"
-		echo "          +     . Second Parameter: Query by dates                    +"
-		echo "          +           -t                    --> Total information     +"
-		echo "          +           -q INITDATE FINALDATE --> Between two dates     +"
-		echo "          +           -i INITDATE           --> Since date            +"
-		echo "          +           -f FINALDATE          --> Until date            +"
-		echo "          +                                                           +"
-		echo "          + Response format: JSON                                     +"
-		echo "          + Dates format: DD/MM/YYYY-hh:mm                            +"
-		echo "          + If you don't specificate any time, 00:00 will be used     +"
-		echo "          + Please, always use double digits for days, month and time +"
-		echo "          +                                                           +"
-		echo "          + Example: ./info_ackuaria.sh -d -i 01/07/2014-07:53        +"
-		echo "          + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +"
+	*) usage
+	
 	;;
 esac
 
@@ -75,6 +93,10 @@ case "$2" in
 		echo "$json_resp" >> "$FILE_NAME"
 
 	;;
+
+	*) echo "        Error: Please, specify the second parameter"
+	   usage
+	   ;;
 
 esac
 
