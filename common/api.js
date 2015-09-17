@@ -93,8 +93,10 @@ API.api = {
                                 if (!hasRoom) {
                                     roomsRegistry.addRoom({
                                         roomID: roomID,
-                                        name: API.rooms[roomID].name,
+                                        roomName: API.rooms[roomID].roomName,
                                         data: API.rooms[roomID].data
+                                    }, function(saved) {
+                                        log.info('MongoDB: Added room: ', saved);
                                     })
                                 }
                             })
@@ -215,6 +217,19 @@ API.api = {
                     } else {
                         API.users[userID].subscribedTo.push(streamID);
                     }
+
+
+                    roomsRegistry.hasRoom(roomID, function(hasRoom){
+                        if (!hasRoom) {
+                            roomsRegistry.addRoom({
+                                roomID: roomID,
+                                roomName: API.rooms[roomID].roomName,
+                                data: API.rooms[roomID].data
+                            }, function(saved) {
+                                log.info('MongoDB: Added room: ', saved);
+                            })
+                        }
+                    })
                     break;
 
                 case "unsubscribe":

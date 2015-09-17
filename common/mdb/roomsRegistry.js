@@ -1,20 +1,5 @@
 var db = require('./dataBase').db;
 
-var getRoom = exports.getRoom = function(id, callback) {
-    "use strict";
-
-    db.rooms.findOne({
-        _id: db.ObjectId(id)
-    }, function(err, room) {
-        if (room === undefined) {
-            console.log('Room ', id, ' not found');
-        }
-        if (callback !== undefined) {
-            callback(room);
-        }
-    });
-};
-
 exports.hasRoom= function(roomID, callback) {
     "use strict";
     db.rooms.findOne({
@@ -29,14 +14,14 @@ exports.hasRoom= function(roomID, callback) {
 };
 
 
-exports.getRoomByRoomId = function(roomId, callback) {
+exports.getRoom = function(roomID, callback) {
     "use strict";
 
     db.rooms.findOne({
-        roomId: roomId
+        roomID: roomID
     }, function(err, room) {
         if (room === undefined) {
-            console.log('Room ', id, ' not found');
+            console.log('Room ', roomID, ' not found');
         }
         if (callback !== undefined) {
             callback(room);
