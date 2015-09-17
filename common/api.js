@@ -7,6 +7,7 @@ var db = require('./mdb/dataBase').db;
 var eventsRegistry = require('./mdb/eventsRegistry');
 var statsRegistry = require('./mdb/statsRegistry');
 var sessionsRegistry = require('./mdb/sessionsRegistry');
+var roomsRegistry = require('./mdb/roomsRegistry');
 var N = require('./../nuve');
 
 GLOBAL.config = config || {};
@@ -64,6 +65,7 @@ API.api = {
                         N.API.getRoom(roomID, function(room){
                             API.rooms[roomID] = {
                                 roomName: JSON.parse(room).name,
+                                data: JSON.parse(room).data,
                                 streams: [streamID],
                                 users: [userID],
                                 failed: []
@@ -86,6 +88,17 @@ API.api = {
                                 failed: []
                             }
                             API.sessions_active[roomID] = session;
+
+                            roomsRegistry.hasRoom(roomID, function(hasRoom){
+                                if (!hasRoom) {
+                                    roomsRegistry.addRoom({
+                                        roomID: roomID,
+                                        name: API.rooms[roomID].name,
+                                        data: API.rooms[roomID].data
+                                    })
+                                }
+                            })
+
                         } else {
                             var session = API.sessions_active[roomID];
                             var stream = {

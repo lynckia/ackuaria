@@ -15,22 +15,10 @@ var getRoom = exports.getRoom = function(id, callback) {
     });
 };
 
-var hasRoom = exports.hasRoom = function(id, callback) {
-    "use strict";
-
-    getRoom(id, function(room) {
-        if (room === undefined) {
-            callback(false);
-        } else {
-            callback(true);
-        }
-    });
-};
-
-exports.hasRoomByRoomId = function(roomId, callback) {
+exports.hasRoom= function(roomID, callback) {
     "use strict";
     db.rooms.findOne({
-        roomId: roomId
+        roomID: roomID
     }, function(err, room) {
         if (room === null) {
             callback(false);

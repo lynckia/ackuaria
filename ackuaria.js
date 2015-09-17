@@ -51,6 +51,7 @@ N.API.getRooms(function(roomList) {
       if (!API.rooms[room._id]) {
          API.rooms[room._id] = {
              roomName: room.name,
+             data: room.data,
              streams: [],
              users: [],
              failed: []
