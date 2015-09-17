@@ -29,6 +29,18 @@ exports.getRoom = function(roomID, callback) {
     });
 };
 
+exports.getRoomsData = function (roomsArray, callback) {
+    db.rooms.find({ 
+        roomID : { $in : roomsArray } 
+    }, function(err, roomList) {
+        if (roomList === undefined) {
+            console.log('Rooms not found');
+        }
+        if (callback !== undefined) {
+            callback(roomList);
+        }    } );
+}
+
 
 exports.addRoom = function(room, callback) {
     "use strict";

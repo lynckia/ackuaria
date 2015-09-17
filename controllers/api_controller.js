@@ -5,6 +5,7 @@ var sessionsRegistry = require('./../common/mdb/sessionsRegistry');
 var eventsRegistry = require('./../common/mdb/eventsRegistry');
 var roomsRegistry = require('./../common/mdb/roomsRegistry');
 
+
 Object.size = function(obj) {
     var size = 0, key;
     for (key in obj) {
@@ -153,66 +154,71 @@ exports.info_plus = function(req, res) {
       var users = {};
       var usersByRoom = {};
       var timePublished = 0;
+      var visited = [];
 
-      var analyze_session = function(index) {
-         if (sessions[index]) {
-            var roomID = sessions[index].roomID;
-            var initSession = parseInt(sessions[index].initTimestamp);
-            var finalSession = parseInt(sessions[index].finalTimestamp);
+      for (var s in sessions) {
+         var roomID = sessions[s].roomID;
+         var initSession = parseInt(sessions[s].initTimestamp);
+         var finalSession = parseInt(sessions[s].finalTimestamp);
 
-            if (initSession > finalDate || finalSession < initDate) return analyze_session(index + 1);
+         if (initSession > finalDate || finalSession < initDate) continue;
 
-            nSessions++;
+         nSessions++;
+         
+         if (!rooms[roomID]) {
+            rooms[roomID] = {data: sessions[s].roomData, nSessions: 1, nUsers: 0, timePublished: 0};
+            visited.push(roomID);
+         }
+         else {
+            rooms[roomID].nSessions++;
+            if (!rooms[roomID].data) rooms[roomID].data = sessions[s].roomData;
+         }
 
-            if (!rooms[roomID]) rooms[roomID] = {nSessions: 1, nUsers: 0, timePublished: 0};
-            else rooms[roomID].nSessions++;
+         if (!usersByRoom[roomID]) usersByRoom[roomID] = [];
 
-            if (!usersByRoom[roomID]) usersByRoom[roomID] = [];
-
-            for (var st in sessions[index].streams){
-               var stream = sessions[index].streams[st];
-               if (!users[stream.userID]) users[stream.userID] = 0;
-               if (usersByRoom[roomID].indexOf(stream.userID) < 0) {
-                  usersByRoom[roomID].push(stream.userID);
-                  rooms[roomID].nUsers++;
-               }
-
-               var initPublish = parseInt(stream.initPublish);
-               var finalPublish = parseInt(stream.finalPublish);
-
-               if (initPublish && finalPublish) {
-                  if (initPublish > finalDate || finalPublish < initDate) continue;
-                  var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
-                  rooms[roomID].timePublished += streamTime;
-                  users[stream.userID] += streamTime;
-                  timePublished += streamTime;
-               }
+         for (var st in sessions[s].streams){
+            var stream = sessions[s].streams[st];
+            if (!users[stream.userID]) users[stream.userID] = 0;
+            if (usersByRoom[roomID].indexOf(stream.userID) < 0) {
+               usersByRoom[roomID].push(stream.userID);
+               rooms[roomID].nUsers++;
             }
 
-            roomsRegistry.getRoom(roomID, function(room){
-               if (room) {
-                  rooms[roomID].roomName = room.roomName;
-                  rooms[roomID].data = room.data;
-               }
-               return analyze_session(index + 1);
-            })
-         } else {
-            info.nSessions = nSessions;
-            info.nRooms = Object.size(rooms);
-            info.nUsers = Object.size(users);
-            info.timePublished = timePublished;
-            info.info = "Time is represented in seconds";
-            info.rooms = rooms;
-            if (initDate) info.initDate = new Date(initDate);
-            else info.initDate = "Not specified Date";
-            if (finalDate) info.finalDate = new Date(finalDate);
-            else info.finalDate = new Date();
-            res.send(info);
+            var initPublish = parseInt(stream.initPublish);
+            var finalPublish = parseInt(stream.finalPublish);
+
+            if (initPublish && finalPublish) {
+               if (initPublish > finalDate || finalPublish < initDate) continue;
+               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
+               rooms[roomID].timePublished += streamTime;
+               users[stream.userID] += streamTime;
+               timePublished += streamTime;
+            }
          }
+
       }
 
-      analyze_session(0);
+      roomsRegistry.getRoomsData(visited, function(roomList) {
+         if (roomList) {
+            for (var r in roomList) {
+               var room = roomList[r];
+               rooms[room.roomID].roomName = room.roomName;
+               rooms[room.roomID].data = room.data;
+            }
+         }
 
+         info.nSessions = nSessions;
+         info.nRooms = Object.size(rooms);
+         info.nUsers = Object.size(users);
+         info.timePublished = timePublished;
+         info.info = "Time is represented in seconds";
+         info.rooms = rooms;
+         if (initDate) info.initDate = new Date(initDate);
+         else info.initDate = "Not specified Date";
+         if (finalDate) info.finalDate = new Date(finalDate);
+         else info.finalDate = new Date();
+            res.send(info);
+      })
 
 
 
