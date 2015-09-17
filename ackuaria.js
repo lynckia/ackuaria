@@ -44,15 +44,16 @@ var api = API.api;
 N.API.init(GLOBAL.config.nuve.superserviceID, GLOBAL.config.nuve.superserviceKey, GLOBAL.config.nuve.host);
 
 N.API.getRooms(function(roomList) {
+   API.lastUpdated = new Date().getTime();
    var rooms = JSON.parse(roomList);
    for (var r in rooms) {
       var room = rooms[r];
       if (!API.rooms[room._id]) {
          API.rooms[room._id] = {
-             "roomName": room.name,
-             "streams": [],
-             "users": [],
-             "failed": []
+             roomName: room.name,
+             streams: [],
+             users: [],
+             failed: []
          };      
       }
    }
@@ -71,37 +72,41 @@ io.on('connection', function(socket) {
 
 app.use('/ackuaria', ackuaria_router);
 
+app.get('/', function(req, res) {
+  res.redirect('/ackuaria');
+})
+
 ackuaria_router.use(express.static(path.join(__dirname, 'public')));
 
-ackuaria_router.get('/', ackuariaController.loadRooms)
+ackuaria_router.get('/', ackuariaController.updateRooms, ackuariaController.loadRooms)
 
-ackuaria_router.get('/room', ackuariaController.loadPublishers)
+ackuaria_router.get('/room', ackuariaController.updateRooms, ackuariaController.loadPublishers)
 
-ackuaria_router.get('/pub', ackuariaController.loadSubscribers)
+ackuaria_router.get('/pub', ackuariaController.updateRooms, ackuariaController.loadSubscribers)
 
-ackuaria_router.get('/sessions', apiController.sessions)
+ackuaria_router.get('/sessions', ackuariaController.updateRooms, apiController.sessions)
 
-ackuaria_router.get('/sessions/room/:roomID', apiController.sessionsOfRoom)
+ackuaria_router.get('/sessions/room/:roomID', ackuariaController.updateRooms, apiController.sessionsOfRoom)
 
-ackuaria_router.get('/sessions/user/:userID', apiController.sessionsOfUser)
+ackuaria_router.get('/sessions/user/:userID', ackuariaController.updateRooms, apiController.sessionsOfUser)
 
-ackuaria_router.get('/sessions/stream/:streamID', apiController.sessionsOfStream)
+ackuaria_router.get('/sessions/stream/:streamID', ackuariaController.updateRooms, apiController.sessionsOfStream)
 
-ackuaria_router.get('/info/general', apiController.info)
+ackuaria_router.get('/info/general', ackuariaController.updateRooms, apiController.info)
 
-ackuaria_router.get('/info/detailed', apiController.info_plus)
+ackuaria_router.get('/info/detailed', ackuariaController.updateRooms, apiController.info_plus)
 
-ackuaria_router.get('/info/room/:roomID', apiController.infoOfRoom)
+ackuaria_router.get('/info/room/:roomID', ackuariaController.updateRooms, apiController.infoOfRoom)
 
-ackuaria_router.get('/info/user/:userID', apiController.infoOfUser)
+ackuaria_router.get('/info/user/:userID', ackuariaController.updateRooms, apiController.infoOfUser)
 
-ackuaria_router.get('/events', apiController.events)
+ackuaria_router.get('/events', ackuariaController.updateRooms, apiController.events)
 
-ackuaria_router.get('/events/room/:roomID', apiController.eventsOfRoom)
+ackuaria_router.get('/events/room/:roomID', ackuariaController.updateRooms, apiController.eventsOfRoom)
 
-ackuaria_router.get('/events/user/:userID', apiController.eventsOfUser)
+ackuaria_router.get('/events/user/:userID', ackuariaController.updateRooms, apiController.eventsOfUser)
 
-ackuaria_router.get('/events/type/:type', apiController.eventsOfType)
+ackuaria_router.get('/events/type/:type', ackuariaController.updateRooms, apiController.eventsOfType)
 
 ackuaria_router.post('/delete/:roomID', function(req, res) {
   var roomID = req.params.roomID;

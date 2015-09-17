@@ -23,7 +23,8 @@ config.logger.config_file = './log4js_configuration.json'; //default value: "../
 config.ackuaria = {};
 config.ackuaria.useDB = false; // default value: false
 config.ackuaria.dataBaseURL = "localhost/ackuariadb"; // default value: 'localhost/ackuariadb'
-config.ackuaria.port = 8888 // default value: 8888
+config.ackuaria.port = 8888; // default value: 8888
+config.ackuaria.call_time = 180; // default value: 180 (Minimum number of seconds to wait before accepting a new call to Nuve)
 
 /*********************************************************
  NUVE CONFIGURATION

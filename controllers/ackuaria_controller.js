@@ -1,33 +1,48 @@
 
 var API = require('./../common/api');
 var N = require('./../nuve');
+var config = require('./../ackuaria_config');
+
+exports.updateRooms = function(req, res, next) {
+   var date = new Date().getTime();
+
+   if (req.originalUrl == "/ackuaria/" || !API.lastUpdated || (date - API.lastUpdated) >= config.ackuaria.call_time * 1000) {
+      console.log("Calling Nuve...");
+      N.API.getRooms(function(roomList) {
+         var rooms = JSON.parse(roomList);
+         var test_rooms = {};
+         for (var i in rooms) {
+            var room = rooms[i];
+            if (!API.rooms[room._id]) {
+               test_rooms[room._id] = {
+                   roomName: room.name,
+                   streams: [],
+                   users: [],
+                   failed: []
+               };
+            } else {
+               test_rooms[room._id] = API.rooms[room._id];
+            }
+         }
+
+         API.rooms = test_rooms;
+         API.lastUpdated = new Date().getTime();
+         console.log("Nuve called: Updated Room List");
+
+         next();
+      })   
+   } else {
+      console.log("Too soon for calling Nuve again.");
+      next();
+   }
+}
 
 exports.loadRooms = function(req, res) {
    API.currentRoom = "";
-
-   N.API.getRooms(function(roomList) {
-      var rooms = JSON.parse(roomList);
-      var test_rooms = {};
-      for (var i in rooms) {
-         var room = rooms[i];
-         if (!API.rooms[room._id]) {
-            test_rooms[room._id] = {
-                "roomName": room.name,
-                "streams": [],
-                "users": [],
-                "failed": []
-            };
-         } else {
-            test_rooms[room._id] = API.rooms[room._id];
-         }
-      }
-
-      API.rooms = test_rooms;
-      res.render('rooms', {
-         view:"rooms",
-         rooms: API.rooms
-      });
-   })
+   res.render('rooms', {
+      view: "rooms",
+      rooms: API.rooms
+   });
 };
 
 exports.loadPublishers = function(req, res) {

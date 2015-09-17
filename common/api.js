@@ -20,6 +20,7 @@ API.users = {};
 API.states = {};
 API.currentRoom;
 API.sessions_active = {};
+API.lastUpdated;
 
 function isEmpty(obj) {
     for (var key in obj) {
