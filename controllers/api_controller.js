@@ -14,6 +14,15 @@ Object.size = function(obj) {
     return size;
 };
 
+var checkQueries = function(roomData, queries) {
+   for (q in queries) {
+      if (roomData[q] != queries[q]) {
+         return false;
+      }
+   }
+   return true;
+}
+
 var formatDate = function(date) {
    var day =  date.substring(0,2);
    var month = parseInt(date.substring(2,4)) - 1;
@@ -80,7 +89,7 @@ exports.eventsOfType = function(req, res) {
 };
 
 //Show total number of sessions, minutes published, streams and rooms used
-exports.info = function(req, res) {
+exports.info_rooms = function(req, res) {
    var info = {};
    var initURL = req.query.init;
    var finalURL = req.query.final;
@@ -88,7 +97,16 @@ exports.info = function(req, res) {
 
    if (initURL) initDate = formatDate(initURL);
    if (finalURL) finalDate = formatDate(finalURL);
-   
+
+   var queries = {};
+   for (var q in req.query) {
+      var query_name = q;
+      var query_value = req.query[q];
+      if (query_name != "init" && query_name != "final") {
+         queries[query_name] = query_value;
+      }
+   }
+
    sessionsRegistry.getSessions(function(sessions){
       
       var nSessions = 0;
@@ -102,6 +120,8 @@ exports.info = function(req, res) {
          var finalSession = parseInt(sessions[s].finalTimestamp);
 
          if (initSession > finalDate || finalSession < initDate) continue;
+
+         if (!checkQueries(sessions[s].roomData, queries)) continue;
 
          nSessions++;
 
@@ -124,133 +144,83 @@ exports.info = function(req, res) {
          }
       }
 
-      info.nSessions = nSessions;
-      info.nRooms = Object.size(rooms);
-      info.nUsers = Object.size(users);
-      info.timePublished = timePublished;
-      info.info = "Time is represented in seconds";
+      for (var r in rooms) {
+         var room_list = [];
+         room_list.push(r);
+      }
+
+      info.n_sessions = nSessions;
+      info.n_rooms = Object.size(rooms);
+      info.room_list = room_list;
+      info.n_users = Object.size(users);
+      info.time_published = timePublished;
+
       if (initDate) info.initDate = new Date(initDate);
-      else info.initDate = "Not specified Date";
+      else info.init_date = "Not specified Date";
+
       if (finalDate) info.finalDate = new Date(finalDate);
-      else info.finalDate = new Date();
+      else info.final_date = new Date();
       res.send(info);
    }) 
 };
 
-//Show total number of sessions, minutes published, streams and detailed room info
-exports.info_plus = function(req, res) {
-   var info = {};
-   var initURL = req.query.init;
-   var finalURL = req.query.final;
-   var initDate, finalDate;
 
-   if (initURL) initDate = formatDate(initURL);
-   if (finalURL) finalDate = formatDate(finalURL);
-   
-   sessionsRegistry.getSessions(function(sessions){
-      
-      var nSessions = 0;
-      var rooms = {};
-      var users = {};
-      var usersByRoom = {};
-      var timePublished = 0;
-      var visited = [];
-
-      for (var s in sessions) {
-         var roomID = sessions[s].roomID;
-         var initSession = parseInt(sessions[s].initTimestamp);
-         var finalSession = parseInt(sessions[s].finalTimestamp);
-
-         if (initSession > finalDate || finalSession < initDate) continue;
-
-         nSessions++;
-         
-         if (!rooms[roomID]) {
-            rooms[roomID] = {data: sessions[s].roomData, nSessions: 1, nUsers: 0, timePublished: 0};
-            visited.push(roomID);
-         }
-         else {
-            rooms[roomID].nSessions++;
-            if (!rooms[roomID].data) rooms[roomID].data = sessions[s].roomData;
-         }
-
-         if (!usersByRoom[roomID]) usersByRoom[roomID] = [];
-
-         for (var st in sessions[s].streams){
-            var stream = sessions[s].streams[st];
-            if (!users[stream.userID]) users[stream.userID] = 0;
-            if (usersByRoom[roomID].indexOf(stream.userID) < 0) {
-               usersByRoom[roomID].push(stream.userID);
-               rooms[roomID].nUsers++;
-            }
-
-            var initPublish = parseInt(stream.initPublish);
-            var finalPublish = parseInt(stream.finalPublish);
-
-            if (initPublish && finalPublish) {
-               if (initPublish > finalDate || finalPublish < initDate) continue;
-               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
-               rooms[roomID].timePublished += streamTime;
-               users[stream.userID] += streamTime;
-               timePublished += streamTime;
-            }
-         }
-
-      }
-
-      roomsRegistry.getRoomsData(visited, function(roomList) {
-         if (roomList) {
-            for (var r in roomList) {
-               var room = roomList[r];
-               rooms[room.roomID].roomName = room.roomName;
-               rooms[room.roomID].data = room.data;
-            }
-         }
-
-         info.nSessions = nSessions;
-         info.nRooms = Object.size(rooms);
-         info.nUsers = Object.size(users);
-         info.timePublished = timePublished;
-         info.info = "Time is represented in seconds";
-         info.rooms = rooms;
-         if (initDate) info.initDate = new Date(initDate);
-         else info.initDate = "Not specified Date";
-         if (finalDate) info.finalDate = new Date(finalDate);
-         else info.finalDate = new Date();
-            res.send(info);
-      })
-
-
-
-   }) 
-};
-
-exports.infoOfRoom = function(req, res) {
+exports.info_room = function(req, res) {
    var roomID = req.params.roomID;
    var info = {};  
    var streams = [];
 
+   // Query by date variables
+   var initURL = req.query.init;
+   var finalURL = req.query.final;
+   var initDate, finalDate;
+   if (initURL) initDate = formatDate(initURL);
+   if (finalURL) finalDate = formatDate(finalURL);
+   
    sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
-      var nSessions = sessions.length;
+      var nSessions = 0;
       var timePublished = 0;
+      var room_data;
+
       for (var s in sessions) {
+         var initSession = parseInt(sessions[s].initTimestamp);
+         var finalSession = parseInt(sessions[s].finalTimestamp);
+         room_data = sessions[s].roomData;
+         // Checking the query by date. If it doesn't fit, we jump to the next session
+         if (initSession > finalDate || finalSession < initDate) continue;
+
+         // Once checked the query, we add the session and start adding times
+         nSessions++;
          for (var st in sessions[s].streams){
             var stream = sessions[s].streams[st];
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
-            var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
-            streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
-            timePublished += streamTime;
+
+            if (initPublish && finalPublish) {
+               // If the stream has started after the final date or it has ended before the initial date, we jump to the next stream
+               if (initPublish > finalDate || finalPublish < initDate) continue;
+               var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
+               //streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
+               timePublished += streamTime;
+            }
+            
          }
       }
-      info.roomID = roomID;
-      info.timePublished = timePublished;
-      info.streams = streams;
+      info.room_id = roomID;
+      info.n_sessions = nSessions;
+      info.time_published = timePublished;
+      info.room_data = room_data;
+      if (initDate) info.init_date = new Date(initDate);
+      else info.init_date = "Not specified Date";
+      
+      if (finalDate) info.final_date = new Date(finalDate);
+      else info.final_date = new Date();
+      //info.streams = streams;
       res.send(info);
    })
 };
 
-exports.infoOfUser = function(req, res) {
+exports.info_user = function(req, res) {
    var userID = req.params.userID;
    var streams = [];
    var info = {};

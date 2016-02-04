@@ -83,6 +83,7 @@ API.api = {
                                 sessionID: sessionID,
                                 nSession: nSession,
                                 roomID: roomID,
+                                roomData: API.rooms[roomID].data,
                                 initTimestamp: initTimestamp,
                                 streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }],
                                 failed: []

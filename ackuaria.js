@@ -93,13 +93,11 @@ ackuaria_router.get('/sessions/user/:userID', ackuariaController.updateRooms, ap
 
 ackuaria_router.get('/sessions/stream/:streamID', ackuariaController.updateRooms, apiController.sessionsOfStream)
 
-ackuaria_router.get('/info/general', ackuariaController.updateRooms, apiController.info)
+ackuaria_router.get('/info/rooms', ackuariaController.updateRooms, apiController.info_rooms)
 
-ackuaria_router.get('/info/detailed', ackuariaController.updateRooms, apiController.info_plus)
+ackuaria_router.get('/info/rooms/:roomID', ackuariaController.updateRooms, apiController.info_room)
 
-ackuaria_router.get('/info/room/:roomID', ackuariaController.updateRooms, apiController.infoOfRoom)
-
-ackuaria_router.get('/info/user/:userID', ackuariaController.updateRooms, apiController.infoOfUser)
+ackuaria_router.get('/info/user/:userID', ackuariaController.updateRooms, apiController.info_user)
 
 ackuaria_router.get('/events', ackuariaController.updateRooms, apiController.events)
 
