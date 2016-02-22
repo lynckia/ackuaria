@@ -15,10 +15,11 @@ $(document).ready(function(){
         if (show_grid) {
             $('.roomContainer').each(function() {
                 var _this = $(this);
-                var title = _this.find('.roomId').text().toLowerCase();
+                var title1 = _this.find('.roomId').text().toLowerCase();
+                var title2 = _this.find('.roomName').text().toLowerCase();
                 var hidden = 0;
                 for (var i = 0; i < arrayLength; i++) {
-                    if (title.indexOf(filter_array[i]) < 0) {
+                    if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
                         _this.hide();
                         hidden = 1;
                     }
@@ -30,10 +31,11 @@ $(document).ready(function(){
         } else {
             $('.room').each(function() {
                 var _this = $(this);
-                var title = _this.find('.roomID').text().toLowerCase();
+                var title1 = _this.find('.roomID').text().toLowerCase();
+                var title2 = _this.find('.roomName').text().toLowerCase();
                 var hidden = 0;
                 for (var i = 0; i < arrayLength; i++) {
-                     if (title.indexOf(filter_array[i]) < 0) {
+                    if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
                         _this.hide();
                         hidden = 1;
                     }
