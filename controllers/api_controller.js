@@ -16,10 +16,11 @@ Object.size = function(obj) {
 
 var checkQueries = function(roomData, queries) {
    for (q in queries) {
-      if (roomData[q] != queries[q]) {
+      if (!roomData || !roomData[q] || roomData[q].toString() != queries[q]) {
          return false;
       }
    }
+
    return true;
 }
 
@@ -106,9 +107,8 @@ exports.info_rooms = function(req, res) {
          queries[query_name] = query_value;
       }
    }
-
+   console.log("Queries:", queries);
    sessionsRegistry.getSessions(function(sessions){
-      
       var nSessions = 0;
       var rooms = {};
       var users = {};
@@ -143,9 +143,8 @@ exports.info_rooms = function(req, res) {
             }
          }
       }
-
+      var room_list = [];
       for (var r in rooms) {
-         var room_list = [];
          room_list.push(r);
       }
 
@@ -154,6 +153,7 @@ exports.info_rooms = function(req, res) {
       info.room_list = room_list;
       info.n_users = Object.size(users);
       info.time_published = timePublished;
+      info.query = queries;
 
       if (initDate) info.initDate = new Date(initDate);
       else info.init_date = "Not specified Date";
@@ -168,6 +168,8 @@ exports.info_rooms = function(req, res) {
 exports.info_room = function(req, res) {
    var roomID = req.params.roomID;
    var info = {};  
+   var users = {};
+
    var streams = [];
 
    // Query by date variables
@@ -200,6 +202,8 @@ exports.info_room = function(req, res) {
                // If the stream has started after the final date or it has ended before the initial date, we jump to the next stream
                if (initPublish > finalDate || finalPublish < initDate) continue;
                var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
+               users[stream.userID] += streamTime;
+
                //streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
                timePublished += streamTime;
             }
@@ -210,6 +214,8 @@ exports.info_room = function(req, res) {
       info.n_sessions = nSessions;
       info.time_published = timePublished;
       info.room_data = room_data;
+      info.n_users = Object.size(users);
+
       if (initDate) info.init_date = new Date(initDate);
       else info.init_date = "Not specified Date";
       
