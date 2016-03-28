@@ -81,15 +81,12 @@ ackuaria_router.use(express.static(path.join(__dirname, 'public')));
 
 ackuaria_router.get('/', ackuariaController.updateRooms, ackuariaController.loadRooms)
 
-ackuaria_router.get('/history', function(req, res) {
-     res.render('history', {
-      view: "history"
-   });
-})
-
 ackuaria_router.get('/room', ackuariaController.updateRooms, ackuariaController.loadPublishers)
 
 ackuaria_router.get('/pub', ackuariaController.updateRooms, ackuariaController.loadSubscribers)
+
+//Por ahora carga las Rooms existentes en Nuve. TO DO: cablear a la API 
+ackuaria_router.get('/history', ackuariaController.updateRooms, ackuariaController.loadHistory)
 
 ackuaria_router.get('/sessions', ackuariaController.updateRooms, apiController.sessions)
 

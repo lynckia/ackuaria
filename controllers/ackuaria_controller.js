@@ -121,3 +121,10 @@ exports.loadSubscribers = function(req, res) {
       states: statesInRoom
    });
 };
+
+exports.loadHistory = function(req, res) {
+   res.render('history', {
+      view: "history",
+      rooms: API.rooms
+   });
+};

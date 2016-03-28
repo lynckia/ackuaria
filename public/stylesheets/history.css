@@ -140,7 +140,7 @@ input.date {
 
 }
 
-#roomsInfo {
+#overall {
 	font-family: "Nunito-Light";
 	color: #55739D;
 	background-color: white;
@@ -148,7 +148,7 @@ input.date {
 	padding: 10px 15px 10px 15px;
 	width: 100%;
 	line-height: 25px;
-	margin-top: 10px;
+	margin: 10px 0 20px 0;
 	text-align: center;
 }
 
@@ -200,4 +200,9 @@ input.filter {
 }
 .filters span {
 	max-width: 35%;
+}
+
+
+#rooms {
+	margin: 0;
 }

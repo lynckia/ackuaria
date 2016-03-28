@@ -23,7 +23,7 @@
 
             </div>
 
-            <div id="roomsInfo">
+            <div id="overall">
                 <div class="row">
                     <div class="col-md-3">
                         <span>Sessions </span><span class="info bold dark"> 342341</span>
@@ -40,9 +40,10 @@
 
 
                 </div>
+            </div>
 
-
-
+            <div id="rooms" class="row">
+                
             </div>
         </div>
         <div id="rightCol" class="col-md-4">
@@ -62,7 +63,7 @@
                         </div>
                         <div class="first-row col-md-1">
                             <span class="collapsed fa fa-angle-down" id="collapseButtonDown"></span>
-                            <span class="collapsed fa fa-angle-up" id="collapseButtonUp"></span>
+                            <span class="collapsed fa fa-angle-up" id="collapseButtonUp" hidden></span>
 
                         </div>
                     </div>
@@ -110,3 +111,10 @@
     </div>
 
 </div>
+<script>
+
+  var rooms = <%- JSON.stringify(rooms) %>;
+  
+  paintRoomsList();
+
+</script>
