@@ -69,8 +69,30 @@ API.api = {
                                 streams: [streamID],
                                 users: [userID],
                                 failed: []
-                            };           
+                            };
+
+                            var nSession, sessionID, session;
+                            if (!API.sessions_active[roomID]) nSession = 1;
+                            else nSession = API.sessions_active[roomID].nSession + 1;
+                            sessionID = roomID + "_" + nSession;
+                            var roomData = {};
+                            roomData._name = API.rooms[roomID].roomName
+                            for (var d in API.rooms[roomID].data) {
+                                roomData[d] = API.rooms[roomID].data[d];
+                            }
+
+                            session = {
+                                sessionID: sessionID,
+                                nSession: nSession,
+                                roomID: roomID,
+                                roomData: roomData,
+                                initTimestamp: initTimestamp,
+                                streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }],
+                                failed: []
+                            }
+                            API.sessions_active[roomID] = session;
                         })
+
                     } else {
 
                         if (API.rooms[roomID].streams.length == 0) {
@@ -78,8 +100,11 @@ API.api = {
                             if (!API.sessions_active[roomID]) nSession = 1;
                             else nSession = API.sessions_active[roomID].nSession + 1;
                             sessionID = roomID + "_" + nSession;
-                            var roomData = API.rooms[roomID].data;
+                            var roomData = {};
                             roomData._name = API.rooms[roomID].roomName;
+                            for (var d in API.rooms[roomID].data) {
+                                roomData[d] = API.rooms[roomID].data[d];
+                            }
                             session = {
                                 sessionID: sessionID,
                                 nSession: nSession,
