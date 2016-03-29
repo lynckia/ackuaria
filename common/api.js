@@ -78,12 +78,13 @@ API.api = {
                             if (!API.sessions_active[roomID]) nSession = 1;
                             else nSession = API.sessions_active[roomID].nSession + 1;
                             sessionID = roomID + "_" + nSession;
-
+                            var roomData = API.rooms[roomID].data;
+                            roomData._name = API.rooms[roomID].roomName;
                             session = {
                                 sessionID: sessionID,
                                 nSession: nSession,
                                 roomID: roomID,
-                                roomData: API.rooms[roomID].data,
+                                roomData: roomData,
                                 initTimestamp: initTimestamp,
                                 streams: [{streamID: streamID, userID: userID, initPublish: initTimestamp }],
                                 failed: []

@@ -95,9 +95,9 @@ var paintRoomsList = function(){
     var nRooms = Object.keys(rooms).length
     $('#rooms').append('<div class="roomContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     for (var room in rooms) {
-            var roomID = room;
-            var roomName = rooms[room].roomName;
-            createNewRoomList(roomID, roomName);        
+        var roomID = room;
+        var roomName = rooms[room]._name;
+        createNewRoomList(roomID, roomName);        
     }
 
     Sortable.init()
@@ -109,3 +109,4 @@ var createNewRoomList = function(roomID, roomName){
         var room_id = $(this).data('room_id');
     })
 }
+

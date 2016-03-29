@@ -2,6 +2,7 @@
 var API = require('./../common/api');
 var N = require('./../nuve');
 var config = require('./../ackuaria_config');
+var api_controller = require('./api_controller');
 
 exports.updateRooms = function(req, res, next) {
    var date = new Date().getTime();
@@ -123,8 +124,20 @@ exports.loadSubscribers = function(req, res) {
 };
 
 exports.loadHistory = function(req, res) {
-   res.render('history', {
-      view: "history",
-      rooms: API.rooms
-   });
+   api_controller.get_room_list({}, undefined, undefined, function(info) {
+      var time_published = parseInt(info.time_published);
+      var hours = parseInt(time_published/3600);
+      var minutes = parseInt((time_published - hours*3600) / 60);
+      var seconds = parseInt(time_published - hours*3600 - minutes*60);
+      var time = hours + "h " + minutes + "m " + seconds + "s"; 
+
+      res.render('history', {
+         view: "history",
+         rooms: info.room_list,
+         sessions: info.n_sessions,
+         n_rooms: info.n_rooms,
+         n_users: info.n_users,
+         time_published: time
+      });
+   })
 };

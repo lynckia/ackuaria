@@ -91,7 +91,6 @@ exports.eventsOfType = function(req, res) {
 
 //Show total number of sessions, minutes published, streams and rooms used
 exports.info_rooms = function(req, res) {
-   var info = {};
    var initURL = req.query.init;
    var finalURL = req.query.final;
    var initDate, finalDate;
@@ -108,13 +107,22 @@ exports.info_rooms = function(req, res) {
       }
    }
    console.log("Queries:", queries);
+   get_room_list(queries, initDate, finalDate, function(info) {
+      res.send(info);
+   });
+};
+
+var get_room_list = exports.get_room_list = function(queries, initDate, finalDate, callback) {
+   var info = {};
    sessionsRegistry.getSessions(function(sessions){
       var nSessions = 0;
       var rooms = {};
       var users = {};
       var timePublished = 0;
+      var room_list = {};
 
       for (var s in sessions) {
+
          var roomID = sessions[s].roomID;
          var initSession = parseInt(sessions[s].initTimestamp);
          var finalSession = parseInt(sessions[s].finalTimestamp);
@@ -122,7 +130,7 @@ exports.info_rooms = function(req, res) {
          if (initSession > finalDate || finalSession < initDate) continue;
 
          if (!checkQueries(sessions[s].roomData, queries)) continue;
-
+         room_list[roomID] = sessions[s].roomData;
          nSessions++;
 
          if (!rooms[roomID]) rooms[roomID] = 0;
@@ -143,10 +151,6 @@ exports.info_rooms = function(req, res) {
             }
          }
       }
-      var room_list = [];
-      for (var r in rooms) {
-         room_list.push(r);
-      }
 
       info.n_sessions = nSessions;
       info.n_rooms = Object.size(rooms);
@@ -160,9 +164,9 @@ exports.info_rooms = function(req, res) {
 
       if (finalDate) info.finalDate = new Date(finalDate);
       else info.final_date = new Date();
-      res.send(info);
-   }) 
-};
+      callback(info);
+   })
+}
 
 
 exports.info_room = function(req, res) {
