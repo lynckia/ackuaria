@@ -131,13 +131,25 @@ exports.loadHistory = function(req, res) {
       var seconds = parseInt(time_published - hours*3600 - minutes*60);
       var time = hours + "h " + minutes + "m " + seconds + "s"; 
 
+      var keys_list = [];
+
+      for (var r in info.room_list) {
+         var keys = Object.keys(info.room_list[r].data);
+         for (var k in keys) {
+            if (keys[k] !== '_name' && keys_list.indexOf(keys[k]) === -1) {
+               keys_list.push(keys[k]);
+            }
+         }
+      }
+
       res.render('history', {
          view: "history",
          rooms: info.room_list,
          sessions: info.n_sessions,
          n_rooms: info.n_rooms,
          n_users: info.n_users,
-         time_published: time
+         time_published: time_published,
+         keys: keys_list
       });
    })
 };

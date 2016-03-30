@@ -38,13 +38,8 @@
 }
 
 #dateSelect {
-	font-family: "Nunito-Light";
-	color: #55739D;
-	background-color: #E6EEF5;
-	padding: 10px 15px 10px 15px;
-	width: 100%;
 	line-height: 25px;
-
+	height: 31px;
 }
 
 #leftCol {
@@ -64,8 +59,9 @@ input.date {
 	border-color: #55739D;
 	padding-left: 10px;
 	text-align: left;
-	margin-left: 10px;
 	line-height: inherit;
+	width: 100%;
+	padding-right: 20%;
 }
 .button {
 	border: 1px solid;
@@ -80,7 +76,22 @@ input.date {
 	margin: 0 10px 0 3px;
 
 }
+
 .dateIcon {
+    /* margin-right: 10px; */
+    width: 26px;
+    /* margin-right: 10px; */
+    width: 20%;
+    /* margin-left: -1px; */
+    background-color: white;
+    border: none;
+    color: #042763;
+    position: absolute;
+    right: 7px;
+    top: 3px;
+}
+
+.toolIcon {
 	margin-right: 10px; 
 	width: 26px;
 
@@ -97,32 +108,41 @@ input.date {
 #searchButton {
 	float:right;
 	margin-right: 0;
+	width: 100%;
 }
 #configButton {
 	margin: 0;
 	font-size: 17px;
+	width: 100%;
+	padding-right: 30%;
 }
+
 .removeButton {
 	margin: 0;
 	font-size: 15px;
 	max-width: 100% !important;
 	background-color: #878787;
 	border-color: #878787;
+	width: 100%;
 }
 
 #addButton {
 	margin: 0;
 	font-size: 15px;
 	max-width: 100% !important;
+	width: 100%;
 }
 
 #collapseButtonUp, #collapseButtonDown{
-	vertical-align: middle;
-	height: 100%;
-	line-height: inherit;
-	color: #042763;
-	font-size: 17px;
-	cursor: pointer;
+    vertical-align: middle;
+    height: 100%;
+    line-height: inherit;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 30%;
 }
 
 #deleteFiltersButton {
@@ -148,7 +168,8 @@ input.date {
 	padding: 10px 15px 10px 15px;
 	width: 100%;
 	line-height: 25px;
-	margin: 10px ;
+	/*margin-top: 40px;*/
+	margin-left: 0px;
 	text-align: center;
 }
 
@@ -165,10 +186,12 @@ input.date {
 }
 #custom-search-input {
 	height: 26px;
+    position: absolute;
+    width: 30%;
+    right: 0;
 }
 
 .input-group {
-	float: left !important;
 	padding: 0 !important;
 }
 
@@ -177,11 +200,8 @@ input.date {
 	padding: 0;
 }
 .filter_row {
-	margin: 0 0 15px 0;
-}
-.filters {
-	padding: 0;
-	color: #042763;
+	height: 40px;
+	padding-top: 10px;
 }
 
 input.filter {
@@ -194,15 +214,48 @@ input.filter {
 }
 
 .filters input.filter {
-	margin: 0 5px 0 5px;
 	padding: 10px;
-	max-width: 65%;
+	width: 100%;
 }
 .filters span {
 	max-width: 35%;
 }
 
+.key_value select {
+	height: 26px !important;
+	-webkit-border-radius: 7px !important;
+    -moz-border-radius: 7px !important;
+    border-radius: 7px !important;
+    border-color: #042763 !important;
+    font-family: "Nunito-Light";
+}
 
 #rooms {
 	margin: 0;
+}
+
+.room {
+	cursor: pointer;
+
+}
+
+.room.selected, .room_detail {
+	background-color: #E6EEF5;
+}
+
+
+.table-hover>tbody>tr:hover {
+    background-color: #CFDCE8;
+}
+
+.room_empty:hover {
+	background-color: white !important;
+}
+
+.room_detail:hover {
+	background-color: #E6EEF5 !important;
+}
+
+.room_detail span {
+	padding-left: 30px;
 }

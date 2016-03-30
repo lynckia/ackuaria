@@ -130,14 +130,28 @@ var get_room_list = exports.get_room_list = function(queries, initDate, finalDat
          if (initSession > finalDate || finalSession < initDate) continue;
 
          if (!checkQueries(sessions[s].roomData, queries)) continue;
-         room_list[roomID] = sessions[s].roomData;
+
+         if (!room_list[roomID]) {
+            room_list[roomID] = {};
+            room_list[roomID].n_sessions = 0;
+            room_list[roomID].time_published = 0;
+            room_list[roomID].n_users = 0;
+         }
+
+         // we use the metadata of the last session done in the room
+         room_list[roomID].data = sessions[s].roomData;
+         room_list[roomID].n_sessions++;
+
          nSessions++;
 
          if (!rooms[roomID]) rooms[roomID] = 0;
 
          for (var st in sessions[s].streams){
             var stream = sessions[s].streams[st];
-            if (!users[stream.userID]) users[stream.userID] = 0;
+            if (!users[stream.userID]) {
+               users[stream.userID] = 0;
+               room_list[roomID].n_users++;
+            }
 
             var initPublish = parseInt(stream.initPublish);
             var finalPublish = parseInt(stream.finalPublish);
@@ -148,6 +162,7 @@ var get_room_list = exports.get_room_list = function(queries, initDate, finalDat
                rooms[roomID] += streamTime;
                users[stream.userID] += streamTime;
                timePublished += streamTime;
+               room_list[roomID].time_published += streamTime;
             }
          }
       }
@@ -164,6 +179,7 @@ var get_room_list = exports.get_room_list = function(queries, initDate, finalDat
 
       if (finalDate) info.finalDate = new Date(finalDate);
       else info.final_date = new Date();
+
       callback(info);
    })
 }
