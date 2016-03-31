@@ -75,6 +75,7 @@ $(document).ready(function(){
 	
 	$('#deleteFiltersButton').click(function() {
 		delete_all_filters();
+		search();
 	});
 
 	$('input').keyup(function(e) {
