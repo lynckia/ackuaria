@@ -237,6 +237,7 @@ input.filter {
 	margin: 0;
 	max-height: calc(100% - 48px);
 	overflow-y: scroll;
+	margin-top: 12px;
 }
 
 #rooms table {
