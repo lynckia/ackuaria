@@ -189,6 +189,7 @@ exports.info_room = function(req, res) {
    var roomID = req.params.roomID;
    var info = {};  
    var users = {};
+   var room_list = {};
 
    var streams = [];
 
@@ -223,22 +224,24 @@ exports.info_room = function(req, res) {
                if (initPublish > finalDate || finalPublish < initDate) continue;
                var streamTime = parseInt(((finalPublish - initPublish) / 1000).toFixed(0));
                users[stream.userID] += streamTime;
-
                //streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
                timePublished += streamTime;
             }
-            
          }
       }
-      info.room_id = roomID;
+      var room_list = {};
+      room_list[roomID] = {time_published: timePublished, n_users: Object.size(users), n_sessions: nSessions, room_data: room_data };
+
       info.n_sessions = nSessions;
-      info.time_published = timePublished;
-      info.room_data = room_data;
+      info.n_rooms = 1;
+      info.room_list = room_list;
       info.n_users = Object.size(users);
+      info.time_published = timePublished;
+      info.query = {};
 
       if (initDate) info.init_date = new Date(initDate);
       else info.init_date = "Not specified Date";
-      
+
       if (finalDate) info.final_date = new Date(finalDate);
       else info.final_date = new Date();
       //info.streams = streams;
