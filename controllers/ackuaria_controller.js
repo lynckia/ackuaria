@@ -128,10 +128,12 @@ exports.loadHistory = function(req, res) {
       var keys_list = [];
 
       for (var r in info.room_list) {
-         var keys = Object.keys(info.room_list[r].data);
-         for (var k in keys) {
-            if (keys[k] !== '_name' && keys_list.indexOf(keys[k]) === -1) {
-               keys_list.push(keys[k]);
+         if (info.room_list[r].data) {
+            var keys = Object.keys(info.room_list[r].data);
+            for (var k in keys) {
+               if (keys[k] !== '_name' && keys_list.indexOf(keys[k]) === -1) {
+                  keys_list.push(keys[k]);
+               }
             }
          }
       }

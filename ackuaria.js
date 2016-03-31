@@ -85,7 +85,6 @@ ackuaria_router.get('/room', ackuariaController.updateRooms, ackuariaController.
 
 ackuaria_router.get('/pub', ackuariaController.updateRooms, ackuariaController.loadSubscribers)
 
-//Por ahora carga las Rooms existentes en Nuve. TO DO: cablear a la API 
 ackuaria_router.get('/history', ackuariaController.updateRooms, ackuariaController.loadHistory)
 
 ackuaria_router.get('/sessions', ackuariaController.updateRooms, apiController.sessions)
