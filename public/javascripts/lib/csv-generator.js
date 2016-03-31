@@ -15,7 +15,8 @@ var get_csv = function (data) {
 
 	for (var r in rooms) {
 		room = rooms[r];
-		room_name = (room.data || {})._name || '-';
+		room.data = room.data || {};
+		room_name = room.data._name;
 		delete room.data._name;
 		csv = csv + r + ';' + room_name + ';' + room.n_sessions + ';' + room.n_users + ';' + room.time_published + ';' + JSON.stringify(room.data) +'\n';
 	}
