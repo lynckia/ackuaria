@@ -76,7 +76,7 @@ API.api = {
                             else nSession = API.sessions_active[roomID].nSession + 1;
                             sessionID = roomID + "_" + nSession;
                             var roomData = {};
-                            roomData._name = API.rooms[roomID].roomName
+                            roomData._name = API.rooms[roomID].roomName;
                             for (var d in API.rooms[roomID].data) {
                                 roomData[d] = API.rooms[roomID].data[d];
                             }

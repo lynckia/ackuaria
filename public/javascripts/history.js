@@ -208,7 +208,7 @@ var paintRoomsList = function(room_list){
 };
 
 var createNewRoomList = function(roomID, room){
-	var roomName = room.data._name;
+	var roomName = (room.data || {})._name || '-';
 	var nSessions = room.n_sessions;
 	var nUsers = room.n_users;
 	var time = room.time_published;
