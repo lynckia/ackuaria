@@ -216,7 +216,7 @@ var createNewRoomList = function(roomID, room){
     $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '">' + 
     	'<td class="roomID">'+ roomID + '</td>' + 
     	'<td class="roomName">' + roomName + '</td>' +
-    	'<td><span class="collapseButtonDown fa fa-angle-down" id="collapseButtonDown_' + roomID + '"></span>' + 
+    	'<td class="collapseButtons"><span class="collapseButtonDown fa fa-angle-down" id="collapseButtonDown_' + roomID + '"></span>' + 
 		'<span class="collapseButtonUp fa fa-angle-up hidden" id="collapseButtonUp_' + roomID + '"></span></td>' +
     	'</tr>');
     $('#bodyTable').append('<tr class="room_detail show_list hidden" id="room_detail_' + roomID + '" data-room_id="' + roomID + '"><td colspan="3">' + 
