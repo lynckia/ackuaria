@@ -7,16 +7,6 @@
 
     <div id="history" class="row">
         <div id="leftCol" class="col-md-7">
-            <!--<div id="custom-search-input">
-                <div class="input-group">
-                    <input id="searchBar" type="text" class="filter search-query form-control" placeholder="Search" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-danger" type="button">
-                            <span class=" glyphicon glyphicon-search"></span>
-                        </button>
-                    </span>
-                </div>
-            </div>-->
             <div id="overall">
                 <div class="row">
                     <div class="col-md-2">
@@ -31,59 +21,63 @@
                     <div class="col-md-4">
                         <span>Time published </span><span class="info bold dark" id="stats_time"><%- info.time_published %></span>
                     </div>
-
-                    <div class="col-md-2">
-                         <span class="button" id="exportButton">Export</span>
-                    </div>
                 </div>
             </div>
 
             <div id="rooms" class="row">
-                
+                <div class="roomContainer show_list">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">ID</th>
+                                <th class="col-md-3">Room Name</th>
+                                <th class="col-md-2">
+                                    <button class="button" id="exportButton">
+                                         <span><i class="fa fa-share-square-o"></i>Export .csv</span>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTable">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div id="rightCol" class="col-md-5">
             <div id="filtersContainer">
                 <div class="row" id="dateSelect">
-                    <div class="col-md-1">
-                        <span>From</span>
+                    <div class="col-md-2">
+                        <span>Dates</span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <input class="date" type="text" name="initCalendar" id="initCalendar" placeholder="dd/mm/yyyy">
                         <span class="dateIcon button fa fa-calendar" id="initButton"></span>
                     </div>
-                    <div class="col-md-1">
-                        <span>to</span> 
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <input class="date" type="text" name="finalCalendar" id="finalCalendar" placeholder="dd/mm/yyyy">
                         <span class="dateIcon button fa fa-calendar" id="finalButton"></span>
                     </div>
-                    <div class="col-md-2">
-                        <span class="toolIcon button fa fa-cog" id="configButton"></span>
-                        <span class="collapsed fa fa-angle-down" id="collapseButtonDown"></span>
-                        <span class="collapsed fa fa-angle-up" id="collapseButtonUp" hidden></span>
-                    </div>
                 </div>
                 <div class="row filter_row" id="idFilter">
-                    <div class="filters col-md-1">
+                    <div class="filters col-md-2">
                         <span>ID</span>
                     </div>
-                    <div class="filters col-md-4">
-                        <input id="room_id" class="filter" type="text" placeholder="">
+                    <div class="filters col-md-10">
+                        <input id="room_id" class="filter" type="text" placeholder="Search by ID">
                     </div>
                 </div>
                 <div class="row filter_row" id="idFilter">
-                    <div class="filters col-md-1">
+                    <div class="filters col-md-2">
                         <span>Name</span>
                     </div>
-                    <div class="filters col-md-4">
-                        <input id="room_name" class="filter" type="text" placeholder="">
+                    <div class="filters col-md-10">
+                        <input id="room_name" class="filter" type="text" placeholder="Search by name">
                     </div>
                 </div>
                 <!-- Añadir esto -->
                 <div class="row filter_row key_value" id="filter_row_0">
-                    <div class="filters col-md-1">
+                    <div class="filters col-md-2">
                         <span>Key</span>
                     </div>
                     <div class="filters col-md-4">
@@ -97,33 +91,32 @@
                         </div>
                     </div>
                     <div class="filters col-md-1">
-                        <span>Value</span>
+                        <span class="value">Value</span>
                     </div>
                     <div class="filters col-md-4">
-                        <input id="value_0" class="filter" type="text" placeholder="e.g. true">
+                        <input id="value_0" class="filter" type="text" placeholder="Insert value">
                     </div>
-                    <div class="filters col-md-2">
+                    <div class="filters col-md-1">
                         <span class="button toolIcon fa fa-times removeButton" todelete="filter_row_0" id="remove_button_1"></span>
                     </div>
                 </div>
                 <!-- Hasta aquí -->
 
-                <div class="row filter_row" id="addFilter">
-                    <div class="filters col-md-5">
-                    </div>
-                    <div class="filters col-md-5">
-                    </div>
-                    <div class="filters col-md-2">
+                <div class="row filter_row" id="addFilter_row">
+                    <div class="filters col-md-12">
                         <span class="button toolIcon fa fa-plus" id="addButton"></span>
                     </div>
                 </div>
 
 
-                <div class="row">
-                    <div class="col-md-10">
-                    </div>
-                    <div class="col-md-2">
-                        <span class="toolIcon button fa fa-search" id="searchButton"></span>
+                <div class="row" id="actions_row">
+                    <div class="col-md-12">
+                        <button class="actionbutton button" id="deleteFiltersButton">
+                             <span><i class="fa fa-times"></i>Clear</span>
+                        </button>
+                        <button class="actionbutton button" id="searchButton">
+                             <span><i class="fa fa-search"></i>Search</span>
+                        </button>
                     </div>
                 </div>
             </div>

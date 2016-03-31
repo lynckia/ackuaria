@@ -104,61 +104,52 @@ input.date {
 #exportButton {
 	float: right;
 	padding: 0 10px 0 10px;
+	font-family: "Nunito-Light";
 }
 
-#searchButton {
-	float:right;
-	margin-right: 0;
-	width: 100%;
-}
-#configButton {
-	margin: 0;
-	font-size: 17px;
-	width: 100%;
-	padding-right: 30%;
+#exportButton i {
+	margin-right: 10px;
 }
 
-.removeButton {
-	margin: 0;
-	font-size: 15px;
-	max-width: 100% !important;
-	background-color: #878787;
-	border-color: #878787;
-	width: 100%;
+#addFilter_row {
+	text-align: right;
+	height: 36px;
 }
 
-#addButton {
-	margin: 0;
-	font-size: 15px;
-	max-width: 100% !important;
-	width: 100%;
+#actions_row {
+	text-align: right;
 }
 
-#collapseButtonUp, #collapseButtonDown{
-    vertical-align: middle;
-    height: 100%;
-    line-height: inherit;
-    color: white;
-    font-size: 17px;
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    right: 30%;
+.actionButton {
+	margin-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 2px;
+    margin-right: 0;
+}
+
+.actionButton i {
+	margin-right: 10px;
 }
 
 #deleteFiltersButton {
-	float: right;
-	padding: 0 10px 0 10px;
 	background-color: #878787;
 	border-color: #878787;
-	max-width: 100%;
-
 }
-#applyFiltersButton {
-	float: left;
-	padding: 0 10px 0 10px;
-	max-width: 100%;
 
+.removeButton {
+    font-size: 15px;
+    background-color: #878787;
+    border-color: #878787;
+    position: absolute;
+    right: 7px;
+}
+
+#addButton {
+ 	font-size: 15px;
+    border-color: #878787;
+    position: absolute;
+    right: 7px;
 }
 
 #overall {
@@ -179,8 +170,10 @@ input.date {
 }
 
 #filtersContainer {
-	border: 1px solid #042763;
+	color: #55739D;
+	background-color: #E6EEF5;
 	padding: 20px 15px 20px 15px;
+	font-family: "Nunito-Light";
 }
 #search {
 	margin: 0;
@@ -201,7 +194,6 @@ input.date {
 	padding: 0;
 }
 .filter_row {
-	height: 40px;
 	padding-top: 10px;
 }
 
@@ -218,8 +210,9 @@ input.filter {
 	padding: 10px;
 	width: 100%;
 }
-.filters span {
-	max-width: 35%;
+
+.key_value {
+	height: 41px;
 }
 
 .key_value select {
@@ -231,8 +224,17 @@ input.filter {
     font-family: "Nunito-Light";
 }
 
+.value {
+	margin-left: -10px;
+}
+
 #rooms {
 	margin: 0;
+}
+
+#rooms table {
+	font-size: 14px;
+	font-family: "Nunito-Light";
 }
 
 .room {

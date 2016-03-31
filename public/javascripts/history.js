@@ -11,18 +11,6 @@ $(document).ready(function(){
 	$("#initCalendar").datepicker();
 	$("#finalCalendar").datepicker();
 
-	$(".filter_row").hide();
-	$("#collapseButtonUp").hide();
-
-	$("#configButton, .collapsed").click(function() {
-		$(".filter_row").toggle();
-		$("#collapseButtonUp").toggle();
-		$("#collapseButtonDown").toggle();
-		// $("#searchBar").toggleDisabled();
-		// $('#searchBar').val("");
-		// $('#searchBar').keyup();
-	})
-	
 	document.getElementById("initButton").onclick = function(e) {
 		$("#initCalendar").focus();
 	}
@@ -61,9 +49,16 @@ $(document).ready(function(){
 
 
 	var delete_all_filters = function() {
-		for (var i=0; i<=filter_count; i++){
+		$("#initCalendar").val('');
+		$("#finalCalendar").val('');
+		$('#room_id').val('');
+		$('#room_name').val('');
+
+		$('#key_0 option:eq(0)').prop('selected', true);
+		$('#value_0').val('');
+
+		for (var i=1; i<=filter_count; i++){
 			var target = '#filter_row_' + i;
-			console.log(target);
 			$(target).remove();
 		}
 	}
@@ -71,7 +66,7 @@ $(document).ready(function(){
 	var new_filter = function() {
 		filter_count++;
 		var html = '<div class="row filter_row key_value" id="filter_row_' + filter_count + '">' + 
-			'<div class="filters col-md-1"><span>Key </span></div>' +
+			'<div class="filters col-md-2"><span>Key </span></div>' +
 			'<div class="filters col-md-4"><div class="form-group">' + 
             '<select class="form-control" id="key_' + filter_count + '">' +
             '<option value="">Select key</option>';
@@ -81,12 +76,12 @@ $(document).ready(function(){
         }
 
         html += '</select></div></div>' + 
-			'<div class="filters col-md-1"><span>Value </span></div>' + 
-			'<div class="filters col-md-4"><input id="value_' + filter_count + '" class="filter" type="text" placeholder="e.g. true"></div>' + 
-			'<div class="filters col-md-2"><span class="button toolIcon fa fa-times removeButton" todelete="filter_row_' + filter_count + '" id="remove_button_' + filter_count + '"></span></div>' + 
+			'<div class="filters col-md-1"><span class="value">Value </span></div>' + 
+			'<div class="filters col-md-4"><input id="value_' + filter_count + '" class="filter" type="text" placeholder="Insert value"></div>' + 
+			'<div class="filters col-md-1"><span class="button toolIcon fa fa-times removeButton" todelete="filter_row_' + filter_count + '" id="remove_button_' + filter_count + '"></span></div>' + 
 			'</div>';
 
-		$(html).insertBefore($('#addFilter'));
+		$(html).insertBefore($('#addFilter_row'));
                            
 		$('#remove_button_' + filter_count).click(function() {
 			var target = '#' + $(this).attr('todelete');
@@ -126,7 +121,7 @@ $(document).ready(function(){
 			var key = $('#key_' + i).val();
 			var value = $('#value_' + i).val();
 
-			if (key !== '') {
+			if (key !== '' && key !== undefined) {
 				url = url + key + '=' + value + '&';  
 			}
 		}
@@ -200,9 +195,8 @@ var paintRoomsStats = function(data){
 };
 
 var paintRoomsList = function(room_list){
-    $('#rooms').html("");
+    $('#bodyTable').html("");
     var nRooms = Object.keys(room_list).length;
-    $('#rooms').append('<div class="roomContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     for (var room in room_list) {
         var roomID = room;
         createNewRoomList(roomID, room_list[room]);        
@@ -219,8 +213,8 @@ var createNewRoomList = function(roomID, room){
 	var nUsers = room.n_users;
 	var time = room.time_published;
 
-    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><td class="roomID">'+ roomID + '</td><th class="roomName">' + roomName + '</th></tr>');
-    $('#bodyTable').append('<tr class="room_detail show_list hidden" id="room_detail_' + roomID + '" data-room_id="' + roomID + '"><td colspan="2">' + 
+    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><td class="roomID">'+ roomID + '</td><td colspan="2" class="roomName">' + roomName + '</td></tr>');
+    $('#bodyTable').append('<tr class="room_detail show_list hidden" id="room_detail_' + roomID + '" data-room_id="' + roomID + '"><td colspan="3">' + 
     	'<span>Sessions </span><span class="info bold dark">' +  nSessions + '</span>' +
     	'<span>Users </span><span class="info bold dark">' +  nUsers + '</span>' +
     	'<span>Time published </span><span class="info bold dark">' +  time + '</span>' +
