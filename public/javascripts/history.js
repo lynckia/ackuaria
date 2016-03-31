@@ -17,31 +17,6 @@ $(document).ready(function(){
 	document.getElementById("finalButton").onclick = function(e) {
 		$("#finalCalendar").focus();
 	}
-	$('#searchBar').keyup(function () {
-        search();
-    });
-
-    var search = function() {
-        var filter_array = new Array();
-        var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
-        filter_array = filter.split(' '); // split the user input at the spaces
-        var arrayLength = filter_array.length; // Get the length of the filter array
-        $('.room').each(function() {
-            var _this = $(this);
-            var title1 = _this.find('.roomID').text().toLowerCase();
-            var title2 = _this.find('.roomName').text().toLowerCase();
-            var hidden = 0;
-            for (var i = 0; i < arrayLength; i++) {
-                if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
-                    _this.hide();
-                    hidden = 1;
-                }
-            }
-            if (hidden == 0)  {
-               _this.show();
-            }
-        });
-    }
 
 	var delete_filter = function(target) {
 		$(target).remove();
@@ -102,7 +77,21 @@ $(document).ready(function(){
 		delete_all_filters();
 	});
 
+	$('input').keyup(function(e) {
+		console.log('k', e);
+
+		e = e || event;
+		if (e.keyCode === 13) {
+			search();
+		}
+		return true;
+	});
+
 	$('#searchButton').click(function() {
+		search();
+	});
+
+	var search = function () {
 
 		var url = 'info/rooms?';
 
@@ -110,7 +99,7 @@ $(document).ready(function(){
 		var room_name = $('#room_name').val();
 
 		if (room_id !== '') {
-			url = 'info/' + room_id + '?';
+			url = 'info/rooms/' + room_id + '?';
 		}
 
 		if (room_name !== '') {
@@ -166,7 +155,7 @@ $(document).ready(function(){
 				}
 			}
 		});
-	});
+	}
 
 	$('#exportButton').click(function() {
 		var csv = get_csv(_last_data);
