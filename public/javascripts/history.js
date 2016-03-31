@@ -211,8 +211,6 @@ var paintRoomsList = function(room_list){
     if (nRooms === 0) {
     	$('#bodyTable').append('<tr class="show_list room_empty"><td colspan="2"><span>No rooms</span></td></tr>');
     }
-
-    Sortable.init()
 };
 
 var createNewRoomList = function(roomID, room){

@@ -20,6 +20,10 @@
 	right: 0;
 }
 
+#historical {
+	margin-left: 10px !important;
+	border-radius: 3px !important;	
+}
 
 #roomsContainer{
 	position: relative;

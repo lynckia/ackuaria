@@ -17,14 +17,15 @@
 #title {
 	margin-top: 30px;
 }
-.back {
+#back {
 	float: right;
 	font-size: 15px;
 	color: #55739D;
+	cursor: pointer;
 }
 
-#back {
-	cursor: pointer;
+#back:hover {
+	text-decoration: none;
 }
 
 #history {
@@ -247,6 +248,10 @@ input.filter {
 .table-hover>tbody>tr:hover {
     background-color: #CFDCE8;
 }
+
+.table thead tr th {
+	cursor: default !important;
+} 
 
 .room_empty:hover {
 	background-color: white !important;
