@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	var filter_count = 0;
+	var _last_data = info;
 
 	$.fn.toggleDisabled = function() {
 		return this.each(function(){
@@ -72,12 +73,13 @@ $(document).ready(function(){
 		var html = '<div class="row filter_row key_value" id="filter_row_' + filter_count + '">' + 
 			'<div class="filters col-md-1"><span>Key </span></div>' +
 			'<div class="filters col-md-4"><div class="form-group">' + 
-            '<select class="form-control" id="key_' + filter_count + '">';
+            '<select class="form-control" id="key_' + filter_count + '">' +
+            '<option value="">Select key</option>';
 
         for (var k in keys) {
         	html = html + '<option>' + keys[k] + '</option>';
         }
-        
+
         html += '</select></div></div>' + 
 			'<div class="filters col-md-1"><span>Value </span></div>' + 
 			'<div class="filters col-md-4"><input id="value_' + filter_count + '" class="filter" type="text" placeholder="e.g. true"></div>' + 
@@ -86,10 +88,6 @@ $(document).ready(function(){
 
 		$(html).insertBefore($('#addFilter'));
                            
-            
-		
-
-
 		$('#remove_button_' + filter_count).click(function() {
 			var target = '#' + $(this).attr('todelete');
 			delete_filter(target);
@@ -158,15 +156,12 @@ $(document).ready(function(){
 			url += 'final=' + f_day  + f_month + f_year;
 		}
 
-		
-		console.log('voy', url);
-
 		$.ajax({
 			url: url,
 			type: 'GET',
 			statusCode: {
 				200: function (data, status, xhr) {
-					console.log(data);
+					_last_data = data;
 					paintRoomsList(data.room_list);
 					paintRoomsStats(data);
 				},
@@ -177,11 +172,25 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	$('#exportButton').click(function() {
+		var csv = get_csv(_last_data);
+
+        var blob = new Blob([csv], {type: "text/plain"});
+        var blobURL = window.URL.createObjectURL(blob);
+
+        var a = document.createElement("a");
+	    document.body.appendChild(a);
+	    a.style = "display: none";
+	        
+        a.href = blobURL;
+        a.download = 'ackuaria.csv';
+        a.click();
+        window.URL.revokeObjectURL(blobURL);
+        document.body.removeChild(a);
+        
+	});
 });
-
-var getRooms = function() {
-
-}
 
 var paintRoomsStats = function(data){
     $('#stats_sessions').html(data.n_sessions);

@@ -20,16 +20,16 @@
             <div id="overall">
                 <div class="row">
                     <div class="col-md-2">
-                        <span>Sessions </span><span class="info bold dark" id="stats_sessions"> <%- sessions %></span>
+                        <span>Sessions </span><span class="info bold dark" id="stats_sessions"> <%- info.n_sessions %></span>
                     </div>
                     <div class="col-md-2">
-                        <span>Rooms </span><span class="info bold dark" id="stats_rooms"><%- n_rooms %></span>
+                        <span>Rooms </span><span class="info bold dark" id="stats_rooms"><%- info.n_rooms %></span>
                     </div>
                     <div class="col-md-2">
-                        <span>Users </span><span class="info bold dark" id="stats_users"><%- n_users %></span>
+                        <span>Users </span><span class="info bold dark" id="stats_users"><%- info.n_users %></span>
                     </div>
                     <div class="col-md-4">
-                        <span>Time published </span><span class="info bold dark" id="stats_time"><%- time_published %></span>
+                        <span>Time published </span><span class="info bold dark" id="stats_time"><%- info.time_published %></span>
                     </div>
 
                     <div class="col-md-2">
@@ -89,6 +89,7 @@
                     <div class="filters col-md-4">
                         <div class="form-group">
                           <select class="form-control" id="key_0">
+                            <option value="">Select key</option>
                             <% for (var k in keys) { %>
                             <option><%=keys[k]%></option>
                             <% } %>
@@ -130,11 +131,10 @@
     </div>
 
 </div>
+<script src="javascripts/lib/csv-generator.js"></script>
+
 <script>
-
-  var rooms = <%- JSON.stringify(rooms) %>;
+  var info = <%- JSON.stringify(info) %>;
   var keys = <%- JSON.stringify(keys) %>;
-
-  paintRoomsList(rooms);
-
+  paintRoomsList(info.room_list);
 </script>

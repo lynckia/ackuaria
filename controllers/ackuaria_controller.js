@@ -144,11 +144,7 @@ exports.loadHistory = function(req, res) {
 
       res.render('history', {
          view: "history",
-         rooms: info.room_list,
-         sessions: info.n_sessions,
-         n_rooms: info.n_rooms,
-         n_users: info.n_users,
-         time_published: time_published,
+         info: info,
          keys: keys_list
       });
    })
