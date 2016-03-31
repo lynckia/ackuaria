@@ -203,7 +203,9 @@ exports.info_room = function(req, res) {
    sessionsRegistry.getSessionsOfRoom(roomID, function(sessions){
       var nSessions = 0;
       var timePublished = 0;
+      var nRooms = 0;
       var room_data;
+      var room_id = undefined;
 
       for (var s in sessions) {
          var initSession = parseInt(sessions[s].initTimestamp);
@@ -226,14 +228,20 @@ exports.info_room = function(req, res) {
                users[stream.userID] += streamTime;
                //streams.push({streamID: stream.streamID, timePublished: streamTime, userID: stream.userID});
                timePublished += streamTime;
+
+               // We confirm that the room ID actually corresponds to a real Room;
+               room_id = roomID;
+               nRooms = 1;
             }
          }
       }
-      var room_list = {};
-      room_list[roomID] = {time_published: timePublished, n_users: Object.size(users), n_sessions: nSessions, room_data: room_data };
 
+      var room_list = {};
+      if (room_id) {
+         room_list[roomID] = {time_published: timePublished, n_users: Object.size(users), n_sessions: nSessions, room_data: room_data };
+      }
       info.n_sessions = nSessions;
-      info.n_rooms = 1;
+      info.n_rooms = nRooms;
       info.room_list = room_list;
       info.n_users = Object.size(users);
       info.time_published = timePublished;
