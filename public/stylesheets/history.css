@@ -38,7 +38,7 @@ body {
 	padding-bottom: 50px;
 	height: 100%;
 	width: 100%;
-	overflow-y: hidden;
+	overflow-y: scroll;
 
 }
 
@@ -84,11 +84,9 @@ input.date {
 }
 
 .dateIcon {
-    /* margin-right: 10px; */
     width: 26px;
-    /* margin-right: 10px; */
     width: 20%;
-    /* margin-left: -1px; */
+    height: 20px;
     background-color: white;
     border: none;
     color: #042763;
@@ -127,9 +125,7 @@ input.date {
 
 .actionButton {
 	margin-top: 10px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 2px;
+    padding: 3px 15px;
     margin-right: 0;
 }
 
@@ -179,6 +175,8 @@ input.date {
 	background-color: #E6EEF5;
 	padding: 20px 15px 20px 15px;
 	font-family: "Nunito-Light";
+	max-height: 100%;
+	overflow-y: scroll;
 }
 #search {
 	margin: 0;
