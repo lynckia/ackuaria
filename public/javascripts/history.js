@@ -68,7 +68,7 @@ $(document).ready(function(){
 		var html = '<div class="row filter_row key_value" id="filter_row_' + filter_count + '">' + 
 			'<div class="filters col-md-2"><span>Key </span></div>' +
 			'<div class="filters col-md-4"><div class="form-group">' + 
-            '<select class="form-control" id="key_' + filter_count + '">' +
+            '<select class="form-control key" id="key_' + filter_count + '">' +
             '<option value="">Select key</option>';
 
         for (var k in keys) {
@@ -76,8 +76,8 @@ $(document).ready(function(){
         }
 
         html += '</select></div></div>' + 
-			'<div class="filters col-md-1"><span class="value">Value </span></div>' + 
-			'<div class="filters col-md-4"><input id="value_' + filter_count + '" class="filter" type="text" placeholder="Insert value"></div>' + 
+			'<div class="filters col-md-1"><span class="value_label">Value </span></div>' + 
+			'<div class="filters col-md-4"><input id="value_' + filter_count + '" class="filter value" type="text" placeholder="Insert value"></div>' + 
 			'<div class="filters col-md-1"><span class="button toolIcon fa fa-times removeButton" todelete="filter_row_' + filter_count + '" id="remove_button_' + filter_count + '"></span></div>' + 
 			'</div>';
 
@@ -93,7 +93,7 @@ $(document).ready(function(){
 		new_filter();
 	}
 
-	$('#remove_button_1').click(function() {
+	$('#remove_button_0').click(function() {
 		var target = '#' + $(this).attr('todelete');
 		delete_filter(target);
 	});
@@ -118,8 +118,8 @@ $(document).ready(function(){
 		}
 
 		for (var i = 0; i < $('.key_value').length; i++) {
-			var key = $('#key_' + i).val();
-			var value = $('#value_' + i).val();
+			var key = $('.key:eq(' + i + ')').val();
+			var value = $('.value:eq(' + i + ')').val();
 
 			if (key !== '' && key !== undefined) {
 				url = url + key + '=' + value + '&';  
@@ -191,7 +191,7 @@ var paintRoomsStats = function(data){
     $('#stats_sessions').html(data.n_sessions);
     $('#stats_rooms').html(data.n_rooms);
     $('#stats_users').html(data.n_users);
-    $('#stats_time').html(data.time_published);
+    $('#stats_time').html(getHumanTime(data.time_published));
 };
 
 var paintRoomsList = function(room_list){
@@ -213,24 +213,45 @@ var createNewRoomList = function(roomID, room){
 	var nUsers = room.n_users;
 	var time = room.time_published;
 
-    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><td class="roomID">'+ roomID + '</td><td colspan="2" class="roomName">' + roomName + '</td></tr>');
+    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '">' + 
+    	'<td class="roomID">'+ roomID + '</td>' + 
+    	'<td class="roomName">' + roomName + '</td>' +
+    	'<td><span class="collapseButtonDown fa fa-angle-down" id="collapseButtonDown_' + roomID + '"></span>' + 
+		'<span class="collapseButtonUp fa fa-angle-up hidden" id="collapseButtonUp_' + roomID + '"></span></td>' +
+    	'</tr>');
     $('#bodyTable').append('<tr class="room_detail show_list hidden" id="room_detail_' + roomID + '" data-room_id="' + roomID + '"><td colspan="3">' + 
     	'<span>Sessions </span><span class="info bold dark">' +  nSessions + '</span>' +
     	'<span>Users </span><span class="info bold dark">' +  nUsers + '</span>' +
-    	'<span>Time published </span><span class="info bold dark">' +  time + '</span>' +
+    	'<span>Time published </span><span class="info bold dark">' +  getHumanTime(time) + '</span>' +
     	'</td></tr>');
     $('#room_' + roomID).click(function() {
         var room_id = $(this).data('room_id');
 
+        $("#collapseButtonUp_" + room_id).removeClass('hidden');
+		$("#collapseButtonDown_" + room_id).addClass('hidden');
+
        	$('.room').removeClass('selected');
+       	$(".collapseButtonUp").addClass('hidden');
+		$(".collapseButtonDown").removeClass('hidden');
+
         if (!$('#room_detail_' + room_id).hasClass('hidden')) {
         	$('.room_detail').addClass('hidden');
+        	
         } else {
         	$('.room_detail').addClass('hidden');
         	$('#room_detail_' + room_id).removeClass('hidden');
         	$('#room_' + room_id).addClass('selected');
+        	$("#collapseButtonUp_" + room_id).removeClass('hidden');
+			$("#collapseButtonDown_" + room_id).addClass('hidden');
         }
 
     })
-}
+};
 
+var getHumanTime = function (secs) {
+	var hours = parseInt(secs/3600);
+	var minutes = parseInt((secs - hours*3600) / 60);
+	var seconds = parseInt(secs - hours*3600 - minutes*60);
+	var time = hours + "h " + minutes + "m " + seconds + "s"; 
+	return time;
+}

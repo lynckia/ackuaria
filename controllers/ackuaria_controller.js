@@ -125,12 +125,6 @@ exports.loadSubscribers = function(req, res) {
 
 exports.loadHistory = function(req, res) {
    api_controller.get_room_list({}, undefined, undefined, function(info) {
-      var time_published = parseInt(info.time_published);
-      var hours = parseInt(time_published/3600);
-      var minutes = parseInt((time_published - hours*3600) / 60);
-      var seconds = parseInt(time_published - hours*3600 - minutes*60);
-      var time = hours + "h " + minutes + "m " + seconds + "s"; 
-
       var keys_list = [];
 
       for (var r in info.room_list) {

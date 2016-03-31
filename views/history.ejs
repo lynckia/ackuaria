@@ -10,16 +10,16 @@
             <div id="overall">
                 <div class="row">
                     <div class="col-md-2">
-                        <span>Sessions </span><span class="info bold dark" id="stats_sessions"> <%- info.n_sessions %></span>
+                        <span>Sessions </span><span class="info bold dark" id="stats_sessions"></span>
                     </div>
                     <div class="col-md-2">
-                        <span>Rooms </span><span class="info bold dark" id="stats_rooms"><%- info.n_rooms %></span>
+                        <span>Rooms </span><span class="info bold dark" id="stats_rooms"></span>
                     </div>
                     <div class="col-md-2">
-                        <span>Users </span><span class="info bold dark" id="stats_users"><%- info.n_users %></span>
+                        <span>Users </span><span class="info bold dark" id="stats_users"></span>
                     </div>
                     <div class="col-md-4">
-                        <span>Time published </span><span class="info bold dark" id="stats_time"><%- info.time_published %></span>
+                        <span>Time published </span><span class="info bold dark" id="stats_time"></span>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     </div>
                     <div class="filters col-md-4">
                         <div class="form-group">
-                          <select class="form-control" id="key_0">
+                          <select class="form-control key" id="key_0">
                             <option value="">Select key</option>
                             <% for (var k in keys) { %>
                             <option><%=keys[k]%></option>
@@ -91,13 +91,13 @@
                         </div>
                     </div>
                     <div class="filters col-md-1">
-                        <span class="value">Value</span>
+                        <span class="value_label">Value</span>
                     </div>
                     <div class="filters col-md-4">
-                        <input id="value_0" class="filter" type="text" placeholder="Insert value">
+                        <input id="value_0" class="filter value" type="text" placeholder="Insert value">
                     </div>
                     <div class="filters col-md-1">
-                        <span class="button toolIcon fa fa-times removeButton" todelete="filter_row_0" id="remove_button_1"></span>
+                        <span class="button toolIcon fa fa-times removeButton" todelete="filter_row_0" id="remove_button_0"></span>
                     </div>
                 </div>
                 <!-- Hasta aquí -->
@@ -130,4 +130,5 @@
   var info = <%- JSON.stringify(info) %>;
   var keys = <%- JSON.stringify(keys) %>;
   paintRoomsList(info.room_list);
+  paintRoomsStats(info);
 </script>
