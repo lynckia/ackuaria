@@ -136,7 +136,7 @@ $(document).ready(function(){
 			var f_day = finalDate.getDate() + '';
 
 			if (f_month.length === 1) f_month = '0' + f_month;
-			if (f_day.length === 1) i_day = '0' + i_day;
+			if (f_day.length === 1) f_day = '0' + f_day;
 
 			url += 'final=' + f_day  + f_month + f_year;
 		}
