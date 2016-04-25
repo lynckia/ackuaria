@@ -284,7 +284,7 @@ var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, 
     $('#pub_'+ streamID).click(function() {
         var pub_id = $(this).data('pub_id');
         if (pub_id != undefined || pub_id != null) {
-            window.location += '/ackuaria/pub?pub_id=' + pub_id + '&room_id='+ roomID;
+            window.location = '/ackuaria/pub?pub_id=' + pub_id + '&room_id='+ roomID;
         }
     })
 }
