@@ -270,7 +270,7 @@ API.api = {
 
                     if (API.streams[streamID] !== undefined) {
                         var indexStream = API.streams[streamID].subscribers.indexOf(userID);
-                        if (indexSub > -1) API.streams[streamID].subscribers.splice(indexSub, 1);
+                        if (indexStream > -1) API.streams[streamID].subscribers.splice(indexStream, 1);
                     }
 
                     if (API.users[userID] !== undefined) {
@@ -278,7 +278,6 @@ API.api = {
                         if (indexUser > -1) API.users[userID].subscribedTo.splice(indexUser, 1);
                         if (API.users[userID].streams.length == 0 && API.users[userID].subscribedTo.length == 0) {
                             delete API.users[userID];
-
                             for (var stream in API.streams) {
                                 var indexStream = API.streams[stream].subscribers.indexOf(userID);
                                 if (indexStream > -1) API.streams[stream].subscribers.splice(indexStream, 1);
