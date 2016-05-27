@@ -1,4 +1,4 @@
-var socket = io();
+var socket = io('/', {path: '/ackuaria/socket.io'});
 var view_type = "grid";
 
 $(document).ready(function(){
