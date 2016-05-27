@@ -1,4 +1,4 @@
-var socket = io();
+var socket = io('/', {path: '/ackuaria/socket.io'});
 var show_grid = true;
 var audio, video;
 var subscribers = {};
