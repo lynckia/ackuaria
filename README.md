@@ -12,6 +12,10 @@ More info at:
 http://www.lynckia.com/ackuaria ????
 -->
 
+## Installation
+
+See [INSTALL.md](INSTALL.md)
+
 ## License
 
 The MIT License
