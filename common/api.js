@@ -49,6 +49,7 @@ API.api = {
 
                 case "publish":
                     // Memoria local para datos
+                    var agentID = theEvent.agent;
                     var streamID = theEvent.stream;
                     var roomID = theEvent.room;
                     var userID = theEvent.user;
@@ -157,6 +158,7 @@ API.api = {
                     }
 
                     API.streams[streamID] = {
+                        agentID: agentID,
                         userID: userID,
                         roomID: roomID,
                         userName: userName,

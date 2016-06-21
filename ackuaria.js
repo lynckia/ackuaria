@@ -61,10 +61,25 @@ N.API.getRooms(function(roomList) {
 })
 
 amqper.connect(function() {
-   "use strict";
-   amqper.bind_broadcast('event', api.event);
-   amqper.bind_broadcast('stats', api.stats);
+  "use strict";
+  amqper.bind_broadcast('event', api.event);
+  amqper.bind_broadcast('stats', api.stats);
 
+  var getErizoAgents = function() {
+    API.agents = {};
+    amqper.broadcast('ErizoAgent', {method: 'getErizoAgents', args: []}, function (agent) {
+      console.log(agent);
+      if (agent === 'timeout') {
+         console.log('No agents available');
+         return;
+      }
+      API.agents[agent.info.id] = agent;
+      API.agents[agent.info.id].timeout = 0;
+
+    });
+  }
+  getErizoAgents();
+  setInterval(getErizoAgents, 5000);
 });
 
 io.on('connection', function(socket) {
@@ -114,3 +129,7 @@ ackuaria_router.post('/delete/:roomID', function(req, res) {
   API.rooms[roomID].failed = [];
   res.send(API.rooms[roomID]);
 })
+
+ackuaria_router.get('/agents', ackuariaController.loadAgents)
+
+ackuaria_router.get('/agent', ackuariaController.loadAgent)

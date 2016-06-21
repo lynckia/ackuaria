@@ -1,0 +1,220 @@
+#pubsContainer{
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	width: 90%;
+	min-height:calc(100% - 300px);
+}
+
+#agentInfo {
+	padding-bottom: 30px;
+}
+
+#agentId {
+	position: absolute;
+	margin-top: 20px;
+	font-family: "Nunito-Light";
+	color: #55739D;
+}
+#pubsCount {
+	position: absolute;
+	font-family: "Nunito-Light";
+	color: #042762;
+	margin-top: 60px;
+	font-size: 15px;
+}
+
+#user_id {
+	font-size: 11px;
+}
+
+#search {
+	position: absolute;
+	margin-top: 42px;
+	right: 0;
+	width: 20%;
+}
+#switch {
+	position: absolute;
+	margin-top: 42px;
+	margin-right: 25%;
+	right: 0;
+}
+#removeFails {
+	margin-right: 10px;
+	display: none;
+	border-radius: 3px !important;
+}
+
+#fails {
+	border-top-left-radius: 3px !important;
+	border-bottom-left-radius: 3px !important;
+}
+
+#list {
+	border-top-right-radius: 3px !important;
+	border-bottom-right-radius: 3px !important;
+}
+
+
+#publishers {
+	position: absolute;
+	margin-top: 90px;
+	padding-bottom: 50px;
+	height: 100%;
+	width: 100%;
+	overflow-y: scroll;
+}
+
+
+/* 
+TIPO GRID
+*/
+.show_grid.publisherContainer{
+	min-width: 170px;
+	max-width: 170px;
+	padding: 10px;
+	margin: 10px;
+
+}
+
+.show_grid .publisher {
+	border: 1px solid #55739D;
+	position: relative;
+	padding: 10px;
+	width: 150px;
+	height: 150px;
+	cursor: pointer;
+}
+
+.show_grid .pubName {
+	position: absolute;
+	font-family: "Nunito-Bold";
+	font-size: 13px;
+	color: 042762;
+
+}
+.show_grid .pubId {
+	position: absolute;
+	top: 50%;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 11px;
+}
+.show_grid .subsInPub {
+	height: 25%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: #55739D; 
+	color: white;
+	font-size: 13px;
+
+}
+.show_grid .subscribers {
+	top: 40%;
+	position: relative;
+	text-align: center;
+}
+
+.show_grid .status {
+
+}
+
+
+/* 
+TIPO LIST
+*/
+
+.show_list.publisherContainer{
+	padding: 10px;
+	margin: 10px;
+
+}
+
+.show_list .publisher {
+	padding: 10px;
+	cursor: pointer;
+}
+
+.show_list .pubName {
+	font-family: "Nunito-Bold";
+	color: #286090;
+	font-size: 16px;
+
+}
+.show_list .pubId {
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 13px;
+}
+.show_list #subsInPub {
+	color: #55739D;
+	padding-left: 45px;
+	font-size: 15px;
+
+}
+.show_list .subscribers {
+	text-align: center;
+}
+.show_list .status {
+	padding-left: 50px;
+	font-size: 15px;
+}
+
+
+
+
+.back {
+	float: right;
+	font-size: 15px;
+	color: #55739D;
+}
+
+#back {
+	cursor: pointer;
+}
+
+
+
+
+
+
+#dataModal {
+	padding:20px;
+	height: 100%;
+	margin-bottom: 10px;
+	overflow: auto;
+}
+
+#publisherModal {
+		height: 100%;
+		padding:20px;
+		margin-bottom: 10px;
+		border-left: 1px solid #55739D;
+}
+
+#pubModal {
+	max-height: calc(100% - 300px);
+	height: 100%;
+}
+.modal, .modal.fade.in {
+    top: 120px; /* was 10% */
+}
+
+.modal-backdrop.in {
+	opacity: 0;
+}
+
+.modal ::-webkit-scrollbar-track {
+
+    	margin-bottom: 10px !important;
+}
+
+.close {
+	color: #042762;
+	font-size: 32px;
+	opacity: 1;
+}

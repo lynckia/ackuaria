@@ -3,6 +3,7 @@ var API = require('./../common/api');
 var N = require('./../nuve');
 var config = require('./../ackuaria_config');
 var api_controller = require('./api_controller');
+var amqper = require('./../common/amqper');
 
 exports.updateRooms = function(req, res, next) {
    var date = new Date().getTime();
@@ -145,3 +146,51 @@ exports.loadHistory = function(req, res) {
       });
    })
 };
+
+exports.loadAgents = function(req, res, next) {
+   var streams = {};
+   for (var a in API.agents) {
+      streams[a] = [];
+      for (var s in API.streams){
+         if (API.streams[s].agentID == a) {
+            streams[a].push(s);
+         }
+      }
+   }
+   res.render('agents', {
+      view: "agents",
+      agents: API.agents,
+      streams: streams
+   });
+}
+
+exports.loadAgent = function(req, res, next) {
+   var agentID = req.query.agent_id;
+   API.currentAgent = agentID;
+   var agent = API.agents[agentID];
+
+   if (API.agents[agentID]) {
+      var agentMetadata = API.agents[agentID].metadata;
+      var agentStats = API.agents[agentID].stats;
+   }
+   else {
+      agent = null;
+   }
+
+   var streamsInAgent = {};
+
+   for (var s in API.streams){
+      if (API.streams[s].agentID == agentID) {
+         streamsInAgent[s] = API.streams[s];
+      }
+   }
+
+   res.render('agent', {
+      view: "agent",
+      agentID: agentID,
+      agent: agent,
+      agentMetadata: agentMetadata,
+      agentStats: agentStats,
+      streams: streamsInAgent,
+   });
+}

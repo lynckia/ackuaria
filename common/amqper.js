@@ -134,8 +134,19 @@ exports.bind_broadcast = function(id, callback) {
 /*
  * Publish broadcast messages to 'topic'
  */
-exports.broadcast = function(topic, message) {
-    broadcast_exc.publish(topic, message);
+exports.broadcast = function(topic, message, callback) {
+    var body = {message: message};
+    
+    if (callback) {
+        corrID ++;
+        map[corrID] = {};
+        map[corrID].fn = {callback: callback};
+        map[corrID].to = setTimeout(callbackError, TIMEOUT, corrID);
+
+        body.corrID = corrID;
+        body.replyTo = clientQueue.name;
+    }
+    broadcast_exc.publish(topic, body);
 }
 
 /*

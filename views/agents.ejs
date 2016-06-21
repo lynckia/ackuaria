@@ -1,0 +1,36 @@
+
+
+<div id="agentsContainer" class="container">
+	<div id="agentsCount"><span id="numberAgents">0</span> AGENTS <i class="fa fa-bar-chart"></i></div>
+    <div class="btn-group btn-toggle" id="switch">
+        <button class="btn btn-sm btn-primary active" id="grid" data-toggle="tooltip" data-placement="top" title="Show agents in grid"><span class="glyphicon glyphicon-th-large"></span></button>
+        <button class="btn btn-sm btn-default" id="list" data-toggle="tooltip" data-placement="top" title="Show agents in list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+        <a id="historical" href="history"><button class="btn btn-sm btn-default" id="grid" data-toggle="tooltip" data-placement="top" title="Historical data panel"><span class="glyphicon glyphicon-time"></span></button></a>
+    </div>
+
+	<div class="row" id="search">
+       <div id="custom-search-input">
+            <div class="input-group col-md-12">
+                <input id="searchBar" type="text" class="search-query form-control" placeholder="Search" />
+                <span class="input-group-btn">
+                    <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+	</div>
+	<div id="agents" class="row row-centered">
+
+	</div>
+
+</div>
+
+
+<script>
+
+  var agents = <%- JSON.stringify(agents) %>;
+  var streams = <%- JSON.stringify(streams) %>;
+  paintAgentsGrid();
+
+</script>

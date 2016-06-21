@@ -1,0 +1,158 @@
+#agentsCount {
+	position: absolute;
+	margin-top: 30px;
+	font-family: "Nunito-Light";
+	color: #042762;
+	font-size: 20px;
+}
+
+#search {
+	position: absolute;
+	margin-top: 30px;
+	right: 0;
+	width: 20%;
+}
+
+#switch {
+	position: absolute;
+	margin-top: 30px;
+	margin-right: 25%;
+	right: 0;
+}
+
+#historical {
+	margin-left: 10px !important;
+	border-radius: 3px !important;	
+}
+
+#agentsContainer{
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	bottom: 25px;
+	width: 90%;
+	min-height:calc(100% - 210px);
+}
+
+#agents {
+	position: absolute;
+	margin-top: 70px;
+	padding-bottom: 50px;
+	height: 90%;
+	width: 100%;
+	overflow-y: scroll;
+}
+.agentContainer.show_grid {
+	min-width: 200px;
+	max-width: 200px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.agentContainer.show_list {
+
+	padding: 10px;
+	margin: 10px;
+}
+/**
+TIPO GRID
+**/
+.show_grid .agent{
+	width: 180px;
+	height: 180px;
+	border: 1px solid #55739D;
+	padding: 10px;
+	position: relative;
+	cursor: pointer;
+}
+
+.show_grid .agentMetadata {
+	position: absolute;
+	bottom: 60;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 12px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 160px;
+    display: block;
+    overflow: hidden
+
+}
+.show_grid .agentCPU {
+	position: absolute;
+	bottom: 80;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 12px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 160px;
+    display: block;
+    overflow: hidden
+
+}
+.show_grid .agentId {
+	position: absolute;
+	font-family: "Nunito-Bold";
+	color: 042762;
+	font-size: 12px;
+}
+
+.show_grid .streamsInAgent {
+	height: 20%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: #55739D;
+	color: white;
+	font-size: 15px;
+}
+
+.show_grid .streams {
+	top: 30%;
+	position: relative;
+	text-align: right;
+	padding-right: 20px;
+	background-color: #55739D; 
+	font-family: "Nunito-Light";
+	color: white;
+}
+
+/*
+TIPO LIST
+*/
+
+.show_list .agent{
+	padding: 10px;
+	cursor: pointer;
+}
+
+.show_list .agentMetadata {
+	font-family: "Nunito-Bold";
+	color: #286090;
+	font-size: 16px;
+
+}
+.show_list .agentId {
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 13px;
+}
+
+.show_list #number {
+	color: #55739D;
+	padding-left: 60px;
+	font-size: 15px;
+}
+
+.show_list .streams {
+	padding-right: 20px;
+	background-color: #55739D; 
+	font-family: "Nunito-Light";
+	color: white;
+}
+
+
