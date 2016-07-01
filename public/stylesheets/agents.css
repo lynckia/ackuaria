@@ -136,7 +136,7 @@ TIPO LIST
 	font-size: 16px;
 
 }
-.show_list .agentId {
+.show_list .agentId, .agentCPU {
 	font-family: "Nunito-Light";
 	color: #55739D;
 	font-size: 13px;
@@ -145,6 +145,11 @@ TIPO LIST
 .show_list #number {
 	color: #55739D;
 	padding-left: 60px;
+	font-size: 15px;
+}
+.show_list #useCPU {
+	color: #55739D;
+	padding-left: 20px;
 	font-size: 15px;
 }
 

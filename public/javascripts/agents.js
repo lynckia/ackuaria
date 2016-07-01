@@ -78,13 +78,28 @@ $(document).ready(function(){
         $('#list').removeClass('btn-primary');
     });
 })
-
+socket.on('agentsEvent', function(evt) {
+    agents = evt.agents;
+    streams = evt.streams;
+    if (show_grid){
+        paintAgentsGrid();
+    } else {
+        paintAgentsList();
+    }
+});
 
 var paintAgentsGrid = function(){
     $('#agents').html("");
     var nAgents = Object.keys(agents).length;
     updateNAgents(nAgents);
-    for (var agent in agents) {
+    var keys = [];
+    for (a in agents) {
+        keys.push(a);
+    }
+    keys.sort();
+    len = keys.length;
+    for (i=0; i<len; i++) {
+        agent = keys[i];
         if (!$('#agent_'+ agent).length){
             var agentID = agent;
             var nStreams = streams[agent].length;
@@ -107,14 +122,22 @@ var paintAgentsList = function(){
     $('#agents').html("");
     var nAgents = Object.keys(agents).length
     updateNAgents(nAgents);
-    $('#agents').append('<div class="agentContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Agent Metadata</th><th class="col-md-4">Streams in Agent</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
-    for (var agent in agents) {
+
+    var keys = [];
+    for (a in agents) {
+        keys.push(a);
+    }
+    keys.sort();
+    len = keys.length;
+    $('#agents').append('<div class="agentContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Agent Metadata</th><th class="col-md-2">Streams in Agent</th><th class ="col-md-2">CPU Use</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    for (i=0; i<len; i++) {
+        agent = keys[i];
         if (!$('#agent_'+agent).length){
             var agentID = agent;
             var nStreams = streams[agent].length;
             var cpu = agents[agent].stats.perc_cpu*100
-            var agentCPU = "CPU: " + cpu.toFixed(2) + " %";
-            var agentMetadata = "Metadata: " + JSON.stringify(agents[agent].metadata);
+            var agentCPU = cpu.toFixed(2) + " %";
+            var agentMetadata = JSON.stringify(agents[agent].metadata);
             createNewAgentList(agentID, nStreams, agentMetadata, agentCPU);        
         } else {
             var agentID = agent;
@@ -139,7 +162,7 @@ var createNewAgentGrid = function(agentID, nStreams, agentMetadata, agentCPU){
 }
 
 var createNewAgentList = function(agentID, nStreams, agentMetadata, agentCPU){
-    $('#bodyTable').append('<tr class="agent show_list" id="agent_' + agentID + '" data-agent_id="' + agentID + '"><th class="agentID">'+ agentID + '</th><th class="agentMetadata">' + agentMetadata + '</th><th id="number">' + nStreams + '</th></tr>')
+    $('#bodyTable').append('<tr class="agent show_list" id="agent_' + agentID + '" data-agent_id="' + agentID + '"><th class="agentID">'+ agentID + '</th><th class="agentMetadata">' + agentMetadata + '</th><th id="number">' + nStreams + '</th><th id="useCPU">' + agentCPU + '</th></tr>')
     $('#agent_'+ agentID).click(function() {
         var agent_id = $(this).data('agent_id');
         if (agent_id != undefined || agent_id != null) {

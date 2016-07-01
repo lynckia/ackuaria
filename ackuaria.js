@@ -75,6 +75,21 @@ amqper.connect(function() {
       }
       API.agents[agent.info.id] = agent;
       API.agents[agent.info.id].timeout = 0;
+      var streams = {};
+      for (var a in API.agents) {
+          streams[a] = [];
+          for (var s in API.streams){
+             if (API.streams[s].agentID == a) {
+                streams[a].push(s);
+             }
+          }
+       }
+      for (var s in API.sockets) {
+        API.sockets[s].emit('agentsEvent', {
+            agents: API.agents,
+            streams: streams
+        });
+      }
 
     });
   }
