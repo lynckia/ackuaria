@@ -55,7 +55,7 @@ N.API.getRooms(function(roomList) {
              streams: [],
              users: [],
              failed: []
-         };      
+         };
       }
    }
 })
