@@ -6,5 +6,5 @@
 1. Run ```npm install``` in the root directory of the checkout
 1. In ```licode_config.js``` of your Licode installation, enable the events you want Ackuaria to receive in the ```config.erizoController.report``` section
 1. Open up the port set in ```config.ackuaria.port``` in your server's firewall
-1. In the root directory of the checkout, run ```node ackuaria.js``` to start the server
+1. In the root directory of the checkout, run ```npm start``` or ```node ackuaria.js``` to start the server
 1. Visit http://[host]:[port] in a web browser

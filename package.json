@@ -1,9 +1,9 @@
 {
-  "name": "monitor",
-  "version": "0.0.0",
-  "private": true,
+  "name": "ackuaria",
+  "version": "0.1.0",
+  "private": false,
   "scripts": {
-    "start": "node app.js"
+    "start": "node ackuaria.js"
   },
   "dependencies": {
     "amqp": "0.2.0",
