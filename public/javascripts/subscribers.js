@@ -366,18 +366,18 @@ $(document).ready(function(){
         var bpsAudio, bpsVideo, kbpsAudio, kbpsVideo;
         if (!lastTimestamp && !lastBytesAudio && !lastBytesVideo) {
             lastTimestamp = timestamp;
-            if (audio) lastBytesAudio = audio.rtcpBytesSent;
-            if (video) lastBytesVideo = video.rtcpBytesSent;
+            if (audio) lastBytesAudio = audio.bytesSent;
+            if (video) lastBytesVideo = video.bytesSent;
             return;
         } else {
             var timeSince = (timestamp - lastTimestamp) / 1000;
             if (audio) {
-                bpsAudio = (((audio.rtcpBytesSent - lastBytesAudio) / timeSince) / 1000) * 8;
-                lastBytesAudio = audio.rtcpBytesSent;
+                bpsAudio = audio.bitrateCalculated / 1000;
+                lastBytesAudio = audio.bytesSent;
             }
             if (video) {
-                bpsVideo = (((video.rtcpBytesSent - lastBytesVideo) / timeSince) / 1000) * 8;
-                lastBytesVideo = video.rtcpBytesSent;
+                bpsVideo = video.bitrateCalculated / 1000;
+                lastBytesVideo = video.bytesSent;
             }
             if (audio || video) lastTimestamp = timestamp;
         }
@@ -391,14 +391,14 @@ $(document).ready(function(){
         if (audio) {
             $('#audioSSRC').html(audio.ssrc);
             if (bpsAudio != 0) $('#audioBytesSent').html(Math.round(bpsAudio * 100)/100 + " Kbps");
-            $('#audioPacketsSent').html(audio.rtcpPacketSent);
+            $('#audioPacketsSent').html(audio.packetsSent);
             kbpsAudio = Math.round(bpsAudio * 100)/100;
             ssrcs[audio.ssrc] = "audio";
         }
         if (video) {
             $('#videoSSRC').html(video.ssrc);
             if (bpsVideo != 0) $('#videoBytesSent').html(Math.round(bpsVideo * 100)/100 + " Kbps");
-            $('#videoPacketsSent').html(video.rtcpPacketSent);
+            $('#videoPacketsSent').html(video.packetsSent);
             kbpsVideo = Math.round(bpsVideo * 100)/100;
             ssrcs[video.ssrc] = "video";
         }

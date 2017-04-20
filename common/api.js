@@ -387,7 +387,7 @@ API.api = {
         }
     },
     stats: function(theStats) {
-        //log.info('Stat: ', theStats);
+        // log.info('Stat: ', theStats);
         theStats = theStats.message;
         try {
             API.send_stats_to_clients(theStats);
@@ -415,13 +415,15 @@ API.send_stats_to_clients = function(event) {
         var pubID = String(event.pub);
         var stats = event.stats;
         var video, audio;
-        if (stats && stats.length > 0) {
-            if (stats[0].type == "video") {
-                video = stats[0];
-                audio = stats[1];
-            } else {
-                video = stats[1];
-                audio = stats[0];
+        if (stats) {
+            for (var ssrc in stats) {
+                if (stats[ssrc].type === 'video') {
+                    video = stats[ssrc];
+                    video.ssrc = ssrc;
+                } else if (stats[ssrc].type === 'audio') {
+                    audio = stats[ssrc];
+                    audio.ssrc = ssrc;
+                }
             }
         }
 
@@ -437,13 +439,15 @@ API.send_stats_to_clients = function(event) {
         var subID = event.subs;
         var stats = event.stats;
         var video, audio;
-        if (stats && stats.length > 0) {
-            if (stats[0].PLI) {
-                video = stats[0];
-                audio = stats[1];
-            } else {
-                video = stats[1];
-                audio = stats[0];
+        if (stats) {
+            for (var ssrc in stats) {
+                if (stats[ssrc].type === 'video') {
+                    video = stats[ssrc];
+                    video.ssrc = ssrc;
+                } else if (stats[ssrc].type === 'audio') {
+                    audio = stats[ssrc];
+                    audio.ssrc = ssrc;
+                }
             }
         }
         for (var s in API.sockets) {
