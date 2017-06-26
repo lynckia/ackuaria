@@ -46,31 +46,33 @@ $(document).ready(function(){
         if (sub_modal_now == event.subID) updateModalState(event.subID);
     });
 
-    socket.on('newSR', function(evt) {
+    socket.on('newStats', function(evt) {
         var event = evt.event;
-        var pubID = event.pub;
-        audio = evt.audio;
-        video = evt.video;
-        var timestamp = event.timestamp;
+        var pubID = event.streamId;
+        delete event.streamId;
         if (pubID == streamID){
-            updateSR(audio, video, timestamp);
-        }
-    });
-
-    socket.on('newRR', function(evt) {
-        var event = evt.event;
-
-        var audio = evt.audio;
-        var video = evt.video;
-        var pubID = event.pub;
-        var subID = event.subs;
-        var timestamp = event.timestamp;
-        var stats = {audio: audio, video: video};
-        if (pubID == streamID) {
-            subscribers[subID] = stats;
-            if (sub_modal_now == subID) {
-                updateRR(subID, audio, video, timestamp);
+            var video, audio, stats;
+            for (var id in event) {
+                for (var ssrc in event[id]) {
+                    if (event[id][ssrc].type === 'video') {
+                        video = event[id][ssrc];
+                        video.ssrc = ssrc;
+                    } else if (event[id][ssrc].type === 'audio') {
+                        audio = event[id][ssrc];
+                        audio.ssrc = ssrc;
+                    }
+                }
+                if (id === 'publisher') {
+                    updateSR(audio, video, event.timestamp);
+                } else {
+                    stats = {audio: audio, video: video};
+                    subscribers[id] = stats;
+                    if (sub_modal_now == id) {
+                        updateRR(id, audio, video, event.timestamp);
+                    }
+                }
             }
+
         }
     });
 
@@ -329,7 +331,7 @@ $(document).ready(function(){
         var FLVideo, FLAudio, BW;
         if (video) {
             FLVideo = video.fractionLost;
-            BW = video.bandwidth;
+            BW = video.bitrateCalculated/1000;
         }
         if (audio) FLAudio = audio.fractionLost;
 
@@ -345,7 +347,7 @@ $(document).ready(function(){
 
         if (video && ssrcs[video.sourceSsrc]) {
             $('#dataModal #videoSSRC').html(video.ssrc);
-            $('#dataModal #videoBandwidth').html(video.bandwidth);
+            $('#dataModal #videoBandwidth').html(video.bitrateCalculated/1000);
             $('#dataModal #pli').html(video.PLI);
             $('#dataModal #videoFractionLost').html(Math.round((video.fractionLost * 100 / 256) *100) / 100 + "%");
             $('#dataModal #videoJitter').html(video.jitter);

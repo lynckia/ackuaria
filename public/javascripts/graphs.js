@@ -73,7 +73,7 @@ var newDataSub = function(subID, data) {
         updateFLAudioChart(newDataFLAudio);
       }
       if (data.BW) {
-        var BW = data.BW / 1000;
+        var BW = data.BW;
         var newDataBW = {date: date, val: BW};
         updateBWChart(newDataBW);
       }

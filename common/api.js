@@ -411,52 +411,11 @@ API.send_event_to_clients = function(event, rooms, streams, users, states) {
 }
 
 API.send_stats_to_clients = function(event) {
-    if (!event.subs) {
-        var pubID = String(event.pub);
-        var stats = event.stats;
-        var video, audio;
-        if (stats) {
-            for (var ssrc in stats) {
-                if (stats[ssrc].type === 'video') {
-                    video = stats[ssrc];
-                    video.ssrc = ssrc;
-                } else if (stats[ssrc].type === 'audio') {
-                    audio = stats[ssrc];
-                    audio.ssrc = ssrc;
-                }
-            }
-        }
-
-        for (var s in API.sockets) {
-            API.sockets[s].emit('newSR', {
-                event: event,
-                audio: audio,
-                video: video
-            });
-        }
-    } else {
-        var pubID = String(event.pub);
-        var subID = event.subs;
-        var stats = event.stats;
-        var video, audio;
-        if (stats) {
-            for (var ssrc in stats) {
-                if (stats[ssrc].type === 'video') {
-                    video = stats[ssrc];
-                    video.ssrc = ssrc;
-                } else if (stats[ssrc].type === 'audio') {
-                    audio = stats[ssrc];
-                    audio.ssrc = ssrc;
-                }
-            }
-        }
-        for (var s in API.sockets) {
-            API.sockets[s].emit('newRR', {
-                event: event,
-                audio: audio,
-                video: video
-            });
-        }
+    event.timestamp = (new Date()).getTime();
+    for (var s in API.sockets) {
+        API.sockets[s].emit('newStats', {
+            event: event
+        });
     }
 }
 

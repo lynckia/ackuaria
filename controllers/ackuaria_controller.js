@@ -111,6 +111,10 @@ exports.loadSubscribers = function(req, res) {
       }
    }
 
+   amqper.broadcast('ErizoJS', {method: 'subscribeToStats', args: [streamID, 60, 1]}, function(resp){
+      console.log('Stats subscription result to ', streamID, ':', resp);
+   });
+
    res.render('subscribers', {
       view: "subscribers",
       roomID: roomID,

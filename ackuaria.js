@@ -63,12 +63,12 @@ N.API.getRooms(function(roomList) {
 amqper.connect(function() {
   "use strict";
   amqper.bind_broadcast('event', api.event);
-  amqper.bind_broadcast('stats', api.stats);
+  amqper.bind_broadcast('stats_subscriptions', api.stats);
 
   var getErizoAgents = function() {
     API.agents = {};
     amqper.broadcast('ErizoAgent', {method: 'getErizoAgents', args: []}, function (agent) {
-      console.log(agent);
+      // console.log(agent);
       if (agent === 'timeout') {
          console.log('No agents available');
          return;
