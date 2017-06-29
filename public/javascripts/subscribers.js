@@ -48,6 +48,7 @@ $(document).ready(function(){
 
     socket.on('newStats', function(evt) {
         var event = evt.event;
+        console.log(event);
         var pubID = event.streamId;
         delete event.streamId;
         if (pubID == streamID){
@@ -69,6 +70,7 @@ $(document).ready(function(){
                     subscribers[id] = stats;
                     if (sub_modal_now == id) {
                         updateRR(id, audio, video, event.timestamp);
+                        updateCharts(pubID, id, event);
                     }
                 }
             }

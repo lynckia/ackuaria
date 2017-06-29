@@ -57,7 +57,7 @@ var newDataSub = function(subID, data) {
       dataSub = {FLVideo: [], FLAudio: [], BW: []};
       drawFLVideoChart(subID);
       drawFLAudioChart(subID);
-      drawBWChart(subID);
+      // drawBWChart(subID);
       sub_modal_now = subID;
       return;
   } else if (sub_modal_now == subID) {
@@ -75,7 +75,7 @@ var newDataSub = function(subID, data) {
       if (data.BW) {
         var BW = data.BW;
         var newDataBW = {date: date, val: BW};
-        updateBWChart(newDataBW);
+        // updateBWChart(newDataBW);
       }
 
         
