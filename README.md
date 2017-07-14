@@ -7,14 +7,21 @@
 	+ npm
 	+ Mongodb (Optional. You can disable this option in ackuaria_config.js)
 
-<!---
-More info at:
-http://www.lynckia.com/ackuaria ????
--->
 
 ## Installation
 
-See [INSTALL.md](INSTALL.md)
+To install locally see [INSTALL.md](INSTALL.md)
+
+#### Docker
+You can also use [Docker](https://www.docker.com/).
+You can build your own image using the Dockerfile we provide and then run the container from it or you can run the container directly from the image we provide in Docker Hub.
+
+To get the image form docker hub run `docker pull lynckia/ackuaria`. You can configure the container by mounting a volume in `/opt/assets` including both the configuration file (`ackuaria_config.js`) and the nuve client for your current licode version. The entry point script will automatically copy both files and run ackuaria.
+
+`[sudo] docker run -p 8888:8888 -v [PATH_TO_YOUR_ASSETS_DIR]:/opt/assets`
+
+Make sure ackuaria can communicate with the Rabbitmq server from your Licode installation
+
 
 ## License
 
