@@ -54,6 +54,9 @@ API.api = {
                     var roomID = theEvent.room;
                     var userID = theEvent.user;
                     var userName = theEvent.name;
+                    if (config.display.metadataUsernameField && theEvent.metadata && theEvent.metadata[config.display.metadataUsernameField]) {
+                      userName = theEvent.metadata[config.display.metadataUsernameField];
+                    }
                     var initTimestamp = theEvent.timestamp;
 
                     event.streamID = streamID;
@@ -228,6 +231,9 @@ API.api = {
                     var userID = theEvent.user;
                     var roomID = theEvent.room;
                     var userName = theEvent.name;
+                    if (config.display.metadataUsernameField && theEvent.metadata && theEvent.metadata[config.display.metadataUsernameField]) {
+                      userName = theEvent.metadata[config.display.metadataUsernameField];
+                    }
 
                     event.streamID = streamID;
                     event.roomID = roomID;
@@ -296,11 +302,11 @@ API.api = {
 
                     event.roomID = roomID;
                     event.subID = userID;
-                    
+
                     for (var streamID in API.streams) {
                         var indexStream = API.streams[streamID].subscribers.indexOf(userID);
                         if (indexStream > -1) API.streams[streamID].subscribers.splice(indexStream, 1);
-                        
+
                         delete API.states[streamID].subscribers[userID];
 
                         if (API.streams[streamID].userID == userID){
@@ -314,7 +320,7 @@ API.api = {
                             delete API.states[streamID];
                         }
                     }
-                    
+
                     delete API.users[userID];
 
                     break;
@@ -373,7 +379,7 @@ API.api = {
             if (API.currentRoom == event.roomID || API.currentRoom == "") {
                 API.send_event_to_clients(event, API.rooms, API.streams, API.users, API.states);
             }
-            if (config.ackuaria.useDB) {        
+            if (config.ackuaria.useDB) {
                 eventsRegistry.addEvent(theEvent, function(saved, error) {
                     // if (saved) log.info(saved);
                     if (error) log.error(error);
@@ -391,7 +397,6 @@ API.api = {
         theStats = theStats.message;
         try {
             API.send_stats_to_clients(theStats);
-
         } catch (err) {
             log.error("Error receiving stat", err);
         }

@@ -34,6 +34,12 @@ config.nuve.host = 'http://localhost:3000/'; // default value: 'http://localhost
 config.nuve.superserviceID = ''; // default value: ''
 config.nuve.superserviceKey = ''; // default value: ''
 
+/*********************************************************
+ DISPLAY CONFIGURATION
+**********************************************************/
+config.display = {};
+// If your user identification is in the stream metadata you can set it up here and it will show in the user list
+config.display.metadataUsernameField = '';  // default '' will use licode username
 
 /***** END *****/
 // Following lines are always needed.
