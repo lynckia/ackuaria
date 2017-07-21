@@ -7,8 +7,7 @@ var ssrcs = {};
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
 
 $(document).ready(function(){
-
-
+    socket.emit('subscribe_to_stats', streamID);
     socket.on('newEvent', function(evt) {
         var event = evt.event;
         rooms = evt.rooms;
@@ -28,7 +27,7 @@ $(document).ready(function(){
              states[s] = totalStates[s];
             }
         }
-        users = evt.users; 
+        users = evt.users;
 
         $('#others').html("");
         $('#selected').html("");
@@ -153,7 +152,7 @@ $(document).ready(function(){
             paintSubscribersList();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -169,7 +168,7 @@ $(document).ready(function(){
             paintSubscribersGrid();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -183,7 +182,7 @@ $(document).ready(function(){
             $( ".audioChart" ).hide();
             $( ".videoChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -201,7 +200,7 @@ $(document).ready(function(){
             $( ".videoChart" ).hide();
             $( ".audioChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -219,7 +218,7 @@ $(document).ready(function(){
             $( ".audioChart" ).show();
             $( ".videoChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -241,7 +240,7 @@ $(document).ready(function(){
             $( "#videoCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -263,7 +262,7 @@ $(document).ready(function(){
             $( "#audioCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -285,7 +284,7 @@ $(document).ready(function(){
             $( "#audioCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -312,7 +311,7 @@ $(document).ready(function(){
                 color = "orange";
                 break;
         }
-        return color; 
+        return color;
     }
 
     var updateModalState = function(subID) {
@@ -462,7 +461,7 @@ $(document).ready(function(){
         }
         Sortable.init()
 
-    }   
+    }
 
     var createNewSubscriberGrid = function(userID, userName, state){
         var color = stateToColor(state);
@@ -527,7 +526,7 @@ $(document).ready(function(){
 
     var updateStatePublisher = function() {
         var state;
-        if (states[streamID]) state = states[streamID].state;    
+        if (states[streamID]) state = states[streamID].state;
 
         var color = stateToColor(state);
 
