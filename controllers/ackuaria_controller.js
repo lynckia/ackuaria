@@ -3,7 +3,6 @@ var API = require('./../common/api');
 var N = require('./../nuve');
 var config = require('./../ackuaria_config');
 var api_controller = require('./api_controller');
-var amqper = require('./../common/amqper');
 
 exports.updateRooms = function(req, res, next) {
    var date = new Date().getTime();
@@ -32,7 +31,7 @@ exports.updateRooms = function(req, res, next) {
          console.log("Nuve called: Updated Room List");
 
          next();
-      })   
+      })
    } else {
       console.log("Too soon for calling Nuve again.");
       next();
@@ -96,7 +95,7 @@ exports.loadSubscribers = function(req, res) {
 
    if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
    else var roomName = "Not found";
-   
+
    var streamsInRoom = {};
    for (var s in API.streams){
       if (room.streams.indexOf(parseInt(s)) > -1) {
@@ -110,10 +109,6 @@ exports.loadSubscribers = function(req, res) {
          statesInRoom[s] = API.states[s];
       }
    }
-
-   amqper.broadcast('ErizoJS', {method: 'subscribeToStats', args: [streamID, 60, 1]}, function(resp){
-      console.log('Stats subscription result to ', streamID, ':', resp);
-   });
 
    res.render('subscribers', {
       view: "subscribers",

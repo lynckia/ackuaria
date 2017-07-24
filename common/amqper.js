@@ -1,14 +1,15 @@
 var sys = require('util');
 var amqp = require('amqp');
 var logger = require('./logger').logger;
-
+var config = require('./../ackuaria_config');
 // Logger
 var log = logger.getLogger("AMQPER");
 
 // Configuration default values
-GLOBAL.config.rabbit = GLOBAL.config.rabbit || {};
-GLOBAL.config.rabbit.host = GLOBAL.config.rabbit.host || 'localhost';
-GLOBAL.config.rabbit.port = GLOBAL.config.rabbit.port || 5672;
+GLOBAL.config = config || {};
+GLOBAL.config.rabbit = config.rabbit || {};
+GLOBAL.config.rabbit.host = config.rabbit.host || 'localhost';
+GLOBAL.config.rabbit.port = config.rabbit.port || 5672;
 
 var TIMEOUT = 5000;
 
@@ -123,7 +124,7 @@ exports.bind_broadcast = function(id, callback) {
 
             q.bind('broadcastExchange', id);
             q.subscribe(function (m){callback(m)});
-            
+
         } catch (err) {
             log.error("Error in exchange ", exchange.name, " - error - ", err);
         }
@@ -136,7 +137,7 @@ exports.bind_broadcast = function(id, callback) {
  */
 exports.broadcast = function(topic, message, callback) {
     var body = {message: message};
-    
+
     if (callback) {
         corrID ++;
         map[corrID] = {};

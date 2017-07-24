@@ -55,7 +55,7 @@ N.API.getRooms(function(roomList) {
              streams: [],
              users: [],
              failed: []
-         };      
+         };
       }
    }
 })
@@ -84,22 +84,20 @@ amqper.connect(function() {
              }
           }
        }
-      for (var s in API.sockets) {
-        API.sockets[s].emit('agentsEvent', {
-            agents: API.agents,
-            streams: streams
-        });
-      }
-
+       API.sockets.forEach((currentSocket, currentSocketId) => {
+         currentSocket.emit('agentsEvent', {
+           agents: API.agents,
+           streams: streams
+         });
+       });
     });
   }
   getErizoAgents();
   setInterval(getErizoAgents, 5000);
 });
 
-io.on('connection', function(socket) {
-   API.sockets.push(socket);
-});
+io.on('connection', API.addNewConnection);
+
 
 app.use('/ackuaria', ackuaria_router);
 
