@@ -12,8 +12,7 @@ const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter'];
 
 
 $(document).ready(function(){
-
-
+    socket.emit('subscribe_to_stats', streamID);
     socket.on('newEvent', function(evt) {
         var event = evt.event;
         rooms = evt.rooms;
