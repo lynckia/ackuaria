@@ -1,5 +1,5 @@
 var socket = io();
-var show_grid = true;
+var show_grid = false;
 
 $(document).ready(function(){
     //Śearch bar code
@@ -54,7 +54,7 @@ $(document).ready(function(){
             paintRoomsList();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -69,7 +69,7 @@ $(document).ready(function(){
             paintRoomsGrid();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -113,13 +113,13 @@ var paintRoomsList = function(){
     $('#rooms').html("");
     var nRooms = Object.keys(rooms).length
     updateNRooms(nRooms);
-    $('#rooms').append('<div class="roomContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">ID</th><th class="col-md-4">Room Name</th><th class="col-md-4">Streams in Room</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+    $('#rooms').append('<div class="roomContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">Room Name</th><th class="col-md-4">ID</th><th class="col-md-4">Streams in Room</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
     for (var room in rooms) {
         if (!$('#room_'+room).length){
             var roomID = room;
             var nStreams = rooms[room].streams.length;
             var roomName = rooms[room].roomName;
-            createNewRoomList(roomID, nStreams, roomName);        
+            createNewRoomList(roomID, nStreams, roomName);
         } else {
             var roomID = room;
             var nStreams = rooms[room].streams.length;
@@ -143,7 +143,7 @@ var createNewRoomGrid = function(roomID, nStreams, roomName){
 }
 
 var createNewRoomList = function(roomID, nStreams, roomName, last){
-    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><th class="roomID">'+ roomID + '</th><th class="roomName">' + roomName + '</th><th id="number">' + nStreams + '</th></tr>')
+    $('#bodyTable').append('<tr class="room show_list" id="room_' + roomID + '" data-room_id="' + roomID + '"><th class="roomName">'+ roomName + '</th><th class="roomID">' + roomID+ '</th><th id="number">' + nStreams + '</th></tr>')
     $('#room_'+ roomID).click(function() {
         var room_id = $(this).data('room_id');
         if (room_id != undefined || room_id != null) {

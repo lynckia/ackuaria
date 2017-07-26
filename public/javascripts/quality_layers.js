@@ -13,7 +13,6 @@ let toBitrateString = function(value) {
 
 var initChart = function (streamId, subId) {
     let pubId = streamId;
-    console.log('Init Chart ', streamId, subId);
     if (!charts.has(pubId)) {
        return undefined;
     }
@@ -21,7 +20,6 @@ var initChart = function (streamId, subId) {
     var div = document.createElement('div');
     div.setAttribute('style', 'width: 500px; height:500px; float:left;');
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
-    div.setAttribute('class', 'chart hide');
 
     parent.appendChild(div);
 
@@ -96,6 +94,15 @@ let getOrCreateChart = function(streamId, subId) {
   return chart;
 };
 
+let destroyCharts = function () {
+  charts.forEach((subMap, pubId) => {
+      subMap.forEach((subscriberChart, subId) => {
+        subscriberChart.chart.destroy();
+        charts.get(pubId).delete(subId);
+      });
+  });
+};
+
 var updateSeriesForKey = function (streamId, subId, key, spatial, temporal, valueX, valueY,
   pointName = undefined, isActive = true) {
     let chart = getOrCreateChart(streamId, subId);
@@ -136,12 +143,6 @@ var updateSeriesForKey = function (streamId, subId, key, spatial, temporal, valu
 };
 
 let updateCharts = function (pubId, subId, data) {
-
-    $('.chart').addClass('hide');
-    $('#chart' + pubId + '_' + subId).removeClass('hide');
-    console.log('#chart' + pubId + '_' + subId);
-
-
     let date = (new Date()).getTime();
 
     let selectedLayers = '';

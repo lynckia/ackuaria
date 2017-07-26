@@ -185,8 +185,15 @@
 
 .show_list .subName {
 	font-family: "Nunito-Bold";
-	font-size: 11px;
+	font-size: 14px;
 	color: 042762;
+}
+
+.show_list .subId {
+	font-family: "Nunito-Bold";
+	font-size: 12px;
+	color: 042762;
+
 }
 /*#subId {
 	position: absolute;
@@ -240,7 +247,7 @@
 	margin-bottom: 10px;
 	border-left: 1px solid #55739D;
 }
-#subscribersCharts {	
+#subscribersCharts {
 	height: 100%;
 	margin-top: 10px;
 	overflow-y: auto;

@@ -85,7 +85,7 @@ $(document).ready(function(){
             paintPublishersList();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -96,7 +96,7 @@ $(document).ready(function(){
         $('#fails').addClass('btn-default');
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
-           
+
         $('#removeFails').hide();
     });
 
@@ -106,7 +106,7 @@ $(document).ready(function(){
             paintPublishersGrid();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -117,7 +117,7 @@ $(document).ready(function(){
         $('#fails').addClass('btn-default');
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
-        
+
         $('#removeFails').hide();
     });
     $('#fails').click(function() {
@@ -125,7 +125,7 @@ $(document).ready(function(){
             view_type = "failed";
             paintPublishersFails();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -138,7 +138,7 @@ $(document).ready(function(){
         $('#grid').removeClass('btn-primary');
 
         $('#removeFails').show();
-           
+
     });
 });
 

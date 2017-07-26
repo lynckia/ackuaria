@@ -1,5 +1,5 @@
 var socket = io();
-var view_type = "grid";
+var view_type = "list";
 
 $(document).ready(function(){
 
@@ -85,7 +85,7 @@ $(document).ready(function(){
             paintPublishersList();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -96,7 +96,7 @@ $(document).ready(function(){
         $('#fails').addClass('btn-default');
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
-           
+
         $('#removeFails').hide();
     });
 
@@ -106,7 +106,7 @@ $(document).ready(function(){
             paintPublishersGrid();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -117,7 +117,7 @@ $(document).ready(function(){
         $('#fails').addClass('btn-default');
         $('#fails').removeClass('active');
         $('#fails').removeClass('btn-primary');
-        
+
         $('#removeFails').hide();
     });
     $('#fails').click(function() {
@@ -125,7 +125,7 @@ $(document).ready(function(){
             view_type = "failed";
             paintPublishersFails();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -138,7 +138,7 @@ $(document).ready(function(){
         $('#grid').removeClass('btn-primary');
 
         $('#removeFails').show();
-           
+
     });
 });
 
@@ -222,7 +222,7 @@ var paintPublishersGrid = function() {
 var paintPublishersList = function() {
     if (room) {
         $('#publishers').html("");
-        $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User ID</th><th class="col-md-4">User Name</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+        $('#publishers').append('<div class="publisherContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-4">User Name</th><th class="col-md-2">User Id</th><th class="col-md-2">Publisher Status</th><th class="col-md-2">Number of subscribers</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
         var nStreams = room.streams.length;
         updateNStreams(nStreams);
         for (var streamID in streams){
@@ -280,7 +280,7 @@ var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, 
 
 var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, state){
     var color = stateToColor(state);
-    $('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th class="pubId">' + streamID + '</th><th class="pubName">' + userName + '</th><th><span class="status fa fa-circle ' + color + '"></th><th id="subsInPub">' + nSubscribers + '</th></tr>');
+    $('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th class="pubName">' + userName + '</th><th class="pubId">' + streamID + '</th><th><span class="status fa fa-circle ' + color + '"></th><th id="subsInPub">' + nSubscribers + '</th></tr>');
     $('#pub_'+ streamID).click(function() {
         var pub_id = $(this).data('pub_id');
         if (pub_id != undefined || pub_id != null) {

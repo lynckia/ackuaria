@@ -33,35 +33,25 @@
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="videoCol" >
 					<div id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </div>
 					<div id="videoData">
-						<div id="videoSSRCDiv" class="propertyTitle"> SSRC: <span id="videoSSRC" class="propertyContent"></span> </div>
-						<div id="videoBytesSentDiv" class="propertyTitle"> Bytes Sent: <span id="videoBytesSent" class="propertyContent"></span> </div>
-						<div id="videoPacketsSentDiv" class="propertyTitle">Packets Sent: <span id="videoPacketsSent" class="propertyContent"></span></div>
 					</div>
 				</div>
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartVideo" ></div>
-
+				<div class="clearfix hidden-sm-up"></div>
 
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="audioCol" >
 					<div id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </div>
 					<div id="audioData">
-						<div id="audioSSRCDiv" class="propertyTitle"> SSRC: <span id="audioSSRC" class="propertyContent"></span> </div>
-						<div id="audioBytesSentDiv" class="propertyTitle"> Bytes Sent: <span id="audioBytesSent" class="propertyContent"></span> </div>
-						<div id="audioPacketsSentDiv" class="propertyTitle"> Packets Sent: <span id="audioPacketsSent" class="propertyContent"></span> </div>
 					</div>
 				</div>
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartAudio" ></div>
-
-
-        
-
 
 			</div>
 		</div>
 		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 subsCol" id="subsCol">
 			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
 		    <div class="btn-group btn-toggle" id="switch">
-		        <button class="btn btn-sm btn-primary active" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>
-		        <button class="btn btn-sm btn-default" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+		        <button class="btn btn-sm btn-primary active" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+		        <button class="btn btn-sm btn-default" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>
 		    </div>
 			<div class="row" id="search">
 		       <div id="custom-search-input">
@@ -98,34 +88,13 @@
 	        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" id="dataModal">
 				<span id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </span>
 				<br>
-				<br>
-				SSRC: <span id="videoSSRC"></span>
-				<br>
-				PLI: <span id="pli"></span>
-				<br>
-				Bandwidth: <span id="videoBandwidth"></span>
-				<br>
-				Fraction Lost: <span id="videoFractionlost"></span>
-				<br>
-				Jitter: <span id="videoJitter"></span>
-				<br>
-				Packets Lost: <span id="videoPacketsLost"></span>
-				<br>
-				Source SSRC: <span id="videoSourceSSRC"></span>
-				<br>
-				<br>
+					<div id="videoDataSub">
+					</div>
+
 				<span id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </span>
 				<br>
-				<br>
-				SSRC: <span id="audioSSRC"></span>
-				<br>
-				Fraction Lost: <span id="audioFractionlost"></span>
-				<br>
-				Jitter: <span id="audioJitter"></span>
-				<br>
-				Packets Lost: <span id="audioPacketsLost"></span>
-				<br>
-				Source SSRC: <span id="audioSourceSSRC"></span>
+					<div id="audioDataSub">
+					</div>
 	        </div>
 	       	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="subscribersModal">
 			    <div class="btn-group btn-toggle" id="switchSub">
@@ -136,7 +105,7 @@
 
 			    </div>
 			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="subscribersCharts">
-				   
+
 				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartBW" ></div>
 				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartFLVideo" ></div>
 				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 audioChart" id="chartFLAudio" ></div>
