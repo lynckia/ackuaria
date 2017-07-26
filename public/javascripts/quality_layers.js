@@ -20,7 +20,6 @@ var initChart = function (streamId, subId) {
     var div = document.createElement('div');
     div.setAttribute('style', 'width: 500px; height:500px; float:left;');
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
-    // div.setAttribute('class', 'chart hide');
 
     parent.appendChild(div);
 

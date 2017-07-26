@@ -116,7 +116,7 @@ $(document).ready(function(){
     })
 
     $('#subscriberModal').on('hidden.bs.modal', function () {
-      destroyCharts();
+        destroyCharts();
         sub_modal_now = undefined;
         $("#chartFLVideo").html("");
         $("#chartFLAudio").html("");

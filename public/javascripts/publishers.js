@@ -280,7 +280,6 @@ var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, 
 
 var createNewPublisherList = function(roomID, streamID, nSubscribers, userName, state){
     var color = stateToColor(state);
-    //$('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th class="pubId">' + streamID + '</th><th class="pubName">' + userName + '</th><th><span class="status fa fa-circle ' + color + '"></th><th id="subsInPub">' + nSubscribers + '</th></tr>');
     $('#bodyTable').append('<tr class="publisher" id="pub_' + streamID + '" data-pub_id="' + streamID + '"><th class="pubName">' + userName + '</th><th class="pubId">' + streamID + '</th><th><span class="status fa fa-circle ' + color + '"></th><th id="subsInPub">' + nSubscribers + '</th></tr>');
     $('#pub_'+ streamID).click(function() {
         var pub_id = $(this).data('pub_id');
