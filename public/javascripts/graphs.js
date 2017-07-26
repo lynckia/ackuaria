@@ -20,7 +20,7 @@ $(document).ready(function(){
 
     drawVideoKbpsChart();
     drawAudioKbpsChart();
-})    
+})
 
 var parseDate = d3.time.format("%H:%M:%S");
 
@@ -78,7 +78,7 @@ var newDataSub = function(subID, data) {
         // updateBWChart(newDataBW);
       }
 
-        
+
   }
 }
 
@@ -146,7 +146,7 @@ var drawVideoKbpsChart = function() {
       .style("font-family", 'Nunito-Light')
       .style("font-size", "16px")
       .style("fill", "#042762")
-      .text(" Video (Kbps)");
+      .text(" Video All layers (Kbps)");
 
 }
 
@@ -428,7 +428,7 @@ var updateVideoKbpsChart = function(newData) {
       yVideo.domain([0, d3.max(data.video, function(d) { return d.val; })]);
 
       svgVideo.select("g.x.axis").call(xAxisVideo);
-      svgVideo.select("g.y.axis").call(yAxisVideo); 
+      svgVideo.select("g.y.axis").call(yAxisVideo);
 
       svgVideo.select("path#videoChart").data([data.video])
           .attr("d", lineVideo);
@@ -443,7 +443,7 @@ var updateAudioKbpsChart = function(newData) {
       yAudio.domain([0, d3.max(data.audio, function(d) { return d.val; })]);
 
       svgAudio.select("g.x.axis").call(xAxisAudio);
-      svgAudio.select("g.y.axis").call(yAxisAudio); 
+      svgAudio.select("g.y.axis").call(yAxisAudio);
 
       svgAudio.select("path#audioChart").data([data.audio])
           .attr("d", lineAudio);
@@ -458,7 +458,7 @@ var updateFLVideoChart = function(newData) {
       yFLVideo.domain([0, 100]);
 
       svgFLVideo.select("g.x.axis").call(xAxisFLVideo);
-      svgFLVideo.select("g.y.axis").call(yAxisFLVideo); 
+      svgFLVideo.select("g.y.axis").call(yAxisFLVideo);
 
       svgFLVideo.select("path#FLVideoChart").data([dataSub.FLVideo])
           .attr("d", lineFLVideo);
@@ -472,7 +472,7 @@ var updateFLAudioChart = function(newData) {
       yFLAudio.domain([0, 100]);
 
       svgFLAudio.select("g.x.axis").call(xAxisFLAudio);
-      svgFLAudio.select("g.y.axis").call(yAxisFLAudio); 
+      svgFLAudio.select("g.y.axis").call(yAxisFLAudio);
 
       svgFLAudio.select("path#FLAudioChart").data([dataSub.FLAudio])
           .attr("d", lineFLAudio);
@@ -487,7 +487,7 @@ var updateBWChart = function(newData) {
       yBW.domain([0, d3.max(dataSub.BW, function(d) { return d.val; })]);
 
       svgBW.select("g.x.axis").call(xAxisBW);
-      svgBW.select("g.y.axis").call(yAxisBW); 
+      svgBW.select("g.y.axis").call(yAxisBW);
 
       svgBW.select("path#BWChart").data([dataSub.BW])
           .attr("d", lineBW);

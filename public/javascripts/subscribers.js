@@ -5,6 +5,11 @@ var subscribers = {};
 var sub_modal_now;
 var ssrcs = {};
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
+const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated'];
+const publisherAudioStats = ['bitrateCalculated'];
+const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter'];
+const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter'];
+
 
 $(document).ready(function(){
 
@@ -28,7 +33,7 @@ $(document).ready(function(){
              states[s] = totalStates[s];
             }
         }
-        users = evt.users; 
+        users = evt.users;
 
         $('#others').html("");
         $('#selected').html("");
@@ -47,35 +52,48 @@ $(document).ready(function(){
     });
 
     socket.on('newStats', function(evt) {
-        var event = evt.event;
-        console.log(event);
-        var pubID = event.streamId;
-        delete event.streamId;
-        if (pubID == streamID){
-            var video, audio, stats;
-            for (var id in event) {
-                for (var ssrc in event[id]) {
-                    if (event[id][ssrc].type === 'video') {
-                        video = event[id][ssrc];
-                        video.ssrc = ssrc;
-                    } else if (event[id][ssrc].type === 'audio') {
-                        audio = event[id][ssrc];
-                        audio.ssrc = ssrc;
-                    }
-                }
-                if (id === 'publisher') {
-                    updateSR(audio, video, event.timestamp);
-                } else {
-                    stats = {audio: audio, video: video};
-                    subscribers[id] = stats;
-                    if (sub_modal_now == id) {
-                        updateRR(id, audio, video, event.timestamp);
-                        updateCharts(pubID, id, event);
-                    }
-                }
+      var event = evt.event;
+      var pubID = event.streamId;
+      delete event.streamId
+      let publisherVideo = [];
+      let publisherAudio;
+      if (pubID == streamID) {
+        for (var id in event) {
+          if (id === 'publisher'){
+            for (var ssrc in event[id]) {
+              if (event[id][ssrc].type === 'video'){
+                let videoEntry = event[id][ssrc];
+                videoEntry.ssrc = ssrc
+                publisherVideo.push(videoEntry);
+              } else if (event[id][ssrc].type === 'audio') {
+                publisherAudio = event[id][ssrc];
+                publisherAudio.ssrc = ssrc;
+              }
             }
-
+          } else {
+            let stats = {};
+            for (var ssrc in event[id]) {
+              if(event[id][ssrc].type === 'video') {
+                stats.video = event[id][ssrc];
+                stats.video.ssrc = ssrc;
+              } else if (event[id][ssrc].type === 'audio') {
+                stats.audio = event[id][ssrc];
+                stats.audio.ssrc = ssrc;
+              }
+            }
+            if (stats.video || stats.audio) {
+              subscribers[id] = stats;
+              if (sub_modal_now == id) {
+                updateRR(id, stats.audio, stats.video, event.timestamp);
+                updateCharts(pubID, id, event);
+              }
+            }
+          }
         }
+        if (publisherVideo.length > 0 || publisherAudio) {
+          updateSR(publisherAudio, publisherVideo, event.timestamp);
+        }
+      }
     });
 
     $('.publisher').click(function(){ window.location = '/ackuaria/subs'});
@@ -99,6 +117,7 @@ $(document).ready(function(){
     })
 
     $('#subscriberModal').on('hidden.bs.modal', function () {
+      destroyCharts();
         sub_modal_now = undefined;
         $("#chartFLVideo").html("");
         $("#chartFLAudio").html("");
@@ -153,7 +172,7 @@ $(document).ready(function(){
             paintSubscribersList();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -169,7 +188,7 @@ $(document).ready(function(){
             paintSubscribersGrid();
             search();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -183,7 +202,7 @@ $(document).ready(function(){
             $( ".audioChart" ).hide();
             $( ".videoChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -201,7 +220,7 @@ $(document).ready(function(){
             $( ".videoChart" ).hide();
             $( ".audioChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -219,7 +238,7 @@ $(document).ready(function(){
             $( ".audioChart" ).show();
             $( ".videoChart" ).show();
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -241,7 +260,7 @@ $(document).ready(function(){
             $( "#videoCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -263,7 +282,7 @@ $(document).ready(function(){
             $( "#audioCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -285,7 +304,7 @@ $(document).ready(function(){
             $( "#audioCol" ).show();
 
         }
-        $(this).addClass('active');  
+        $(this).addClass('active');
         $(this).addClass('btn-primary');
         $(this).removeClass('btn-default');
 
@@ -312,7 +331,7 @@ $(document).ready(function(){
                 color = "orange";
                 break;
         }
-        return color; 
+        return color;
     }
 
     var updateModalState = function(subID) {
@@ -347,44 +366,31 @@ $(document).ready(function(){
         var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
         newDataSub(subID, data)
 
-        if (video && ssrcs[video.sourceSsrc]) {
-            $('#dataModal #videoSSRC').html(video.ssrc);
-            $('#dataModal #videoBandwidth').html(video.bitrateCalculated/1000);
-            $('#dataModal #pli').html(video.PLI);
-            $('#dataModal #videoFractionLost').html(Math.round((video.fractionLost * 100 / 256) *100) / 100 + "%");
-            $('#dataModal #videoJitter').html(video.jitter);
-            $('#dataModal #videoPacketsLost').html(video.packetsLost);
-            $('#dataModal #videoSourceSSRC').html(video.sourceSsrc);
+        if (video) {
+          let htmlData = '';
+          subscriberVideoStats.forEach((value) => {
+            if (video[value] || video[value] === 0) {
+              htmlData+=`${value}: ${video[value]} </br>`
+            }
+          });
+          htmlData += '<hr>';
+          $('#videoDataSub').html(htmlData);
         }
-        if (audio && ssrcs[audio.sourceSsrc]) {
-            $('#dataModal #audioSSRC').html(audio.ssrc);
-            $('#dataModal #audioFractionLost').html(Math.round((audio.fractionLost * 100 / 256) *100) / 100 + "%");
-            $('#dataModal #audioJitter').html(audio.jitter);
-            $('#dataModal #audioPacketsLost').html(audio.packetsLost);
-            $('#dataModal #audioSourceSSRC').html(audio.sourceSsrc);
+        if (audio) {
+          let htmlData = '';
+          subscriberAudioStats.forEach((value) => {
+            if (audio[value] || audio[value] === 0) {
+              htmlData+=`${value}: ${audio[value]} </br>`
+            }
+          });
+          $('#audioDataSub').html(htmlData);
         }
 
     }
 
     var updateSR = function(audio, video, timestamp) {
-        var bpsAudio, bpsVideo, kbpsAudio, kbpsVideo;
-        if (!lastTimestamp && !lastBytesAudio && !lastBytesVideo) {
-            lastTimestamp = timestamp;
-            if (audio) lastBytesAudio = audio.bytesSent;
-            if (video) lastBytesVideo = video.bytesSent;
-            return;
-        } else {
-            var timeSince = (timestamp - lastTimestamp) / 1000;
-            if (audio) {
-                bpsAudio = audio.bitrateCalculated / 1000;
-                lastBytesAudio = audio.bytesSent;
-            }
-            if (video) {
-                bpsVideo = video.bitrateCalculated / 1000;
-                lastBytesVideo = video.bytesSent;
-            }
-            if (audio || video) lastTimestamp = timestamp;
-        }
+        let bpsAudio = 0;
+        let bpsVideo = 0;
         var date = new Date(timestamp);
         var seconds = date.getSeconds();
         var minutes = date.getMinutes();
@@ -393,21 +399,32 @@ $(document).ready(function(){
         var dateStr = hour + ":" + minutes +":" + seconds;
 
         if (audio) {
-            $('#audioSSRC').html(audio.ssrc);
-            if (bpsAudio != 0) $('#audioBytesSent').html(Math.round(bpsAudio * 100)/100 + " Kbps");
-            $('#audioPacketsSent').html(audio.packetsSent);
-            kbpsAudio = Math.round(bpsAudio * 100)/100;
-            ssrcs[audio.ssrc] = "audio";
+          let data = '';
+          bpsAudio = audio.bitrateCalculated;
+          publisherAudioStats.forEach((value) => {
+            if (audio[value] || audio[value] === 0) {
+              data += `<div class="propertyTitle"> ${value}: <span class="propertyContent">${audio[value]}</span></div>`
+            }
+          });
+          $('#audioData').html(data);
+          ssrcs[audio.ssrc] = "audio";
         }
         if (video) {
-            $('#videoSSRC').html(video.ssrc);
-            if (bpsVideo != 0) $('#videoBytesSent').html(Math.round(bpsVideo * 100)/100 + " Kbps");
-            $('#videoPacketsSent').html(video.packetsSent);
-            kbpsVideo = Math.round(bpsVideo * 100)/100;
-            ssrcs[video.ssrc] = "video";
+          let data = '';
+          video.forEach((videoData) => {
+            bpsVideo += videoData.bitrateCalculated;
+            ssrcs[videoData.ssrc] = "video";
+            data += `<div class="propertytitle"> SSRC: <span class="propertycontent">${videoData.ssrc}</span></div>`
+            publisherVideoStats.forEach((value) => {
+              if (videoData[value] || videoData[value] === 0) {
+                data += `<div class="propertytitle"> ${value}: <span class="propertycontent">${videoData[value]}</span></div>`
+              }
+            });
+            data+='<hr>';
+          });
+          $('#videoData').html(data);
         }
-
-        newDataPub({date: dateStr, kbpsVideo: kbpsVideo, kbpsAudio: kbpsAudio});
+        newDataPub({date: dateStr, kbpsVideo: bpsVideo/1000, kbpsAudio: bpsAudio/1000});
 
     }
 
@@ -444,7 +461,7 @@ $(document).ready(function(){
 
     var paintSubscribersList = function() {
         $('#subscribers').html("");
-        $('#subscribers').append('<div class="subscriberContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-6">User ID</th><th class="col-md-4">User name</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
+        $('#subscribers').append('<div class="subscriberContainer show_list"><table class="sortable-theme-bootstrap table table-hover" data-sortable><thead><tr><th class="col-md-6">User Name</th><th class="col-md-2">User ID</th><th class="col-md-2">Status</th></tr></thead><tbody id="bodyTable"></tbody></table></div>');
         if (room && streams[streamID]) {
             var subscribers = streams[streamID].subscribers;
             var nSubscribers = subscribers.length;
@@ -462,7 +479,7 @@ $(document).ready(function(){
         }
         Sortable.init()
 
-    }   
+    }
 
     var createNewSubscriberGrid = function(userID, userName, state){
         var color = stateToColor(state);
@@ -472,7 +489,7 @@ $(document).ready(function(){
     var createNewSubscriberList = function(userID, userName, state){
         var color = stateToColor(state);
 
-        $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-state="' + color + '" data-subid="' + userID + '" data-username="' + userName + '" ><th class="subId">' + userID + '</th><th class="subname">' + userName + '</th><th class="status"><span class="fa fa-circle ' + color + '"></span></th></tr>');
+        $('#bodyTable').append('<tr id="sub_' + userID + '" class="subscriber" data-toggle="modal" data-target="#subscriberModal" data-state="' + color + '" data-subid="' + userID + '" data-username="' + userName + '" ><th class="subName">' + userName + '</th><th class="subId">' + userID + '</th><th class="status"><span class="fa fa-circle ' + color + '"></span></th></tr>');
     }
 
     var paintPublishers = function() {
@@ -527,7 +544,7 @@ $(document).ready(function(){
 
     var updateStatePublisher = function() {
         var state;
-        if (states[streamID]) state = states[streamID].state;    
+        if (states[streamID]) state = states[streamID].state;
 
         var color = stateToColor(state);
 
@@ -538,7 +555,7 @@ $(document).ready(function(){
         $('#pubState').addClass(color);
     }
 
-    paintSubscribersGrid();
+    paintSubscribersList();
     paintPublishers();
 
 });

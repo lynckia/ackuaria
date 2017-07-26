@@ -3,7 +3,7 @@
 	<div id="roomInfo">
 		<div id="roomName">Room <%= roomName %></div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
 		<div id="roomId"><%= roomID %></div>
-		<div id="pubsCount"> 
+		<div id="pubsCount">
 			<span id="numberStreams">0</span> STREAMS <i class="fa fa-users"></i>
 		</div>
 
@@ -11,8 +11,8 @@
 
 	    	<button class="btn btn-sm btn-default" id="removeFails" data-toggle="tooltip" data-placement="top" title="Remove all"> <span class="glyphicon glyphicon-trash" hidden></span> </button>
 	        <button class="btn btn-sm btn-default" id="fails" data-toggle="tooltip" data-placement="top" title="Show failed streams"> <span class="glyphicon glyphicon-warning-sign"></span> </button>
-	        <button class="btn btn-sm btn-primary active" id="grid" data-toggle="tooltip" data-placement="top" title="Show streams in grid"><span class="glyphicon glyphicon-th-large"></span></button>
-	        <button class="btn btn-sm btn-default" id="list" data-toggle="tooltip" data-placement="top" title="Show streams in list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+	        <button class="btn btn-sm btn-primary active" id="list" data-toggle="tooltip" data-placement="top" title="Show streams in list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+	        <button class="btn btn-sm btn-default" id="grid" data-toggle="tooltip" data-placement="top" title="Show streams in grid"><span class="glyphicon glyphicon-th-large"></span></button>
 	    </div>
 		<div class="row" id="search">
 	       <div id="custom-search-input">
@@ -30,7 +30,7 @@
 	</div>
 
 	<div id="publishers" class="row row-centered">
-	
+
 	</div>
 
 </div>
@@ -46,7 +46,7 @@
 		 <div id="pubModal" class="row">
 
 	        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dataModal">
-				
+
 	        </div>
       </div>
     </div>
@@ -60,8 +60,8 @@
   var roomName = <%- JSON.stringify(roomName) %>;
   var streams = <%- JSON.stringify(streams) %>;
   var states = <%- JSON.stringify(states) %>;
-  paintPublishersGrid();
-  
+  paintPublishersList();
+
 
 
 
