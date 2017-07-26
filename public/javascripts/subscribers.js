@@ -1,5 +1,5 @@
 var socket = io();
-var show_grid = true;
+var show_grid = false;
 var audio, video;
 var subscribers = {};
 var sub_modal_now;
