@@ -34,12 +34,17 @@ config.nuve.superserviceID = ''; // default value: ''
 config.nuve.superserviceKey = ''; // default value: ''
 
 /*********************************************************
+ VIEW CONFIGURATION
+**********************************************************/
+config.view = {};
+config.view.showLogoBar = true;  // default value: true
+
+/*********************************************************
  LICODE STATS CONFIGURATION
 **********************************************************/
 config.stats = {};
 config.stats.subscriptionDuration = 60;
 config.stats.subscriptionInterval = 1;
-
 
 /***** END *****/
 // Following lines are always needed.

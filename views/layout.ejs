@@ -27,9 +27,11 @@
 	<body>
 		<div id="navbar" class="fixed-top">
 		</div>
-		<div id="ackuaria">
-			<img id="brand" src="images/brand.svg" alt="ACKUARIA" onclick='window.location="/ackuaria"'>
-		</div>
+		<% if (config.view && config.view.showLogoBar) { %>
+			<div id="ackuaria">
+				<img id="brand" src="images/brand.svg" alt="ACKUARIA" onclick='window.location="/ackuaria"'>
+			</div>
+		<% } %>
 		<%- body %>
   	</body>
 
