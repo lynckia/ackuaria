@@ -39,7 +39,6 @@ exports.updateRooms = function(req, res, next) {
 }
 
 exports.loadRooms = function(req, res) {
-   API.currentRoom = "";
    res.render('rooms', {
       view: "rooms",
       rooms: API.rooms
@@ -49,7 +48,6 @@ exports.loadRooms = function(req, res) {
 exports.loadPublishers = function(req, res) {
 	var roomID = req.query.room_id;
    var fails = req.query.fails;
-   API.currentRoom = roomID;
    var room = API.rooms[roomID];
 
    if (API.rooms[roomID]) var roomName = API.rooms[roomID].roomName;
@@ -88,8 +86,7 @@ exports.loadSubscribers = function(req, res) {
    var streamID = req.query.pub_id;
    var roomID = req.query.room_id;
    var room = API.rooms[roomID];
-
-   API.currentRoom = roomID;
+   
    if (API.streams[streamID])  var userName = API.streams[streamID].userName;
    else var userName = "Publisher not found";
 

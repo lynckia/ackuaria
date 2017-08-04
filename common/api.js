@@ -19,7 +19,6 @@ API.rooms = {};
 API.streams = {};
 API.users = {};
 API.states = {};
-API.currentRoom;
 API.sessions_active = {};
 API.lastUpdated;
 // key: socketId, value: socket
@@ -113,16 +112,28 @@ const removeConnection = (socketId) => {
   API.sockets.delete(socketId);
 };
 
+function getParameterByName(name, url) {
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return '';
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 const sendEventToClients = function(event, rooms, streams, users, states) {
   API.sockets.forEach((currentSocket, currentSocketId) => {
-        currentSocket.emit('newEvent', {
-            event: event,
-            rooms: rooms,
-            streams: streams,
-            users: users,
-            states: states
-        });
-    });
+    var clientCurrentRoom = getParameterByName('room_id', currentSocket.handshake.headers.referer);   
+    if (clientCurrentRoom == event.roomID || clientCurrentRoom == '') {
+      currentSocket.emit('newEvent', {
+        event: event,
+        rooms: rooms,
+        streams: streams,
+        users: users,
+        states: states
+      });
+    }
+  });
 };
 
 API.api = {};
@@ -454,9 +465,7 @@ API.api.event = function(theEvent) {
       default:
         break;
     }
-    if (API.currentRoom == event.roomID || API.currentRoom == "") {
-      sendEventToClients(event, API.rooms, API.streams, API.users, API.states);
-    }
+    sendEventToClients(event, API.rooms, API.streams, API.users, API.states);
     if (config.ackuaria.useDB) {
       eventsRegistry.addEvent(theEvent, function(saved, error) {
         if (error) log.error(error);
