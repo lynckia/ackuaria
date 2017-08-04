@@ -5,10 +5,10 @@ var subscribers = {};
 var sub_modal_now;
 var ssrcs = {};
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
-const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated'];
+const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'erizoBandwidth'];
 const publisherAudioStats = ['bitrateCalculated'];
-const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter'];
-const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter'];
+const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow'];
+const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter', 'erizoAudioMute', 'erizoVideoMute'];
 
 
 $(document).ready(function(){
