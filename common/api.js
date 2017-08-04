@@ -202,17 +202,19 @@ API.api.event = function(theEvent) {
             }
             API.sessions_active[roomID] = session;
 
-            roomsRegistry.hasRoom(roomID, function(hasRoom){
-              if (!hasRoom) {
-                roomsRegistry.addRoom({
-                  roomID: roomID,
-                  roomName: API.rooms[roomID].roomName,
-                  data: API.rooms[roomID].data
-                }, function(saved) {
-                  log.info('MongoDB: Added room: ', saved);
-                })
-              }
-            })
+            if (config.ackuaria.useDB) {
+              roomsRegistry.hasRoom(roomID, function(hasRoom){
+                if (!hasRoom) {
+                  roomsRegistry.addRoom({
+                    roomID: roomID,
+                    roomName: API.rooms[roomID].roomName,
+                    data: API.rooms[roomID].data
+                  }, function(saved) {
+                    log.info('MongoDB: Added room: ', saved);
+                  })
+                }
+              });
+            }
 
           } else {
             var session = API.sessions_active[roomID];
@@ -331,18 +333,19 @@ API.api.event = function(theEvent) {
           API.users[userID].subscribedTo.push(streamID);
         }
 
-
-        roomsRegistry.hasRoom(roomID, function(hasRoom){
-          if (!hasRoom) {
-            roomsRegistry.addRoom({
-              roomID: roomID,
-              roomName: API.rooms[roomID].roomName,
-              data: API.rooms[roomID].data
-            }, function(saved) {
-              log.info('MongoDB: Added room: ', saved);
-            })
-          }
-        })
+        if (config.ackuaria.useDB) {
+          roomsRegistry.hasRoom(roomID, function(hasRoom){
+            if (!hasRoom) {
+              roomsRegistry.addRoom({
+                roomID: roomID,
+                roomName: API.rooms[roomID].roomName,
+                data: API.rooms[roomID].data
+              }, function(saved) {
+                log.info('MongoDB: Added room: ', saved);
+              })
+            }
+          });
+        }
         break;
 
       case "unsubscribe":
