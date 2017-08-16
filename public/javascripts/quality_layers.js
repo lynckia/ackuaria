@@ -1,8 +1,10 @@
 /* globals Highcharts */
 'use strict';
 
-const QualityLayersCharts = () => {
+const QualityLayersCharts = (chartStyle) => {
   const that = {};
+  that.chartStyle = chartStyle || 'width: 500px; height:500px; float:left;';
+  console.warn('Initing Quality Layers', that.chartStyle);
   const charts = new Map();
 
   const spatialStyles = ['ShortDot', 'Dash', 'DashDot', 'ShortDashDotDot'];
@@ -20,7 +22,7 @@ const QualityLayersCharts = () => {
     }
     const parent = document.getElementById('chartBW');
     const div = document.createElement('div');
-    div.setAttribute('style', 'width: 500px; height:500px; float:left;');
+    div.setAttribute('style', that.chartStyle);
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
 
     parent.appendChild(div);

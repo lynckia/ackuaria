@@ -10,7 +10,7 @@ body {
 	margin-top: 5px;
 	bottom: 25px;
 	width: 90%;
-	min-height:calc(100% - 210px);
+	min-height: 100%;
 }
 #historyTitle {
 	position: absolute;
@@ -73,7 +73,7 @@ input.date {
 	border: 1px solid;
 	border-radius: 6px;
 	border-color: #042763;
-	line-height: inherit;	
+	line-height: inherit;
 	height: 26px;
 	text-align: center;
 	background-color: #042763;
@@ -96,7 +96,7 @@ input.date {
 }
 
 .toolIcon {
-	margin-right: 10px; 
+	margin-right: 10px;
 	width: 26px;
 
 }
@@ -264,7 +264,7 @@ input.filter {
 
 .table thead tr th {
 	cursor: default !important;
-} 
+}
 
 .room_empty:hover {
 	background-color: white !important;

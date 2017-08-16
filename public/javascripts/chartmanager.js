@@ -33,6 +33,10 @@ let ChartManager = () => {
     svgFLAudio = genericChart('chartFLAudio', 'Audio FLV', 'Audio Fraction Lost', getSubChartStyle());
   };
 
+  let initQualityLayersChart = () => {
+    qualityLayers = QualityLayersCharts(getSubChartStyle());
+  }
+
   let updateVideoKbpsChart = (newData) => {
     svgVideo.updateChart('kbps', newData.val);
   };
@@ -56,7 +60,7 @@ let ChartManager = () => {
 
     drawVideoKbpsChart();
     drawAudioKbpsChart();
-    qualityLayers = QualityLayersCharts();
+    initQualityLayersChart();
   };
 
   that.newDataPub = (newData) => {
