@@ -2,7 +2,7 @@
 'use strict';
 
 const genericChart = (parentDiv, chartDiv, title, chartStyle) => {
-  var that = {};
+  const that = {};
   that.chart = {};
   that.parentDiv = parentDiv;
   that.chartDiv = chartDiv;
@@ -11,7 +11,7 @@ const genericChart = (parentDiv, chartDiv, title, chartStyle) => {
 
   let initChart = () => {
     let parent = document.getElementById(that.parentDiv);
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.setAttribute('style', that.chartStyle);
     div.setAttribute('id', that.chartDiv);
     parent.appendChild(div);
@@ -49,7 +49,7 @@ const genericChart = (parentDiv, chartDiv, title, chartStyle) => {
         }
       },
       tooltip: {
-        formatter: () => {
+        formatter: function() {
           let s = '';
           for (let point of this.points) {
             s += '<br/>' + point.series.name + ': ' + point.y;

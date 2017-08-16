@@ -60,22 +60,22 @@ let ChartManager = () => {
   };
 
   that.newDataPub = (newData) => {
-    var date = newData.date;
+    const date = newData.date;
     if (newData.kbpsVideo) {
       if (newData.kbpsVideo == 0) counterVideo++;
       else {
-        var kbpsVideo = newData.kbpsVideo / counterVideo;
+        const kbpsVideo = newData.kbpsVideo / counterVideo;
         counterVideo = 1;
-        var newDataVideo = {date: date, val: kbpsVideo};
+        const newDataVideo = {date: date, val: kbpsVideo};
         updateVideoKbpsChart(newDataVideo);
       }
     }
     if (newData.kbpsAudio) {
       if (newData.kbpsAudio == 0) counterAudio++;
       else {
-        var kbpsAudio = newData.kbpsAudio / counterAudio;
+        const kbpsAudio = newData.kbpsAudio / counterAudio;
         counterAudio = 1;
-        var newDataAudio = {date: date, val: kbpsAudio};
+        const newDataAudio = {date: date, val: kbpsAudio};
         updateAudioKbpsChart(newDataAudio);
       }
     }
@@ -88,15 +88,15 @@ let ChartManager = () => {
       sub_modal_now = subID;
       return;
     } else if (sub_modal_now == subID) {
-      var date = data.date;
+      const date = data.date;
       if (data.FLVideo !== undefined) {
-        var FLVideo = data.FLVideo * 100 / 256;
-        var newDataFLVideo = {date: date, val: FLVideo};
+        const FLVideo = data.FLVideo * 100 / 256;
+        const newDataFLVideo = {date: date, val: FLVideo};
         updateFLVideoChart(newDataFLVideo);
       }
       if (data.FLAudio !== undefined) {
-        var FLAudio = data.FLAudio * 100 / 256;
-        var newDataFLAudio = {date: date, val: FLAudio};
+        const FLAudio = data.FLAudio * 100 / 256;
+        const newDataFLAudio = {date: date, val: FLAudio};
         updateFLAudioChart(newDataFLAudio);
       }
     }

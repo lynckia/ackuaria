@@ -18,8 +18,8 @@ const QualityLayersCharts = () => {
     if (!charts.has(pubId)) {
       return undefined;
     }
-    var parent = document.getElementById('chartBW');
-    var div = document.createElement('div');
+    const parent = document.getElementById('chartBW');
+    const div = document.createElement('div');
     div.setAttribute('style', 'width: 500px; height:500px; float:left;');
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
 
@@ -58,7 +58,7 @@ const QualityLayersCharts = () => {
         }
       },
       tooltip: {
-        formatter: () => {
+        formatter: function() {
           let s = '';
           let selectedLayers = 'Spatial: 0 / Temporal: 0';
           for (let point of this.points) {
@@ -95,7 +95,7 @@ const QualityLayersCharts = () => {
     return chart;
   };
 
-  var updateSeriesForKey =  (streamId, subId, key, spatial, temporal, valueX, valueY,pointName = undefined, isActive = true) => {
+  const updateSeriesForKey =  (streamId, subId, key, spatial, temporal, valueX, valueY,pointName = undefined, isActive = true) => {
     let chart = getOrCreateChart(streamId, subId);
     if (chart.seriesMap[key] === undefined) {
 
@@ -141,8 +141,8 @@ const QualityLayersCharts = () => {
 
     if (qualityLayersData !== undefined) {
     let maxActiveSpatialLayer = qualityLayersData.maxActiveSpatialLayer || 0;
-    for (var spatialLayer in qualityLayersData) {
-      for (var temporalLayer in qualityLayersData[spatialLayer]) {
+    for (let spatialLayer in qualityLayersData) {
+      for (let temporalLayer in qualityLayersData[spatialLayer]) {
         let key = 'Spatial ' + spatialLayer + ' / Temporal ' + temporalLayer;
         updateSeriesForKey(pubId, subId, key, spatialLayer, temporalLayer,
           date, qualityLayersData[spatialLayer][temporalLayer], undefined,
