@@ -1,6 +1,6 @@
 let ChartManager = () => {
   let that = {};
-  let svgVideo, svgAudio, svgFLAudio, svgFLVideo, qualityLayers;
+  let svgVideo, svgAudio, svgSubsAudio, svgFLAudio, svgFLVideo, qualityLayers;
   let counterVideo, counterAudio;
 
   let getPubChartStyle = () => {
@@ -25,6 +25,10 @@ let ChartManager = () => {
     svgAudio = genericChart('chartAudio', 'audioHighChart', 'Audio Kbps', getPubChartStyle());
   };
 
+  let drawSubscriberAudioChart = () => {
+    svgSubsAudio = genericChart('chartSubsAudio', 'audioSubscriberChart', 'Audio Kbps', getSubChartStyle());
+  };
+
   let drawFLVideoChart = () => {
     svgFLVideo = genericChart('chartFLVideo', 'video FLV', 'Video Fraction Lost', getSubChartStyle());
   };
@@ -45,9 +49,14 @@ let ChartManager = () => {
     svgAudio.updateChart('kbps', newData.val);
   };
 
+  let updateSubscriberAudioChart = (newData) => {
+    svgSubsAudio.updateChart('kbps', newData.val);
+  };
+
   let updateFLVideoChart = (newData) => {
     svgFLVideo.updateChart('lost pct.', newData.val)
   };
+
   let updateFLAudioChart = (newData) => {
     svgFLAudio.updateChart('lost pct', newData.val)
   };
@@ -60,7 +69,6 @@ let ChartManager = () => {
 
     drawVideoKbpsChart();
     drawAudioKbpsChart();
-    initQualityLayersChart();
   };
 
   that.newDataPub = (newData) => {
@@ -87,12 +95,15 @@ let ChartManager = () => {
 
   that.newDataSub = (subID, data) => {
     if (!data) {
+      initQualityLayersChart();
+      drawSubscriberAudioChart(subID);
       drawFLVideoChart(subID);
       drawFLAudioChart(subID);
       sub_modal_now = subID;
       return;
     } else if (sub_modal_now == subID) {
       const date = data.date;
+      console.log('NEW DATA SUB', subID, data);
       if (data.FLVideo !== undefined) {
         const FLVideo = data.FLVideo * 100 / 256;
         const newDataFLVideo = {date: date, val: FLVideo};
@@ -102,6 +113,10 @@ let ChartManager = () => {
         const FLAudio = data.FLAudio * 100 / 256;
         const newDataFLAudio = {date: date, val: FLAudio};
         updateFLAudioChart(newDataFLAudio);
+      }
+      if (data.audioBW !== undefined) {
+        const newDataAudio = {date: date, val: data.audioBW};
+        updateSubscriberAudioChart(newDataAudio);
       }
     }
   }
@@ -118,6 +133,10 @@ let ChartManager = () => {
     if (svgAudio) {
       svgFLAudio.destroyChart();
       svgFLAudio = undefined;
+    }
+    if (svgSubsAudio) {
+      svgSubsAudio.destroyCharts();
+      svgSubsAudio = undefined;
     }
     if (qualityLayers) {
       qualityLayers.destroyCharts();

@@ -352,12 +352,15 @@ $(document).ready(function(){
     }
 
     var updateRR = function(subID, audio, video, timestamp) {
-        var FLVideo, FLAudio, BW;
+        var FLVideo, FLAudio, BW, audioBW;
         if (video) {
             FLVideo = video.fractionLost;
             BW = video.bitrateCalculated/1000;
         }
-        if (audio) FLAudio = audio.fractionLost;
+        if (audio) {
+          FLAudio = audio.fractionLost;
+          audioBW = audio.bitrateCalculated/1000;
+        };
 
         var date = new Date(timestamp);
         var seconds = date.getSeconds();
@@ -366,8 +369,8 @@ $(document).ready(function(){
 
         var dateStr = hour + ":" + minutes +":" + seconds;
 
-        var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
-        chartManager.newDataSub(subID, data)
+        var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW, audioBW: audioBW};
+        chartManager.newDataSub(subID, data);
 
         if (video) {
           let htmlData = '';
