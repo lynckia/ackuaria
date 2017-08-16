@@ -3,6 +3,51 @@ let ChartManager = () => {
   let svgVideo, svgAudio, svgFLAudio, svgFLVideo, qualityLayers;
   let counterVideo, counterAudio;
 
+  let getPubChartStyle = () => {
+    let margin = {top: 30, right: 10, bottom: 50, left: 35};
+    let width = maxWidth - margin.left - margin.right;
+    let strStyle = `width: ${width}` ;
+    return strStyle;
+  }
+
+  let getSubChartStyle = () => {
+    let margin = {top: 50, right: 40, bottom: 20, left: 40};
+    let width = maxWidthSub - margin.left - margin.right;
+    let strStyle = `width: ${width}` ;
+    return strStyle;
+  }
+
+  let drawVideoKbpsChart = () => {
+    svgVideo = genericChart('chartVideo', 'videoHighChart', 'Video Kbps', getPubChartStyle());
+  };
+
+  let drawAudioKbpsChart = () => {
+    svgAudio = genericChart('chartAudio', 'audioHighChart', 'Audio Kbps', getPubChartStyle());
+  };
+
+  let drawFLVideoChart = () => {
+    svgFLVideo = genericChart('chartFLVideo', 'video FLV', 'Video Fraction Lost', getSubChartStyle());
+  };
+
+  let drawFLAudioChart = () => {
+    svgFLAudio = genericChart('chartFLAudio', 'Audio FLV', 'Audio Fraction Lost', getSubChartStyle());
+  };
+
+  let updateVideoKbpsChart = (newData) => {
+    svgVideo.updateChart('kbps', newData.val);
+  };
+
+  let updateAudioKbpsChart = (newData) => {
+    svgAudio.updateChart('kbps', newData.val);
+  };
+
+  let updateFLVideoChart = (newData) => {
+    svgFLVideo.updateChart('lost pct.', newData.val)
+  };
+  let updateFLAudioChart = (newData) => {
+    svgFLAudio.updateChart('lost pct', newData.val)
+  };
+
   that.init = () => {
     maxWidth = $("#chartVideo").width();
     $("#subscriberModal").show();
@@ -14,21 +59,21 @@ let ChartManager = () => {
     qualityLayers = QualityLayersCharts();
   };
 
-  that.newDataPub = function(newObject) {
-    var date = newObject.date;
-    if (newObject.kbpsVideo) {
-      if (newObject.kbpsVideo == 0) counterVideo++;
+  that.newDataPub = (newData) => {
+    var date = newData.date;
+    if (newData.kbpsVideo) {
+      if (newData.kbpsVideo == 0) counterVideo++;
       else {
-        var kbpsVideo = newObject.kbpsVideo / counterVideo;
+        var kbpsVideo = newData.kbpsVideo / counterVideo;
         counterVideo = 1;
         var newDataVideo = {date: date, val: kbpsVideo};
         updateVideoKbpsChart(newDataVideo);
       }
     }
-    if (newObject.kbpsAudio) {
-      if (newObject.kbpsAudio == 0) counterAudio++;
+    if (newData.kbpsAudio) {
+      if (newData.kbpsAudio == 0) counterAudio++;
       else {
-        var kbpsAudio = newObject.kbpsAudio / counterAudio;
+        var kbpsAudio = newData.kbpsAudio / counterAudio;
         counterAudio = 1;
         var newDataAudio = {date: date, val: kbpsAudio};
         updateAudioKbpsChart(newDataAudio);
@@ -36,7 +81,7 @@ let ChartManager = () => {
     }
   }
 
-  that.newDataSub = function(subID, data) {
+  that.newDataSub = (subID, data) => {
     if (!data) {
       drawFLVideoChart(subID);
       drawFLAudioChart(subID);
@@ -75,41 +120,6 @@ let ChartManager = () => {
     }
   };
 
-  drawQualityLayersChart = () => {
-
-  }
-
-  let drawVideoKbpsChart = () => {
-    svgVideo = genericChart('chartVideo', 'videoHighChart', 'Video Kbps');
-  };
-
-  let drawAudioKbpsChart = () => {
-    svgAudio = genericChart('chartAudio', 'audioHighChart', 'Audio Kbps');
-  };
-
-  let drawFLVideoChart = function() {
-    svgFLVideo = genericChart('chartFLVideo', 'video FLV', 'Video Fraction Lost');
-  };
-
-  let drawFLAudioChart = function() {
-    svgFLAudio = genericChart('chartFLAudio', 'Audio FLV', 'Audio Fraction Lost');
-  };
-
-
-  let updateVideoKbpsChart = function(newData) {
-    svgVideo.updateChart('kbps', newData.val);
-  };
-
-  let updateAudioKbpsChart = function(newData) {
-    svgAudio.updateChart('kbps', newData.val);
-  };
-
-  let updateFLVideoChart = function(newData) {
-    svgFLVideo.updateChart('lost pct.', newData.val)
-  };
-  let updateFLAudioChart = function(newData) {
-    svgFLAudio.updateChart('lost pct', newData.val)
-  };
 
   return that;
 };

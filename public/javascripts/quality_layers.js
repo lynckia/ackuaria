@@ -8,12 +8,12 @@ const QualityLayersCharts = () => {
   const spatialStyles = ['ShortDot', 'Dash', 'DashDot', 'ShortDashDotDot'];
   const temporalStyles = ['#7cb5ec', '#90ed7d', '#f7a35c', '#f15c80'];
 
-  const toBitrateString = function(value) {
+  const toBitrateString = (value) => {
     let result = Math.floor(value / Math.pow(2, 10));
     return result + 'kbps';
   };
 
-  const initChart = function (streamId, subId) {
+  const initChart = (streamId, subId) => {
     let pubId = streamId;
     if (!charts.has(pubId)) {
       return undefined;
@@ -58,7 +58,7 @@ const QualityLayersCharts = () => {
         }
       },
       tooltip: {
-        formatter: function() {
+        formatter: () => {
           let s = '';
           let selectedLayers = 'Spatial: 0 / Temporal: 0';
           for (let point of this.points) {
@@ -77,7 +77,7 @@ const QualityLayersCharts = () => {
     return chart;
   };
 
-  let getOrCreateChart = function(streamId, subId) {
+  let getOrCreateChart = (streamId, subId) => {
     let pubId = streamId;
     let chart;
     if (!charts.has(pubId)) {
@@ -95,7 +95,7 @@ const QualityLayersCharts = () => {
     return chart;
   };
 
-  var updateSeriesForKey = function (streamId, subId, key, spatial, temporal, valueX, valueY,pointName = undefined, isActive = true) {
+  var updateSeriesForKey =  (streamId, subId, key, spatial, temporal, valueX, valueY,pointName = undefined, isActive = true) => {
     let chart = getOrCreateChart(streamId, subId);
     if (chart.seriesMap[key] === undefined) {
 
@@ -133,7 +133,7 @@ const QualityLayersCharts = () => {
     seriesForKey.addPoint(point, true, shift);
   };
 
-  that.updateCharts = function (pubId, subId, data) {
+  that.updateCharts = (pubId, subId, data) => {
     let date = (new Date()).getTime();
 
     let selectedLayers = '';
@@ -170,7 +170,7 @@ const QualityLayersCharts = () => {
     date, rtxBitrate);
   };
 
-  that.destroyCharts = function () {
+  that.destroyCharts = () => {
     charts.forEach((subMap, pubId) => {
       subMap.forEach((subscriberChart, subId) => {
         subscriberChart.chart.destroy();

@@ -1,17 +1,18 @@
 /* globals Highcharts */
 'use strict';
 
-const genericChart = (parentDiv, chartDiv, title) => {
+const genericChart = (parentDiv, chartDiv, title, chartStyle) => {
   var that = {};
   that.chart = {};
   that.parentDiv = parentDiv;
   that.chartDiv = chartDiv;
+  that.chartStyle = chartStyle || 'width: 500px; height: float:left;';
   that.title = title;
 
   let initChart = () => {
     let parent = document.getElementById(that.parentDiv);
     var div = document.createElement('div');
-    div.setAttribute('style', 'width: 500px; height: float:left;');
+    div.setAttribute('style', that.chartStyle);
     div.setAttribute('id', that.chartDiv);
     parent.appendChild(div);
     let chart = new Highcharts.Chart({
@@ -48,7 +49,7 @@ const genericChart = (parentDiv, chartDiv, title) => {
         }
       },
       tooltip: {
-        formatter: function() {
+        formatter: () => {
           let s = '';
           for (let point of this.points) {
             s += '<br/>' + point.series.name + ': ' + point.y;
