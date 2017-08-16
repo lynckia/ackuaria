@@ -4,14 +4,18 @@ var audio, video;
 var subscribers = {};
 var sub_modal_now;
 var ssrcs = {};
+let chartManager = ChartManager();
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
-const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'erizoBandwidth'];
-const publisherAudioStats = ['bitrateCalculated'];
-const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow'];
-const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter', 'erizoAudioMute', 'erizoVideoMute'];
+const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'erizoBandwidth', 'NACK'];
+const publisherAudioStats = ['bitrateCalculated', 'NACK'];
+const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow', 'NACK'];
+const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter', 'erizoAudioMute', 'erizoVideoMute', 'NACK'];
 
 
 $(document).ready(function(){
+    chartManager.init();
+
+
     socket.emit('subscribe_to_stats', streamID);
     socket.on('newEvent', function(evt) {
         var event = evt.event;
@@ -84,7 +88,7 @@ $(document).ready(function(){
               subscribers[id] = stats;
               if (sub_modal_now == id) {
                 updateRR(id, stats.audio, stats.video, event.timestamp);
-                updateCharts(pubID, id, event);
+                chartManager.updateQualityLayers(pubID, id, event);
               }
             }
           }
@@ -112,11 +116,11 @@ $(document).ready(function(){
       updateModalState(subID);
       var modal = $(this)
       $('#username').html(" " + userName);
-      newDataSub(subID);
+      chartManager.newDataSub(subID);
     })
 
     $('#subscriberModal').on('hidden.bs.modal', function () {
-        destroyCharts();
+        chartManager.destroySubCharts();
         sub_modal_now = undefined;
         $("#chartFLVideo").html("");
         $("#chartFLAudio").html("");
@@ -363,7 +367,7 @@ $(document).ready(function(){
         var dateStr = hour + ":" + minutes +":" + seconds;
 
         var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW};
-        newDataSub(subID, data)
+        chartManager.newDataSub(subID, data)
 
         if (video) {
           let htmlData = '';
@@ -423,7 +427,7 @@ $(document).ready(function(){
           });
           $('#videoData').html(data);
         }
-        newDataPub({date: dateStr, kbpsVideo: bpsVideo/1000, kbpsAudio: bpsAudio/1000});
+        chartManager.newDataPub({date: dateStr, kbpsVideo: bpsVideo/1000, kbpsAudio: bpsAudio/1000});
 
     }
 
