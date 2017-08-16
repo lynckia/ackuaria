@@ -4,7 +4,7 @@
 	margin-right: auto;
 	margin-top: 5px;
 	width: 90%;
-	min-height:calc(100% - 300px);
+	min-height: 100%;
 }
 
 #agentInfo {
@@ -68,7 +68,7 @@
 }
 
 
-/* 
+/*
 TIPO GRID
 */
 .show_grid.publisherContainer{
@@ -108,7 +108,7 @@ TIPO GRID
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background-color: #55739D; 
+	background-color: #55739D;
 	color: white;
 	font-size: 13px;
 
@@ -124,7 +124,7 @@ TIPO GRID
 }
 
 
-/* 
+/*
 TIPO LIST
 */
 

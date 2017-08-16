@@ -1,167 +1,160 @@
-/* globals Erizo, Highcharts */
+/* globals Highcharts */
 'use strict';
-const serverUrl = '/';
-const charts = new Map();
 
-var spatialStyles = ['ShortDot', 'Dash', 'DashDot', 'ShortDashDotDot'];
-var temporalStyles = ['#7cb5ec', '#90ed7d', '#f7a35c', '#f15c80'];
+const QualityLayersCharts = (chartStyle) => {
+  const that = {};
+  that.chartStyle = chartStyle || 'width: 500px; height:500px; float:left;';
+  console.warn('Initing Quality Layers', that.chartStyle);
+  const charts = new Map();
 
-let toBitrateString = function(value) {
-  let result = Math.floor(value / Math.pow(2, 10));
-  return result + 'kbps';
-};
+  const spatialStyles = ['ShortDot', 'Dash', 'DashDot', 'ShortDashDotDot'];
+  const temporalStyles = ['#7cb5ec', '#90ed7d', '#f7a35c', '#f15c80'];
 
-var initChart = function (streamId, subId) {
+  const toBitrateString = (value) => {
+    let result = Math.floor(value / Math.pow(2, 10));
+    return result + 'kbps';
+  };
+
+  const initChart = (streamId, subId) => {
     let pubId = streamId;
     if (!charts.has(pubId)) {
-       return undefined;
+      return undefined;
     }
-    var parent = document.getElementById('chartBW');
-    var div = document.createElement('div');
-    div.setAttribute('style', 'width: 500px; height:500px; float:left;');
+    const parent = document.getElementById('chartBW');
+    const div = document.createElement('div');
+    div.setAttribute('style', that.chartStyle);
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
 
     parent.appendChild(div);
 
     let chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'chart' + pubId + '_' + subId,
-            defaultSeriesType: 'line',
-            animation: false,
-            showAxes: true,
-            events: {
-            }
-        },
-        plotOptions: {
-            series: {
-                marker: {
-                    enabled: false
-                }
-            }
-        },
+      chart: {
+        renderTo: 'chart' + pubId + '_' + subId,
+        defaultSeriesType: 'line',
+        animation: false,
+        showAxes: true,
+        events: {
+        }
+      },
+      plotOptions: {
+        series: {
+          marker: {
+            enabled: false
+          }
+        }
+      },
+      title: {
+        text: 'Video Bandwidth (Kbps)'
+      },
+      xAxis: {
+        type: 'datetime',
+        tickPixelInterval: 150,
+        maxZoom: 20 * 1000
+      },
+      yAxis: {
+        minPadding: 0.2,
+        maxPadding: 0.2,
         title: {
-            // text: `pub: ${pubId},\nsub: ${subId}`
-            text: 'Video Bandwidth (Kbps)'
+          text: null,
+          margin: 80
+        }
+      },
+      tooltip: {
+        formatter: function() {
+          let s = '';
+          let selectedLayers = 'Spatial: 0 / Temporal: 0';
+          for (let point of this.points) {
+            s += '<br/>' + point.series.name + ': ' + toBitrateString(point.point.y);
+            selectedLayers = point.point.name || selectedLayers;
+          }
+          s = '<b>' + selectedLayers  + '</b>' + s;
+          return s;
         },
-        xAxis: {
-            type: 'datetime',
-            tickPixelInterval: 150,
-            maxZoom: 20 * 1000
-        },
-        yAxis: {
-            minPadding: 0.2,
-            maxPadding: 0.2,
-            title: {
-                text: null,
-                margin: 80
-            }
-        },
-        tooltip: {
-          formatter: function() {
-            let s = '';
-            let selectedLayers = 'Spatial: 0 / Temporal: 0';
-            for (let point of this.points) {
-              s += '<br/>' + point.series.name + ': ' + toBitrateString(point.point.y);
-              selectedLayers = point.point.name || selectedLayers;
-            }
-            s = '<b>' + selectedLayers  + '</b>' + s;
-            return s;
-          },
-          crosshairs: [true, true],
-          shared: true
-        },
-        series: []
+        crosshairs: [true, true],
+        shared: true
+      },
+      series: []
     });
     charts.get(pubId).set(subId, chart);
     return chart;
-};
+  };
 
-let getOrCreateChart = function(streamId, subId) {
-  let pubId = streamId;
-  let chart;
-  if (!charts.has(pubId)) {
-    charts.set(pubId, new Map());
-  }
-  if (!charts.get(pubId).has(subId)) {
-    chart = {
-      seriesMap: {},
-      chart: initChart(streamId, subId)
-    };
-    charts.get(pubId).set(subId, chart);
-  } else {
-    chart = charts.get(pubId).get(subId);
-  }
-  return chart;
-};
+  let getOrCreateChart = (streamId, subId) => {
+    let pubId = streamId;
+    let chart;
+    if (!charts.has(pubId)) {
+      charts.set(pubId, new Map());
+    }
+    if (!charts.get(pubId).has(subId)) {
+      chart = {
+        seriesMap: {},
+        chart: initChart(streamId, subId)
+      };
+      charts.get(pubId).set(subId, chart);
+    } else {
+      chart = charts.get(pubId).get(subId);
+    }
+    return chart;
+  };
 
-let destroyCharts = function () {
-  charts.forEach((subMap, pubId) => {
-      subMap.forEach((subscriberChart, subId) => {
-        subscriberChart.chart.destroy();
-        charts.get(pubId).delete(subId);
-      });
-  });
-};
-
-var updateSeriesForKey = function (streamId, subId, key, spatial, temporal, valueX, valueY,
-  pointName = undefined, isActive = true) {
+  const updateSeriesForKey =  (streamId, subId, key, spatial, temporal, valueX, valueY,pointName = undefined, isActive = true) => {
     let chart = getOrCreateChart(streamId, subId);
     if (chart.seriesMap[key] === undefined) {
 
-        let dash, color, width = 3;
-        if (spatial && temporal) {
-            dash = spatialStyles[spatial];
-            color = temporalStyles[temporal];
-            width = 2;
-        } else if (key === 'Current Received') {
-            color = '#2b908f';
-        } else if (key === 'Estimated Bandwidth') {
-            color = '#434348';
-        }
+      let dash, color, width = 3;
+      if (spatial && temporal) {
+        dash = spatialStyles[spatial];
+        color = temporalStyles[temporal];
+        width = 2;
+      } else if (key === 'Current Received') {
+        color = '#2b908f';
+      } else if (key === 'Estimated Bandwidth') {
+        color = '#434348';
+      }
 
-        chart.seriesMap[key] = chart.chart.addSeries({
-            name: key,
-            dashStyle: dash,
-            color: color,
-            lineWidth: width,
-            data: []
-        });
+      chart.seriesMap[key] = chart.chart.addSeries({
+        name: key,
+        dashStyle: dash,
+        color: color,
+        lineWidth: width,
+        data: []
+      });
     }
     let seriesForKey = chart.seriesMap[key];
     let shift = seriesForKey.data.length > 30;
     let point = { x: valueX, y: valueY, name: pointName };
     if (!isActive) {
-        point.marker = {
-            radius: 4,
-            lineColor: 'red',
-            fillColor: 'red',
-            lineWidth: 1,
-            symbol: 'circle'
-        };
+      point.marker = {
+        radius: 4,
+        lineColor: 'red',
+        fillColor: 'red',
+        lineWidth: 1,
+        symbol: 'circle'
+      };
     }
     seriesForKey.addPoint(point, true, shift);
-};
+  };
 
-let updateCharts = function (pubId, subId, data) {
+  that.updateCharts = (pubId, subId, data) => {
     let date = (new Date()).getTime();
 
     let selectedLayers = '';
     let qualityLayersData = data[subId].qualityLayers;
 
     if (qualityLayersData !== undefined) {
-        let maxActiveSpatialLayer = qualityLayersData.maxActiveSpatialLayer || 0;
-        for (var spatialLayer in qualityLayersData) {
-            for (var temporalLayer in qualityLayersData[spatialLayer]) {
-                let key = 'Spatial ' + spatialLayer + ' / Temporal ' + temporalLayer;
-                updateSeriesForKey(pubId, subId, key, spatialLayer, temporalLayer,
-                  date, qualityLayersData[spatialLayer][temporalLayer], undefined,
-                  maxActiveSpatialLayer >= spatialLayer);
-            }
+    let maxActiveSpatialLayer = qualityLayersData.maxActiveSpatialLayer || 0;
+    for (let spatialLayer in qualityLayersData) {
+      for (let temporalLayer in qualityLayersData[spatialLayer]) {
+        let key = 'Spatial ' + spatialLayer + ' / Temporal ' + temporalLayer;
+        updateSeriesForKey(pubId, subId, key, spatialLayer, temporalLayer,
+          date, qualityLayersData[spatialLayer][temporalLayer], undefined,
+          maxActiveSpatialLayer >= spatialLayer);
         }
-        if (qualityLayersData.selectedSpatialLayer) {
-          selectedLayers += 'Spatial: ' + qualityLayersData.selectedSpatialLayer +
-          ' / Temporal: '+ qualityLayersData.selectedTemporalLayer;
-        }
+      }
+      if (qualityLayersData.selectedSpatialLayer) {
+        selectedLayers += 'Spatial: ' + qualityLayersData.selectedSpatialLayer +
+        ' / Temporal: '+ qualityLayersData.selectedTemporalLayer;
+      }
     }
 
     let totalBitrate = data[subId].total.bitrateCalculated || 0;
@@ -170,11 +163,22 @@ let updateCharts = function (pubId, subId, data) {
     let rtxBitrate = data[subId].total.rtxBitrate || 0;
 
     updateSeriesForKey(pubId, subId, 'Current Received', undefined, undefined,
-      date, totalBitrate, selectedLayers);
+    date, totalBitrate, selectedLayers);
     updateSeriesForKey(pubId, subId, 'Estimated Bandwidth', undefined, undefined,
-      date, bitrateEstimated);
+    date, bitrateEstimated);
     updateSeriesForKey(pubId, subId, 'Padding Bitrate', undefined, undefined,
-      date, paddingBitrate);
+    date, paddingBitrate);
     updateSeriesForKey(pubId, subId, 'Rtx Bitrate', undefined, undefined,
-      date, rtxBitrate);
+    date, rtxBitrate);
+  };
+
+  that.destroyCharts = () => {
+    charts.forEach((subMap, pubId) => {
+      subMap.forEach((subscriberChart, subId) => {
+        subscriberChart.chart.destroy();
+        charts.get(pubId).delete(subId);
+      });
+    });
+  };
+  return that;
 };

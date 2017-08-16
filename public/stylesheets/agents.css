@@ -22,7 +22,7 @@
 
 #historical {
 	margin-left: 10px !important;
-	border-radius: 3px !important;	
+	border-radius: 3px !important;
 }
 
 #agentsContainer{
@@ -32,7 +32,7 @@
 	margin-top: 5px;
 	bottom: 25px;
 	width: 90%;
-	min-height:calc(100% - 210px);
+	min-height: 100%;
 }
 
 #agents {
@@ -116,7 +116,7 @@ TIPO GRID
 	position: relative;
 	text-align: right;
 	padding-right: 20px;
-	background-color: #55739D; 
+	background-color: #55739D;
 	font-family: "Nunito-Light";
 	color: white;
 }
@@ -155,9 +155,7 @@ TIPO LIST
 
 .show_list .streams {
 	padding-right: 20px;
-	background-color: #55739D; 
+	background-color: #55739D;
 	font-family: "Nunito-Light";
 	color: white;
 }
-
-

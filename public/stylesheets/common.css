@@ -117,7 +117,7 @@ Search bar properties
         margin:0;
         padding: 0;
 }
- 
+
 #custom-search-input .search-query {
     padding-right: 27px;
     padding-left: 10px;
@@ -148,7 +148,7 @@ Search bar properties
 }
 
 .search-query:focus + button {
-    z-index: 3;   
+    z-index: 3;
 }
 
 
