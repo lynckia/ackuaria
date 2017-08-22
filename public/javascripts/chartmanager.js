@@ -50,15 +50,21 @@ let ChartManager = () => {
   };
 
   let updateSubscriberAudioChart = (newData) => {
-    svgSubsAudio.updateChart('kbps', newData.val);
+    if (svgSubsAudio) {
+      svgSubsAudio.updateChart('kbps', newData.val);
+    }
   };
 
   let updateFLVideoChart = (newData) => {
-    svgFLVideo.updateChart('lost pct.', newData.val)
+    if (svgFLVideo) {
+      svgFLVideo.updateChart('lost pct.', newData.val)
+    }
   };
 
   let updateFLAudioChart = (newData) => {
-    svgFLAudio.updateChart('lost pct', newData.val)
+    if (svgFLAudio) {
+      svgFLAudio.updateChart('lost pct', newData.val)
+    }
   };
 
   that.init = () => {
@@ -103,7 +109,6 @@ let ChartManager = () => {
       return;
     } else if (sub_modal_now == subID) {
       const date = data.date;
-      console.log('NEW DATA SUB', subID, data);
       if (data.FLVideo !== undefined) {
         const FLVideo = data.FLVideo * 100 / 256;
         const newDataFLVideo = {date: date, val: FLVideo};
@@ -135,7 +140,7 @@ let ChartManager = () => {
       svgFLAudio = undefined;
     }
     if (svgSubsAudio) {
-      svgSubsAudio.destroyCharts();
+      svgSubsAudio.destroyChart();
       svgSubsAudio = undefined;
     }
     if (qualityLayers) {

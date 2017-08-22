@@ -4,7 +4,6 @@
 const QualityLayersCharts = (chartStyle) => {
   const that = {};
   that.chartStyle = chartStyle || 'width: 500px; height:500px; float:left;';
-  console.warn('Initing Quality Layers', that.chartStyle);
   const charts = new Map();
 
   const spatialStyles = ['ShortDot', 'Dash', 'DashDot', 'ShortDashDotDot'];
