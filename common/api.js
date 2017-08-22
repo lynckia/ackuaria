@@ -69,10 +69,10 @@ const subscribeToLicodeStatsStream = (streamId, duration, interval) => {
 const subscribeClientToStats = (socketId, streamId) => {
   removeSubscriptionsforSocket(socketId);
   if (statsSubscriptions.has(streamId)){
-    log.debug('Adding socket', socketId, ' to subscription')
-    statsSubscriptions.get(streamId).socketIds[socketId] = true;
+    log.debug(`Adding socket ${socketId} to subscription  ${streamId}`);
+    statsSubscriptions.get(streamId).socketIds.set(socketId, true);
   } else {
-    log.debug('Adding new subscription to ' + streamId + ' form ' + socketId);
+    log.debug(`Adding new subscription to ${streamId} from  ${socketId}`);
     const subscribeToThisStream = () => {
       log.debug('Renewing subscription to ' +  streamId);
       subscribeToLicodeStatsStream(streamId,config.stats.subscriptionDuration, config.stats.subscriptionInterva).then((result) => {
@@ -123,7 +123,7 @@ function getParameterByName(name, url) {
 
 const sendEventToClients = function(event, rooms, streams, users, states) {
   API.sockets.forEach((currentSocket, currentSocketId) => {
-    var clientCurrentRoom = getParameterByName('room_id', currentSocket.handshake.headers.referer);   
+    var clientCurrentRoom = getParameterByName('room_id', currentSocket.handshake.headers.referer);
     if (clientCurrentRoom == event.roomID || clientCurrentRoom == '') {
       currentSocket.emit('newEvent', {
         event: event,
