@@ -52,7 +52,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             show_grid = false;
             paintRoomsList();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -67,7 +66,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             show_grid = true;
             paintRoomsGrid();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -107,6 +105,7 @@ var paintRoomsGrid = function(){
     if (nRooms == 0) {
         $('#rooms').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no rooms created</strong></div>')
     }
+    search();
 };
 
 var paintRoomsList = function(){
@@ -130,6 +129,7 @@ var paintRoomsList = function(){
         $('#rooms').html('<div class="alert alert-danger" role="alert"><strong>Oops! There are no rooms created</strong></div>')
     }
     Sortable.init()
+    search();
 };
 
 var createNewRoomGrid = function(roomID, nStreams, roomName){
