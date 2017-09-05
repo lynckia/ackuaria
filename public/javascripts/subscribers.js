@@ -173,7 +173,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             show_grid = false;
             paintSubscribersList();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -189,7 +188,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             show_grid = true;
             paintSubscribersGrid();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -463,6 +461,7 @@ $(document).ready(function(){
             updateNamePublisher("Publisher not found");
             updateNSubscribers(0);
         }
+        search();
     }
 
     var paintSubscribersList = function() {
@@ -483,8 +482,8 @@ $(document).ready(function(){
             updateNamePublisher("Publisher not found");
             updateNSubscribers(0);
         }
-        Sortable.init()
-
+        Sortable.init();
+        search();
     }
 
     var createNewSubscriberGrid = function(userID, userName, state){

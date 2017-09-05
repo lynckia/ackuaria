@@ -83,7 +83,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             view_type = "list";
             paintPublishersList();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -104,7 +103,6 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             view_type = "grid";
             paintPublishersGrid();
-            search();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -216,7 +214,7 @@ var paintPublishersGrid = function() {
         }
         updateAlerts();
     }
-
+    search();
 }
 
 var paintPublishersList = function() {
@@ -240,6 +238,7 @@ var paintPublishersList = function() {
 
         Sortable.init()
     }
+    search();
 }
 
 
@@ -265,6 +264,7 @@ var paintPublishersFails = function() {
             $('#publishers').html('<div class="alert alert-danger" role="alert"><strong>Yay! There are no failed streams in this room</strong></div>')
         }
     }
+    search();
 }
 
 var createNewPublisherGrid = function(roomID, streamID, nSubscribers, userName, state){
