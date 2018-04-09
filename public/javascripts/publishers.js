@@ -1,5 +1,6 @@
 var socket = io();
 var view_type = "list";
+var search;
 
 $(document).ready(function(){
 
@@ -40,7 +41,7 @@ $(document).ready(function(){
         search();
     });
 
-    var search = function() {
+    search = function() {
         var filter_array = new Array();
         var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
         filter_array = filter.split(' '); // split the user input at the spaces
@@ -227,7 +228,7 @@ var paintPublishersList = function() {
             if (streams[streamID] !== undefined) {
                 var nSubscribers = streams[streamID].subscribers.length;
                 var userName = streams[streamID].userName;
-                var state = states[streamID].state;
+                var state = states[streamID] && states[streamID].state;
                 createNewPublisherList(roomID, streamID, nSubscribers, userName, state);
             }
         }
