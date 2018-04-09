@@ -277,7 +277,9 @@ API.api.event = function(theEvent) {
         var session = API.sessions_active[roomID];
         if (session !== undefined) {
           var stream = search(streamID, session.streams);
-          stream.finalPublish = finalTimestamp;
+          if (stream) {
+            stream.finalPublish = finalTimestamp;
+          }
         }
 
         if (API.rooms[roomID] !== undefined) {
@@ -331,7 +333,9 @@ API.api.event = function(theEvent) {
         event.userID = userID;
         event.userName = userName;
 
-        API.streams[streamID].subscribers.push(userID);
+        if (API.streams[streamID]) {
+          API.streams[streamID].subscribers.push(userID);
+        }
 
         if (API.users[userID] === undefined) {
           API.users[userID] = {
@@ -399,7 +403,9 @@ API.api.event = function(theEvent) {
           var indexStream = API.streams[streamID].subscribers.indexOf(userID);
           if (indexStream > -1) API.streams[streamID].subscribers.splice(indexStream, 1);
 
-          delete API.states[streamID].subscribers[userID];
+          if (API.states[streamID]) {
+            delete API.states[streamID].subscribers[userID];
+          }
 
           if (API.streams[streamID].userID == userID){
             delete API.streams[streamID];
@@ -420,7 +426,7 @@ API.api.event = function(theEvent) {
         var streamID = theEvent.pub;
         var subID = theEvent.subs;
         var state = theEvent.status;
-        var roomID = API.streams[streamID].roomID;
+        var roomID = API.streams[streamID] && API.streams[streamID].roomID;
 
         event.type = "connection_status";
         event.streamID = streamID;
@@ -439,7 +445,7 @@ API.api.event = function(theEvent) {
           }
           subID = API.streams[streamID].userID;
 
-        } else {
+        } else if (API.states[streamID]) {
           API.states[streamID].subscribers[subID] = state;
         }
         break;

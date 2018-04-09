@@ -474,7 +474,7 @@ $(document).ready(function(){
             for (var sub in subscribers){
                 var userID = subscribers[sub];
                 var userName = users[userID].userName;
-                var state = states[streamID].subscribers[userID];
+                var state = states[streamID] && states[streamID].subscribers[userID];
 
                 createNewSubscriberList(userID, userName, state);
             }
@@ -501,16 +501,14 @@ $(document).ready(function(){
         if (room) {
             var roomStreams = room.streams;
             for (var stream in roomStreams){
-                if ((streamID != roomStreams[stream]) && states[roomStreams[stream]] && streams[roomStreams[stream]]) {
-                    var state = states[roomStreams[stream]].state;
+                if ((streamID != roomStreams[stream]) && streams[roomStreams[stream]]) {
+                    var state = states[roomStreams[stream]] && states[roomStreams[stream]].state;
                     var userName = streams[roomStreams[stream]].userName;
                     createNewPublisher(roomID, roomStreams[stream], userName, state);
-                } else if ((streamID == roomStreams[stream]) && states[streamID] && streams[streamID]) {
-                    if (states[streamID]){
-                        var state = states[streamID].state;
+                } else if ((streamID == roomStreams[stream]) && streams[streamID]) {
+                        var state = states[streamID] && states[streamID].state;
                         var userName = streams[streamID].userName;
                         createMyPublisher(roomID, streamID, userName, state);
-                    }
                 }
             }
             updateStatePublisher();
