@@ -19,7 +19,8 @@ const QualityLayersCharts = (chartStyle) => {
     if (!charts.has(pubId)) {
       return undefined;
     }
-    const parent = document.getElementById('chartBW');
+    const suffix = subId === 'publisher' ? "Pub" : "";
+    const parent = document.getElementById('chartBW' + suffix);
     const div = document.createElement('div');
     div.setAttribute('style', that.chartStyle);
     div.setAttribute('id', 'chart' + pubId + '_' + subId);
@@ -53,6 +54,7 @@ const QualityLayersCharts = (chartStyle) => {
       yAxis: {
         minPadding: 0.2,
         maxPadding: 0.2,
+        min: 0,
         title: {
           text: null,
           margin: 80
@@ -139,6 +141,13 @@ const QualityLayersCharts = (chartStyle) => {
 
     let selectedLayers = '';
     let qualityLayersData = data[subId].qualityLayers;
+    if (subId === 'publisher') {
+      Object.keys(data).forEach(key => {
+        if (data[key].qualityLayers) {
+          qualityLayersData = data[key].qualityLayers;
+        }
+      });
+    }
 
     if (qualityLayersData !== undefined) {
     let maxActiveSpatialLayer = qualityLayersData.maxActiveSpatialLayer || 0;
@@ -150,7 +159,7 @@ const QualityLayersCharts = (chartStyle) => {
           maxActiveSpatialLayer >= spatialLayer);
         }
       }
-      if (qualityLayersData.selectedSpatialLayer) {
+      if (subId !== 'publisher' && qualityLayersData.selectedSpatialLayer) {
         selectedLayers += 'Spatial: ' + qualityLayersData.selectedSpatialLayer +
         ' / Temporal: '+ qualityLayersData.selectedTemporalLayer;
       }
@@ -163,10 +172,14 @@ const QualityLayersCharts = (chartStyle) => {
 
     updateSeriesForKey(pubId, subId, 'Current Received', undefined, undefined,
     date, totalBitrate, selectedLayers);
-    updateSeriesForKey(pubId, subId, 'Estimated Bandwidth', undefined, undefined,
-    date, bitrateEstimated);
     updateSeriesForKey(pubId, subId, 'Padding Bitrate', undefined, undefined,
     date, paddingBitrate);
+    if (subId === 'publisher') {
+      return;
+    }
+    updateSeriesForKey(pubId, subId, 'Estimated Bandwidth', undefined, undefined,
+    date, bitrateEstimated);
+
     updateSeriesForKey(pubId, subId, 'Rtx Bitrate', undefined, undefined,
     date, rtxBitrate);
   };

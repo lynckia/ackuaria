@@ -73,6 +73,7 @@ $(document).ready(function(){
                 publisherAudio.ssrc = ssrc;
               }
             }
+            chartManager.updateQualityLayersPub(pubID, event);
           } else {
             let stats = {};
             for (var ssrc in event[id]) {
