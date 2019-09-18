@@ -1,6 +1,6 @@
 let ChartManager = () => {
   let that = {};
-  let svgVideo, svgAudio, svgSubsAudio, svgFLAudio, svgFLVideo, qualityLayers;
+  let svgVideo, svgAudio, svgSubsAudio, svgFLAudio, svgFLVideo, qualityLayers, qualityLayersPub;
   let counterVideo, counterAudio;
 
   let getPubChartStyle = () => {
@@ -73,21 +73,22 @@ let ChartManager = () => {
     maxWidthSub = $("#subscribersCharts").width();
     $("#subscriberModal").hide();
 
-    drawVideoKbpsChart();
+    // drawVideoKbpsChart();
     drawAudioKbpsChart();
+    qualityLayersPub = QualityLayersCharts(getPubChartStyle());
   };
 
   that.newDataPub = (newData) => {
     const date = newData.date;
-    if (newData.kbpsVideo) {
-      if (newData.kbpsVideo == 0) counterVideo++;
-      else {
-        const kbpsVideo = newData.kbpsVideo / counterVideo;
-        counterVideo = 1;
-        const newDataVideo = {date: date, val: kbpsVideo};
-        updateVideoKbpsChart(newDataVideo);
-      }
-    }
+    // if (newData.kbpsVideo) {
+    //   if (newData.kbpsVideo == 0) counterVideo++;
+    //   else {
+    //     const kbpsVideo = newData.kbpsVideo / counterVideo;
+    //     counterVideo = 1;
+    //     const newDataVideo = {date: date, val: kbpsVideo};
+    //     updateVideoKbpsChart(newDataVideo);
+    //   }
+    // }
     if (newData.kbpsAudio) {
       if (newData.kbpsAudio == 0) counterAudio++;
       else {
@@ -128,6 +129,10 @@ let ChartManager = () => {
 
   that.updateQualityLayers = (pubID, id, event) => {
     qualityLayers.updateCharts(pubID, id, event);
+  };
+
+  that.updateQualityLayersPub = (pubID, event) => {
+    qualityLayersPub.updateCharts(pubID, 'publisher', event);
   };
 
   that.destroySubCharts = () => {
