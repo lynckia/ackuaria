@@ -69,11 +69,18 @@
 	font-size: 20px;
 	color: #042762;
 }
-
+#typeConnection {
+	font-family: 'Nunito-Light';
+	font-size: 20px;
+	color: #042762;
+}
 #videoData {
 	padding-top: 20px;
 }
 #audioData {
+	padding-top: 20px;
+}
+#connectionData {
 	padding-top: 20px;
 }
 

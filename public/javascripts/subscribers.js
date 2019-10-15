@@ -10,6 +10,7 @@ const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalcu
 const publisherAudioStats = ['bitrateCalculated', 'NACK'];
 const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow', 'NACK'];
 const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter', 'erizoAudioMute', 'erizoVideoMute', 'NACK'];
+const connectionStats = ['videoBitrate', 'senderBitrateEstimation', 'paddingBitrate', 'targetBitrate', 'numberOfStreams'];
 
 
 $(document).ready(function(){
@@ -57,9 +58,10 @@ $(document).ready(function(){
     socket.on('newStats', function(evt) {
       var event = evt.event;
       var pubID = event.streamId;
-      delete event.streamId
+      delete event.streamId;
       let publisherVideo = [];
       let publisherAudio;
+      let publisherConnection;
       if (pubID == streamID) {
         for (var id in event) {
           if (id === 'publisher'){
@@ -71,6 +73,8 @@ $(document).ready(function(){
               } else if (event[id][ssrc].type === 'audio') {
                 publisherAudio = event[id][ssrc];
                 publisherAudio.ssrc = ssrc;
+              } else if (ssrc === "connection") {
+                publisherConnection = event[id][ssrc].total;
               }
             }
             chartManager.updateQualityLayersPub(pubID, event);
@@ -84,18 +88,19 @@ $(document).ready(function(){
                 stats.audio = event[id][ssrc];
                 stats.audio.ssrc = ssrc;
               }
+              stats.connection = event[id].connection;
             }
             if (stats.video || stats.audio) {
               subscribers[id] = stats;
               if (sub_modal_now == id) {
-                updateRR(id, stats.audio, stats.video, event.timestamp);
+                updateRR(id, stats.audio, stats.video, stats.connection, event.timestamp);
                 chartManager.updateQualityLayers(pubID, id, event);
               }
             }
           }
         }
-        if (publisherVideo.length > 0 || publisherAudio) {
-          updateSR(publisherAudio, publisherVideo, event.timestamp);
+        if (publisherVideo.length > 0 || publisherAudio || publisherConnection) {
+          updateSR(publisherAudio, publisherVideo, publisherConnection, event.timestamp);
         }
       }
     });
@@ -112,7 +117,8 @@ $(document).ready(function(){
       if (stats) {
         var audio = stats.audio;
         var video = stats.video;
-        updateRR(subID, audio, video);
+        var connection = stats.connection;
+        updateRR(subID, audio, video, connection);
       }
       updateModalState(subID);
       var modal = $(this)
@@ -126,6 +132,7 @@ $(document).ready(function(){
         $("#chartFLVideo").html("");
         $("#chartFLAudio").html("");
         $("#chartBW").html("");
+        $("#chartBWE").html("");
 
     })
     $('#searchBar').keyup(function () {
@@ -203,6 +210,7 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             $( ".audioChart" ).hide();
             $( ".videoChart" ).show();
+            $( ".bweChart" ).show();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -221,6 +229,7 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             $( ".videoChart" ).hide();
             $( ".audioChart" ).show();
+            $( ".bweChart" ).show();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -239,6 +248,7 @@ $(document).ready(function(){
         if (!$(this).hasClass("active")){
             $( ".audioChart" ).show();
             $( ".videoChart" ).show();
+            $( ".bweChart" ).show();
         }
         $(this).addClass('active');
         $(this).addClass('btn-primary');
@@ -350,8 +360,9 @@ $(document).ready(function(){
 
     }
 
-    var updateRR = function(subID, audio, video, timestamp) {
-        var FLVideo, FLAudio, BW, audioBW;
+    var updateRR = function(subID, audio, video, connection, timestamp) {
+        var FLVideo, FLAudio, BW, audioBW, senderBitrateEstimation,
+            targetVideoBitrate, paddingBitrate, numberOfStreams, videoBitrate;
         if (video) {
             FLVideo = video.fractionLost;
             BW = video.bitrateCalculated/1000;
@@ -359,7 +370,14 @@ $(document).ready(function(){
         if (audio) {
           FLAudio = audio.fractionLost;
           audioBW = audio.bitrateCalculated/1000;
-        };
+        }
+        if (connection && connection.total) {
+          senderBitrateEstimation = connection.total.senderBitrateEstimation;
+          targetVideoBitrate = connection.total.targetBitrate;
+          paddingBitrate = connection.total.paddingBitrate;
+          numberOfStreams = connection.total.numberOfStreams;
+          videoBitrate = connection.total.videoBitrate;
+        }
 
         var date = new Date(timestamp);
         var seconds = date.getSeconds();
@@ -367,8 +385,19 @@ $(document).ready(function(){
         var hour = date.getHours();
 
         var dateStr = hour + ":" + minutes +":" + seconds;
-
-        var data = {date: dateStr, FLVideo: FLVideo, FLAudio: FLAudio, BW: BW, audioBW: audioBW};
+        var data = {
+            date: dateStr,
+            FLVideo: FLVideo,
+            FLAudio: FLAudio,
+            BW: BW,
+            audioBW: audioBW,
+            senderBitrateEstimation: senderBitrateEstimation,
+            targetVideoBitrate: targetVideoBitrate,
+            paddingBitrate: paddingBitrate,
+            numberOfStreams: numberOfStreams,
+            videoBitrate: videoBitrate,
+        };
+        console.log("Updating with data", data);
         chartManager.newDataSub(subID, data);
 
         if (video) {
@@ -388,12 +417,23 @@ $(document).ready(function(){
               htmlData+=`${value}: ${audio[value]} </br>`
             }
           });
+          htmlData += '<hr>';
           $('#audioDataSub').html(htmlData);
+        }
+        if (connection && connection.total) {
+          let htmlData = '';
+          connectionStats.forEach((value) => {
+              if (connection.total[value] || connection.total[value] === 0) {
+              htmlData+=`${value}: ${connection.total[value]} </br>`
+              }
+          });
+          htmlData += '<hr>';
+          $('#connectionDataSub').html(htmlData);
         }
 
     }
 
-    var updateSR = function(audio, video, timestamp) {
+    var updateSR = function(audio, video, connection, timestamp) {
         let bpsAudio = 0;
         let bpsVideo = 0;
         var date = new Date(timestamp);
@@ -429,7 +469,16 @@ $(document).ready(function(){
           });
           $('#videoData').html(data);
         }
-        chartManager.newDataPub({date: dateStr, kbpsVideo: bpsVideo/1000, kbpsAudio: bpsAudio/1000});
+        if (connection) {
+          let data = '';
+          connectionStats.forEach((value) => {
+            if (connection[value] || connection[value] === 0) {
+              data += `<div class="propertyTitle"> ${value}: <span class="propertyContent">${connection[value]}</span></div>`
+            }
+          });
+          $('#connectionData').html(data);
+        }
+        chartManager.newDataPub({date: dateStr, kbpsVideo: bpsVideo/1000, kbpsAudio: bpsAudio/1000, connection: connection});
 
     }
 
