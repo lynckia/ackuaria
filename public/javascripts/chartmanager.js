@@ -1,6 +1,6 @@
 let ChartManager = () => {
   let that = {};
-  let svgVideo, svgAudio, svgSubsAudio, svgFLAudio, svgFLVideo, qualityLayers, qualityLayersPub;
+  let svgVideo, svgAudio, svgSubsAudio, svgFLAudio, svgFLVideo, qualityLayers, qualityLayersPub, svgBWE, svgConnection;
   let counterVideo, counterAudio;
 
   let getPubChartStyle = () => {
@@ -8,14 +8,14 @@ let ChartManager = () => {
     let width = maxWidth - margin.left - margin.right;
     let strStyle = `width: ${width}` ;
     return strStyle;
-  }
+  };
 
   let getSubChartStyle = () => {
     let margin = {top: 50, right: 40, bottom: 20, left: 40};
     let width = maxWidthSub - margin.left - margin.right;
     let strStyle = `width: ${width}` ;
     return strStyle;
-  }
+  };
 
   let drawVideoKbpsChart = () => {
     svgVideo = genericChart('chartVideo', 'videoHighChart', 'Video Kbps', getPubChartStyle());
@@ -23,6 +23,10 @@ let ChartManager = () => {
 
   let drawAudioKbpsChart = () => {
     svgAudio = genericChart('chartAudio', 'audioHighChart', 'Audio Kbps', getPubChartStyle());
+  };
+
+  let drawConnectionChart = () => {
+    svgConnection = genericChart('chartConnection', 'connectionHighChart', 'Connection BW estimated', getPubChartStyle());
   };
 
   let drawSubscriberAudioChart = () => {
@@ -37,9 +41,13 @@ let ChartManager = () => {
     svgFLAudio = genericChart('chartFLAudio', 'Audio FLV', 'Audio Fraction Lost', getSubChartStyle());
   };
 
+  let drawBWEChart = () => {
+    svgBWE = genericChart('chartBWE', 'Connection BW estimated', 'Connection BW estimated', getSubChartStyle());
+  };
+
   let initQualityLayersChart = () => {
     qualityLayers = QualityLayersCharts(getSubChartStyle());
-  }
+  };
 
   let updateVideoKbpsChart = (newData) => {
     svgVideo.updateChart('kbps', newData.val);
@@ -47,6 +55,15 @@ let ChartManager = () => {
 
   let updateAudioKbpsChart = (newData) => {
     svgAudio.updateChart('kbps', newData.val);
+  };
+
+  let updateConnectionChart = (newData) => {
+    if (svgConnection) {
+      svgConnection.updateChart('bwe', newData.val.senderBitrateEstimation);
+      svgConnection.updateChart('target bitrate', newData.val.targetBitrate);
+      svgConnection.updateChart('padding bitrate', newData.val.paddingBitrate);
+      svgConnection.updateChart('video bitrate', newData.val.videoBitrate);
+    }
   };
 
   let updateSubscriberAudioChart = (newData) => {
@@ -67,6 +84,15 @@ let ChartManager = () => {
     }
   };
 
+  let updateBWEChart = (newData) => {
+    if (svgBWE) {
+      svgBWE.updateChart('bwe', newData.val.senderBitrateEstimation);
+      svgBWE.updateChart('target bitrate', newData.val.targetVideoBitrate);
+      svgBWE.updateChart('padding bitrate', newData.val.paddingBitrate);
+      svgBWE.updateChart('video bitrate', newData.val.videoBitrate);
+    }
+  };
+
   that.init = () => {
     maxWidth = $("#chartVideo").width();
     $("#subscriberModal").show();
@@ -75,6 +101,7 @@ let ChartManager = () => {
 
     // drawVideoKbpsChart();
     drawAudioKbpsChart();
+    drawConnectionChart();
     qualityLayersPub = QualityLayersCharts(getPubChartStyle());
   };
 
@@ -98,6 +125,10 @@ let ChartManager = () => {
         updateAudioKbpsChart(newDataAudio);
       }
     }
+    if (newData.connection) {
+        const newDataAudio = {date: date, val: newData.connection};
+        updateConnectionChart(newDataAudio);
+    }
   }
 
   that.newDataSub = (subID, data) => {
@@ -106,6 +137,7 @@ let ChartManager = () => {
       drawSubscriberAudioChart(subID);
       drawFLVideoChart(subID);
       drawFLAudioChart(subID);
+      drawBWEChart(subID);
       sub_modal_now = subID;
       return;
     } else if (sub_modal_now == subID) {
@@ -123,6 +155,12 @@ let ChartManager = () => {
       if (data.audioBW !== undefined) {
         const newDataAudio = {date: date, val: data.audioBW};
         updateSubscriberAudioChart(newDataAudio);
+      }
+      if (data.senderBitrateEstimation !== undefined) {
+        const newDataBWE = {
+          date: date,
+          val: data};
+        updateBWEChart(newDataBWE);
       }
     }
   }
@@ -150,6 +188,10 @@ let ChartManager = () => {
     }
     if (qualityLayers) {
       qualityLayers.destroyCharts();
+    }
+    if (svgBWE) {
+      svgBWE.destroyChart();
+      svgBWE = undefined;
     }
   };
 

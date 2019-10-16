@@ -2,131 +2,135 @@
 <script type="text/javascript" src="javascripts/quality_layers.js"></script>
 <script type="text/javascript" src="javascripts/genericchart.js"></script>
 <div id="carouselContainer" class="container">
-	<div class="back"><span class="light blue">BACK TO </span><span id="backRooms" class="bold dark">ROOMS </span> / <span id="backStreams" class="bold dark"><%= roomName %></span> </div>
-	<div class="row-fluid">
-		<div id="carousel">
-		<div>
-			<span id="selected">
-			</span><span id="others">
-			</span>
-	    </div>
-	    </div>
-	</div>
-</div>
-
-<div id="subsContainer" class="container">
-	<div id="dataAndSubs" class="row">
-		<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 subsCol" id="dataCol" >
-			<div id="streamInfo">
-				<span id="pubState" class="fa fa-circle"></span>
-				<span id="pubName"><%= userName %></span>
-				<span id="pubId"><%= streamID %></span>
-			</div>
-
-			<div class="btn-group btn-toggle" id="switchPub">
-
-			    	<button class="btn btn-sm btn-primary active" id="switchAllPub"><span class="fa fa-globe"></button>
-			        <button class="btn btn-sm btn-default" id="switchVideoPub"><span class="fa fa-video-camera"></span></button>
-			        <button class="btn btn-sm btn-default" id="switchAudioPub"><span class="fa fa-volume-up"></span> </button>
-
-			</div>
-			<div id="streamData">
-				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="videoCol" >
-					<div id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </div>
-					<div id="videoData">
-					</div>
-				</div>
-				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartBWPub" ></div>
-				<div class="clearfix hidden-sm-up"></div>
-
-				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="audioCol" >
-					<div id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </div>
-					<div id="audioData">
-					</div>
-				</div>
-				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartAudio" ></div>
-
-			</div>
-		</div>
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 subsCol" id="subsCol">
-			<div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
-		    <div class="btn-group btn-toggle" id="switch">
-		        <button class="btn btn-sm btn-primary active" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
-		        <button class="btn btn-sm btn-default" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>
-		    </div>
-			<div class="row" id="search">
-		       <div id="custom-search-input">
-		            <div class="input-group col-md-12">
-		                <input id="searchBar" type="text" class="search-query form-control" placeholder="Search" />
-		                <span class="input-group-btn">
-		                    <button class="btn btn-danger" type="button">
-		                        <span class=" glyphicon glyphicon-search"></span>
-		                    </button>
-		                </span>
-		            </div>
-		        </div>
-			</div>
-		 	<div id="subscribers" class="row">
-
-			</div>
-		</div>
-		</div>
-
-</div>
-
-
-
-<div class="modal fade" id="subscriberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg big-big-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel"><span id="subState" class="fa fa-circle"></span><span class="bold dark" id="username"></span></h4>
-      </div>
-      <div class="modal-body">
-      	<div id="subModal" class="row">
-
-	        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" id="dataModal">
-				<span id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </span>
-				<br>
-					<div id="videoDataSub">
-					</div>
-
-				<span id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </span>
-				<br>
-					<div id="audioDataSub">
-					</div>
-	        </div>
-	       	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="subscribersModal">
-			    <div class="btn-group btn-toggle" id="switchSub">
-
-			    	<button class="btn btn-sm btn-primary active" id="switchAll"><span class="fa fa-globe"></button>
-			        <button class="btn btn-sm btn-default" id="switchVideo"><span class="fa fa-video-camera"></span></button>
-			        <button class="btn btn-sm btn-default" id="switchAudio"><span class="fa fa-volume-up"></span> </button>
-
-			    </div>
-			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="subscribersCharts">
-
-				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartBW" ></div>
-				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 audioChart" id="chartSubsAudio" ></div>
-				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartFLVideo" ></div>
-				    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 audioChart" id="chartFLAudio" ></div>
-				</div>
-
-	        </div>
+  <div class="back"><span class="light blue">BACK TO </span><span id="backRooms" class="bold dark">ROOMS </span> / <span id="backStreams" class="bold dark"><%= roomName %></span> </div>
+  <div class="row-fluid">
+    <div id="carousel">
+      <div>
+        <span id="selected">
+        </span><span id="others">
+        </span>
       </div>
     </div>
   </div>
 </div>
-</div>
-<script>
 
-  var room = <%- JSON.stringify(room) %>;
-  var roomID = <%- JSON.stringify(roomID) %>;
-  var roomName = <%- JSON.stringify(roomName) %>;
-  var streamID = <%- JSON.stringify(streamID) %>;
-  var streams = <%- JSON.stringify(streams) %>;
-  var users = <%- JSON.stringify(users) %>;
-  var states = <%- JSON.stringify(states) %>;
+<div id="subsContainer" class="container">
+  <div id="dataAndSubs" class="row">
+    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 subsCol" id="dataCol" >
+      <div id="streamInfo">
+        <span id="pubState" class="fa fa-circle"></span>
+        <span id="pubName"><%= userName %></span>
+        <span id="pubId"><%= streamID %></span>
+      </div>
 
-</script>
+      <div class="btn-group btn-toggle" id="switchPub">
+        <button class="btn btn-sm btn-primary active" id="switchAllPub"><span class="fa fa-globe"></button>
+          <button class="btn btn-sm btn-default" id="switchVideoPub"><span class="fa fa-video-camera"></span></button>
+          <button class="btn btn-sm btn-default" id="switchAudioPub"><span class="fa fa-volume-up"></span> </button>
+        </div>
+        <div id="streamData">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="videoCol" >
+            <div id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </div>
+            <div id="videoData">
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartBWPub" ></div>
+          <div class="clearfix hidden-sm-up"></div>
+
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="audioCol" >
+            <div id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </div>
+            <div id="audioData">
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartAudio" ></div>
+          <div class="clearfix hidden-sm-up"></div>
+
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="connectionCol" >
+            <div id="typeConnection"><i class="fa fa-volume-up"></i> CONNECTION </div>
+            <div id="connectionData">
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="chartConnection" ></div>
+          <div class="clearfix hidden-sm-up"></div>
+        </div>
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 subsCol" id="subsCol">
+        <div id="subsCount"><span id="numberSubs"> 0 </span> SUBSCRIBERS <i class="fa fa-users"></i></div>
+        <div class="btn-group btn-toggle" id="switch">
+          <button class="btn btn-sm btn-primary active" id="list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+          <button class="btn btn-sm btn-default" id="grid"><span class="glyphicon glyphicon-th-large"></span></button>
+        </div>
+        <div class="row" id="search">
+          <div id="custom-search-input">
+            <div class="input-group col-md-12">
+              <input id="searchBar" type="text" class="search-query form-control" placeholder="Search" />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button">
+                  <span class=" glyphicon glyphicon-search"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div id="subscribers" class="row">
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="modal fade" id="subscriberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg big-big-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel"><span id="subState" class="fa fa-circle"></span><span class="bold dark" id="username"></span></h4>
+        </div>
+        <div class="modal-body">
+          <div id="subModal" class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" id="dataModal">
+              <span id="typeVideo"><i class="fa fa-video-camera"></i> VIDEO </span>
+              <br>
+              <div id="videoDataSub"></div>
+              <span id="typeAudio"><i class="fa fa-volume-up"></i> AUDIO </span>
+              <br>
+              <div id="audioDataSub"></div>
+              <span id="typeConnection"><i class="fa fa-wifi"></i> CONNECTION </span>
+              <br>
+              <div id="connectionDataSub"></div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="subscribersModal">
+              <div class="btn-group btn-toggle" id="switchSub">
+                <button class="btn btn-sm btn-primary active" id="switchAll"><span class="fa fa-globe"></button>
+                  <button class="btn btn-sm btn-default" id="switchVideo"><span class="fa fa-video-camera"></span></button>
+                  <button class="btn btn-sm btn-default" id="switchAudio"><span class="fa fa-volume-up"></span> </button>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="subscribersCharts">
+
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartBW" ></div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 audioChart" id="chartSubsAudio" ></div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 videoChart" id="chartFLVideo" ></div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 audioChart" id="chartFLAudio" ></div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bweChart" id="chartBWE" ></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      var room = <%- JSON.stringify(room) %>;
+      var roomID = <%- JSON.stringify(roomID) %>;
+      var roomName = <%- JSON.stringify(roomName) %>;
+      var streamID = <%- JSON.stringify(streamID) %>;
+      var streams = <%- JSON.stringify(streams) %>;
+      var users = <%- JSON.stringify(users) %>;
+      var states = <%- JSON.stringify(states) %>;
+
+    </script>
