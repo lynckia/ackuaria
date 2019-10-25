@@ -159,7 +159,7 @@ const QualityLayersCharts = (chartStyle) => {
           maxActiveSpatialLayer >= spatialLayer);
         }
       }
-      if (subId !== 'publisher' && qualityLayersData.selectedSpatialLayer) {
+      if (subId !== 'publisher' && qualityLayersData.selectedSpatialLayer !== undefined) {
         selectedLayers += 'Spatial: ' + qualityLayersData.selectedSpatialLayer +
         ' / Temporal: '+ qualityLayersData.selectedTemporalLayer;
       }
