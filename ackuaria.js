@@ -111,6 +111,8 @@ ackuaria_router.get('/', ackuariaController.updateRooms, ackuariaController.load
 
 ackuaria_router.get('/room', ackuariaController.updateRooms, ackuariaController.loadPublishers)
 
+ackuaria_router.get('/clients', ackuariaController.updateRooms, ackuariaController.loadUsersInRoom)
+
 ackuaria_router.get('/pub', ackuariaController.updateRooms, ackuariaController.loadSubscribers)
 
 ackuaria_router.get('/history', ackuariaController.updateRooms, ackuariaController.loadHistory)

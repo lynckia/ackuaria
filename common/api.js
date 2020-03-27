@@ -239,9 +239,6 @@ API.api.event = function(theEvent) {
           }
 
           API.rooms[roomID].streams.push(streamID);
-          if (API.rooms[roomID].users.indexOf(userID) > -1) {
-            API.rooms[roomID].users.push(userID);
-          }
         }
 
         if (API.users[userID] === undefined) {
@@ -391,7 +388,24 @@ API.api.event = function(theEvent) {
           }
         }
         break;
+      case "user_connection":
+        var roomID = theEvent.room;
+        var userID = theEvent.user;
+        var userName = theEvent.name;
+        event.roomID = roomID;
+        event.subID = userID;
+        event.userName = userName;
+        API.users[userID] = {
+          userName: userName,
+          roomID: roomID,
+          streams: [],
+          subscribedTo: []
+        };
+        if (API.rooms[roomID].users.indexOf(userID) === -1) {
+          API.rooms[roomID].users.push(userID);
+        }
 
+        break;
       case "user_disconnection":
         var roomID = theEvent.room;
         var userID = theEvent.user;
@@ -419,6 +433,8 @@ API.api.event = function(theEvent) {
           }
         }
 
+        var indexUser = API.rooms[roomID].users.indexOf(userID);
+        if (indexUser > -1) API.rooms[roomID].users.splice(indexUser, 1);
         delete API.users[userID];
         break;
 

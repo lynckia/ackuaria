@@ -45,6 +45,29 @@ exports.loadRooms = function(req, res) {
    });
 };
 
+exports.loadUsersInRoom = function(req, res) {
+  var roomID = req.query.room_id;
+  var fails = req.query.fails;
+  var room = API.rooms[roomID];
+  var roomName = room ? room.roomName : "Not found";
+
+   var usersInRoom = {};
+   for (var s in API.users){
+      if (room.users.indexOf(s) > -1) {
+        usersInRoom[s] = API.users[s];
+        usersInRoom[s].subscribers = 0;
+      }
+   }
+
+   res.render('users', {
+      view: "users",
+      roomID: roomID,
+      roomName: roomName,
+      room: room,
+      users: usersInRoom,
+   });
+};
+
 exports.loadPublishers = function(req, res) {
 	var roomID = req.query.room_id;
    var fails = req.query.fails;

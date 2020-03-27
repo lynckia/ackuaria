@@ -1,0 +1,67 @@
+
+<div id="usersContainer" class="container">
+  <div id="roomInfo">
+    <div id="roomName">Room <%= roomName %></div><div class="back"><span class="light blue">BACK TO </span><span id="back" class="bold dark">ROOMS</span></div>
+    <div id="roomId"><%= roomID %></div>
+    <div id="usersCount">
+      <span id="numberUsers">0</span> USERS <i class="fa fa-users"></i>
+    </div>
+
+      <div class="btn-group btn-toggle" id="switch">
+
+          <button class="btn btn-sm btn-primary active" id="list" data-toggle="tooltip" data-placement="top" title="Show users in list"><span class="glyphicon glyphicon-menu-hamburger"></span> </button>
+          <button class="btn btn-sm btn-default" id="grid" data-toggle="tooltip" data-placement="top" title="Show users in grid"><span class="glyphicon glyphicon-th-large"></span></button>
+      </div>
+    <div class="row" id="search">
+         <div id="custom-search-input">
+              <div class="input-group col-md-12">
+                  <input id="searchBar" type="text" class="  search-query form-control" placeholder="Search" />
+                  <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                  </span>
+              </div>
+          </div>
+    </div>
+
+  </div>
+
+  <div id="users" class="row row-centered">
+
+  </div>
+
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel"><span class="bold dark" id="username"></span> - <span class="bold dark" id="userid"></span></h4>
+      </div>
+      <div class="modal-body">
+     <div id="usModal" class="row">
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dataModal">
+
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+
+  var room = <%- JSON.stringify(room) %>;
+  var roomID = <%- JSON.stringify(roomID) %>;
+  var roomName = <%- JSON.stringify(roomName) %>;
+  var users = <%- JSON.stringify(users) %>;
+  $(document).ready(function(){
+    paintUsersList();
+  });
+
+
+
+
+</script>
