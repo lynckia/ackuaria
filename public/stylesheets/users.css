@@ -1,0 +1,199 @@
+#usersContainer {
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	width: 90%;
+	min-height:calc(100% - 150px);
+}
+
+#roomInfo {
+	padding-bottom: 30px;
+}
+#roomName {
+	position: absolute;
+	font-family: "Nunito-Bold";
+	color: 042762;
+	font-size: 15px;
+
+
+}
+#roomId {
+	position: absolute;
+	margin-top: 20px;
+	font-family: "Nunito-Light";
+	color: #55739D;
+}
+#usersCount {
+	position: absolute;
+	font-family: "Nunito-Light";
+	color: #042762;
+	margin-top: 60px;
+	font-size: 15px;
+}
+
+#user_id {
+	font-size: 11px;
+}
+
+#search {
+	position: absolute;
+	margin-top: 42px;
+	right: 0;
+	width: 20%;
+}
+#switch {
+	position: absolute;
+	margin-top: 42px;
+	margin-right: 25%;
+	right: 0;
+}
+
+#users {
+	position: absolute;
+	margin-top: 60px;
+	padding-bottom: 50px;
+	height: 100%;
+	width: 100%;
+	overflow-y: scroll;
+}
+
+
+/*
+TIPO GRID
+*/
+.show_grid.userContainer{
+	min-width: 170px;
+	max-width: 170px;
+	padding: 10px;
+	margin: 10px;
+
+}
+
+.show_grid .user {
+	border: 1px solid #55739D;
+	position: relative;
+	padding: 10px;
+	width: 150px;
+	height: 150px;
+	cursor: pointer;
+}
+
+.show_grid .userName {
+	position: absolute;
+	font-family: "Nunito-Bold";
+	font-size: 13px;
+	color: 042762;
+
+}
+.show_grid .userId {
+	position: absolute;
+	top: 50%;
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 11px;
+}
+.show_grid .streamsInUser {
+	height: 25%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: #55739D;
+	color: white;
+	font-size: 13px;
+
+}
+.show_grid .streams {
+	top: 40%;
+	position: relative;
+	text-align: center;
+}
+
+/*
+TIPO LIST
+*/
+
+.show_list.userContainer{
+	padding: 10px;
+	margin: 10px;
+
+}
+
+.show_list .user {
+	padding: 10px;
+	cursor: pointer;
+}
+
+.show_list .userName {
+	font-family: "Nunito-Bold";
+	color: #286090;
+	font-size: 16px;
+
+}
+.show_list .userId {
+	font-family: "Nunito-Light";
+	color: #55739D;
+	font-size: 13px;
+}
+.show_list #streamsInUser {
+	color: #55739D;
+	padding-left: 45px;
+	font-size: 15px;
+
+}
+.show_list .subscribers {
+	text-align: center;
+}
+
+.back {
+	float: right;
+	font-size: 15px;
+	color: #55739D;
+}
+
+#back {
+	cursor: pointer;
+}
+
+
+
+
+
+
+#dataModal {
+	padding:20px;
+	height: 100%;
+	margin-bottom: 10px;
+	overflow: auto;
+}
+
+#userModal {
+		height: 100%;
+		padding:20px;
+		margin-bottom: 10px;
+		border-left: 1px solid #55739D;
+}
+
+#usModal {
+	max-height: calc(100% - 300px);
+	height: 100%;
+}
+.modal, .modal.fade.in {
+    top: 120px; /* was 10% */
+}
+
+.modal-backdrop.in {
+	opacity: 0;
+}
+
+.modal ::-webkit-scrollbar-track {
+
+    	margin-bottom: 10px !important;
+}
+
+.close {
+	color: #042762;
+	font-size: 32px;
+	opacity: 1;
+}
