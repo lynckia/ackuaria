@@ -1,6 +1,43 @@
 var socket = io();
 var view_type = "list";
-var search;
+var search = function() {
+    var filter_array = new Array();
+    var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
+    filter_array = filter.split(' '); // split the user input at the spaces
+    var arrayLength = filter_array.length; // Get the length of the filter array
+
+    if (view_type == "grid" || view_type == "failed") {
+        $('.publisherContainer').each(function() {
+            var _this = $(this);
+            var title = _this.find('.pubName').text().toLowerCase();
+            var hidden = 0;
+            for (var i = 0; i < arrayLength; i++) {
+                 if (title.indexOf(filter_array[i]) < 0) {
+                    _this.hide();
+                    hidden = 1;
+                }
+            }
+            if (hidden == 0)  {
+               _this.show();
+            }
+        });
+    } else {
+        $('.publisher').each(function() {
+            var _this = $(this);
+            var title = _this.find('.pubName').text().toLowerCase();
+            var hidden = 0;
+            for (var i = 0; i < arrayLength; i++) {
+                 if (title.indexOf(filter_array[i]) < 0) {
+                    _this.hide();
+                    hidden = 1;
+                }
+            }
+            if (hidden == 0)  {
+               _this.show();
+            }
+        });
+    }
+};
 
 $(document).ready(function(){
 
@@ -40,45 +77,6 @@ $(document).ready(function(){
     $('#searchBar').keyup(function () {
         search();
     });
-
-    search = function() {
-        var filter_array = new Array();
-        var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
-        filter_array = filter.split(' '); // split the user input at the spaces
-        var arrayLength = filter_array.length; // Get the length of the filter array
-
-        if (view_type == "grid" || view_type == "failed") {
-            $('.publisherContainer').each(function() {
-                var _this = $(this);
-                var title = _this.find('.pubName').text().toLowerCase();
-                var hidden = 0;
-                for (var i = 0; i < arrayLength; i++) {
-                     if (title.indexOf(filter_array[i]) < 0) {
-                        _this.hide();
-                        hidden = 1;
-                    }
-                }
-                if (hidden == 0)  {
-                   _this.show();
-                }
-            });
-        } else {
-            $('.publisher').each(function() {
-                var _this = $(this);
-                var title = _this.find('.pubName').text().toLowerCase();
-                var hidden = 0;
-                for (var i = 0; i < arrayLength; i++) {
-                     if (title.indexOf(filter_array[i]) < 0) {
-                        _this.hide();
-                        hidden = 1;
-                    }
-                }
-                if (hidden == 0)  {
-                   _this.show();
-                }
-            });
-        }
-    }
 
     $('#list').click(function() {
         if (!$(this).hasClass("active")){
