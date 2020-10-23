@@ -1,51 +1,53 @@
 var socket = io();
 var show_grid = false;
 
+var search = function() {
+    var filter_array = new Array();
+    var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
+    filter_array = filter.split(' '); // split the user input at the spaces
+    var arrayLength = filter_array.length; // Get the length of the filter array
+    if (show_grid) {
+        $('.roomContainer').each(function() {
+            var _this = $(this);
+            var title1 = _this.find('.roomId').text().toLowerCase();
+            var title2 = _this.find('.roomName').text().toLowerCase();
+            var hidden = 0;
+            for (var i = 0; i < arrayLength; i++) {
+                if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
+                    _this.hide();
+                    hidden = 1;
+                }
+            }
+            if (hidden == 0)  {
+               _this.show();
+            }
+        });
+    } else {
+        $('.room').each(function() {
+            var _this = $(this);
+            var title1 = _this.find('.roomID').text().toLowerCase();
+            var title2 = _this.find('.roomName').text().toLowerCase();
+            var hidden = 0;
+            for (var i = 0; i < arrayLength; i++) {
+                if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
+                    _this.hide();
+                    hidden = 1;
+                }
+            }
+            if (hidden == 0)  {
+               _this.show();
+            }
+        });
+    }
+};
+
 $(document).ready(function(){
     //Śearch bar code
     $('#searchBar').keyup(function () {
         search();
     });
 
-    var search = function() {
-        var filter_array = new Array();
-        var filter = $('#searchBar')[0].value.toLowerCase();  // no need to call jQuery here
-        filter_array = filter.split(' '); // split the user input at the spaces
-        var arrayLength = filter_array.length; // Get the length of the filter array
-        if (show_grid) {
-            $('.roomContainer').each(function() {
-                var _this = $(this);
-                var title1 = _this.find('.roomId').text().toLowerCase();
-                var title2 = _this.find('.roomName').text().toLowerCase();
-                var hidden = 0;
-                for (var i = 0; i < arrayLength; i++) {
-                    if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
-                        _this.hide();
-                        hidden = 1;
-                    }
-                }
-                if (hidden == 0)  {
-                   _this.show();
-                }
-            });
-        } else {
-            $('.room').each(function() {
-                var _this = $(this);
-                var title1 = _this.find('.roomID').text().toLowerCase();
-                var title2 = _this.find('.roomName').text().toLowerCase();
-                var hidden = 0;
-                for (var i = 0; i < arrayLength; i++) {
-                    if (title1.indexOf(filter_array[i]) < 0 && title2.indexOf(filter_array[i]) < 0) {
-                        _this.hide();
-                        hidden = 1;
-                    }
-                }
-                if (hidden == 0)  {
-                   _this.show();
-                }
-            });
-        }
-    }
+
 
     // Grid/List switch
     $('#list').click(function() {

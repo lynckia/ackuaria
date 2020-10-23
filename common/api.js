@@ -59,7 +59,7 @@ const sendStatsToClients = (event) => {
 const subscribeToLicodeStatsStream = (streamId, duration, interval) => {
   log.debug(`Subscribing to licode stat stream id ${streamId} for ${duration}s with interval ${interval}s`);
   return new Promise((resolve, reject) => {
-    amqper.broadcast('ErizoJS', {method: 'subscribeToStats', args: [streamId, duration, interval]},
+    amqper.broadcast('ErizoJS', {method: 'subscribeToStats', args: [parseInt(streamId), duration, interval]},
     (response) => {
         resolve(response);
     })
