@@ -8,7 +8,7 @@ let chartManager = ChartManager();
 var lastTimestamp, lastBytesAudio, lastBytesVideo;
 const publisherVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'erizoBandwidth', 'NACK'];
 const publisherAudioStats = ['bitrateCalculated', 'NACK'];
-const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow', 'NACK'];
+const subscriberVideoStats = ['clientHostType', 'PLI', 'keyFrames', 'bitrateCalculated', 'packetsLost', 'jitter', 'erizoSlideShow', 'NACK', 'streamPriority'];
 const subscriberAudioStats = ['bitrateCalculated', 'packetsLost', 'jitter', 'erizoAudioMute', 'erizoVideoMute', 'NACK'];
 const connectionStats = ['videoBitrate', 'senderBitrateEstimation', 'paddingBitrate', 'targetBitrate', 'numberOfStreams'];
 
